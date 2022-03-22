@@ -1,0 +1,104 @@
+﻿@using ShowLogger.Models
+
+@model ShowModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmEditShow" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(m => m.ShowId)
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.ShowName)
+        </div>
+
+        <div id="divShowNameTxt" class="col-sm-6" style="display: none;">
+            @Html.OA().TextBoxFor(m => m.ShowName).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+
+        <div id="divShowNameDDL" class="col-sm-6">
+            @(Html.OA().DropDownList<string>()
+                .Name("ddlShowNames")
+                .ValueList(Url.Action("GetShowNamesDDL", "Show", new { area = "Shows" }))
+                .HtmlAttributes(new { @class = "form-control mandatory" })
+                .DataTextName("ShowName")
+                .DataTextValue("ShowName")
+                .OnChange("shows.ddlShowNames_Change")
+                .EmptyOption("-- Please select a show --")
+            )
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnToggleShowName")
+                .Text("Old")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnToggleShowName_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.SeasonNumber)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().NumericTextBoxFor(m => m.SeasonNumber)
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnAddSeason")
+                .Text("Add")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnAddSeason_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.EpisodeNumber)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().NumericTextBoxFor(m => m.EpisodeNumber)
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnResetEpisode")
+                .Text("Reset")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnResetEpisode_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.DateWatched)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.OA().DateFor(m => m.DateWatched).Format("L").HtmlAttributes(new { @class = "mandatory" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.ShowTypeId)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DropDownListFor(m => m.ShowTypeId, new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1000", Text = "TV" },
+                new SelectListItem { Value = "1001", Text = "Movie" },
+                new SelectListItem { Value = "1002", Text = "AMC" },
+            }, new { @class = "form-control mandatory" })
+        </div>
+    </div>
+
+}

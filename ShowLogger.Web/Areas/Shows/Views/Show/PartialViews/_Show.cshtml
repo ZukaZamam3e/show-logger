@@ -1,0 +1,7 @@
+﻿@(Html.OA().Tab()
+    .Name("tbShows")
+    .Items(tabs =>
+    {
+        tabs.Add().Title("Shows").Selected(true).LoadFromPartial("~/Areas/Shows/Views/Show/PartialViews/_Shows.cshtml");
+    })
+)

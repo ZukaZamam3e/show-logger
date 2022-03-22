@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Show Logger</title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
+    <script type="text/javascript" src="~/js/Moment/moment.min.js"></script>
+    <script type="text/javascript" src="~/js/DateTimePicker/transition.js"></script>
+    <script type="text/javascript" src="~/js/DateTimePicker/collapse.js"></script>
+    <script type="text/javascript" src="~/js/DateTimePicker/bootstrap-datetimepicker.js"></script>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+
+    <link href="~/css/MvcGrid/mvc-grid.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link href="~/css/Toastr/toastr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/DateTimePicker/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ShowLogger.styles.css" asp-append-version="true" />
+
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>a*@
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/MvcGrid/mvc-grid.js"></script>
+    <script src="~/js/Toastr/toastr.min.js"></script>
+
+    
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ShowLogger</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - ShowLogger.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <div class="modal" id="gridModelEditor" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="gridModelEditorTitle" class="modal-title"></h4>
+                    <button type="button" class="close btn btn-secondary" data-bs-dismiss="modal">&times;</button>
+                </div>
+                <div id="gridModelEditorBody" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button id="gridModelEditorSave" type="button" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*<div class="modal fade" id="ssWindow" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="ssWindowTitle" class="modal-title"></h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="ssModalBody" class="modal-body">
+
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+    <a id="hlLoadEditor" asp-area="Common"
+       asp-controller="Grid"
+       asp-action="LoadEditor"
+       class="nav-link text-dark"
+       style="display: none;">
+
+    </a>
+    <input id="hlAjaxGrid" type="hidden" value="@Url.Action("AjaxGrid", "Grid", new { area = "Common" })" />
+    <input id="hlTabPartial" type="hidden" value="@Url.Action("Partial", "Tab", new { area = "Common" })" />
+
+    <div>
+        <input type="hidden" id="hdnRootPath" value="@Url.Content("~")" />
+    </div>
+
+    <div class="modal fade hide" id="divLoading" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="row" style="padding-top: 15px; padding-bottom">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                        <div class="spinner-border"></div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                        Loading please wait...
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+    
+    <script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+
+        [].forEach.call(document.getElementsByClassName('oa_date'), function (element) {
+            $(element).datetimepicker();
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

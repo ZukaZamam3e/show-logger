@@ -1,0 +1,23 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<ShowModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvShows")
+    .Creator("Create Show", Url.Action("LoadCreator", "Show", new { area = "Shows" }), Url.Action("Create", "Show", new { area = "Shows" }))
+    .Editor("Edit Show", Url.Action("LoadEditor", "Show", new { area = "Shows" }), Url.Action("Update", "Show", new { area = "Shows" }))
+    .Columns(columns =>
+    {
+        columns.Commands(commands =>
+        {
+            commands.Edit();
+            commands.Custom("Delete", "fas fa-trash-alt", "shows.delete");
+        });
+        columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.Add(model => model.ShowName).SetCssClass();
+        columns.Add(model => model.SeasonNumber).SetCssClass();
+        columns.Add(model => model.EpisodeNumber).SetCssClass();
+        columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
+        columns.Add(model => model.ShowTypeIdZ).SetCssClass();
+    })
+)
