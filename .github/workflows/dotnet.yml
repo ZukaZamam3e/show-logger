@@ -32,7 +32,6 @@ jobs:
       with:
         # username
         username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
         # your sftp server
         server: ${{ secrets.SSH_IP_ADDRESS }}
         # your sftp server port, default to 22
