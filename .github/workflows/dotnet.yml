@@ -39,6 +39,6 @@ jobs:
         # you can copy private_key from your *.pem file, keep format
         ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         # will put all file under this path
-        local_path: ./Release/
+        local_path: ./Release/*
         # files will copy to under remote_path
         remote_path: /oaprojects/show-logger
