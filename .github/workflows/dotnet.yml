@@ -1,0 +1,44 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish -c Release --output ./Release
+    - name: SFTP Deploy
+  # You may pin to the exact commit or the version.
+  # uses: wlixcc/SFTP-Deploy-Action@c6e4d76ad92d7460e93fc66178b52638298adfaa
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.2
+      with:
+        # username
+        username: ${{ secrets.SSH_USER }}
+        # your sftp server
+        server: ${{ secrets.SSH_IP_ADDRESS }}
+        # your sftp server port, default to 22
+        port: 22
+        # you can copy private_key from your *.pem file, keep format
+        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        # will put all file under this path
+        local_path: ./Release/*
+        # files will copy to under remote_path
+        remote_path: /oaprojects/show-logger
