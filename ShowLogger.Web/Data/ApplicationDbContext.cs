@@ -12,12 +12,7 @@ namespace ShowLogger.Web.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.HasSequence<int>("OA_IDENTITY_USER_ID_SEQ")
-                .StartsAt(1000)
-                .IncrementsBy(1);
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasIndex(m => m.UserId)
@@ -25,9 +20,7 @@ namespace ShowLogger.Web.Data
 
             modelBuilder.Entity<ApplicationUser>()
                 .Property(e => e.UserId)
-                .ValueGeneratedOnAdd()
-                .IsRequired()
-                .HasDefaultValueSql("NEXT VALUE FOR OA_IDENTITY_USER_ID_SEQ");
+                .IsRequired();
 
             modelBuilder.Entity<ApplicationUser>()
                 .Property(e => e.FirstName)

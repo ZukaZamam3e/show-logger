@@ -50,15 +50,14 @@ public class ShowLoggerDbContext : DbContext
             new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.SHOW_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.AMC, DECODE_TXT = "AMC" }
         );
 
-        modelBuilder.HasSequence<int>("SL_SHOW_SHOW_ID_SEQ")
-            .StartsAt(1000)
-            .IncrementsBy(1);
+        //modelBuilder.HasSequence<int>("SL_SHOW_SHOW_ID_SEQ")
+        //    .StartsAt(1000)
+        //    .IncrementsBy(1);
 
         modelBuilder.Entity<SL_SHOW>(entity =>
         {
             entity.Property(e => e.SHOW_ID)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("NEXT VALUE FOR SL_SHOW_SHOW_ID_SEQ");
+                .ValueGeneratedOnAdd();
 
             entity.Property(e => e.SHOW_NAME)
                 .IsRequired()

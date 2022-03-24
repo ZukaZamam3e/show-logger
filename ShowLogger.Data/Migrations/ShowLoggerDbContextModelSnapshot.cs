@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShowLogger.Data.Context;
 
@@ -17,13 +16,8 @@ namespace ShowLogger.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.HasSequence<int>("SL_SHOW_SHOW_ID_SEQ")
-                .StartsAt(1000L);
+                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("ShowLogger.Data.Entities.SL_CODE_VALUE", b =>
                 {
@@ -36,11 +30,11 @@ namespace ShowLogger.Data.Migrations
                     b.Property<string>("DECODE_TXT")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("EXTRA_INFO")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("CODE_VALUE_ID");
 
@@ -71,11 +65,10 @@ namespace ShowLogger.Data.Migrations
                 {
                     b.Property<int>("SHOW_ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR SL_SHOW_SHOW_ID_SEQ");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DATE_WATCHED")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("EPISODE_NUMBER")
                         .HasColumnType("int");
@@ -86,7 +79,7 @@ namespace ShowLogger.Data.Migrations
                     b.Property<string>("SHOW_NAME")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("SHOW_TYPE_ID")
                         .HasColumnType("int");

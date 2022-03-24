@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -9,9 +10,8 @@ namespace ShowLogger.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateSequence<int>(
-                name: "SL_SHOW_SHOW_ID_SEQ",
-                startValue: 1000L);
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "SL_CODE_VALUE",
@@ -19,30 +19,36 @@ namespace ShowLogger.Data.Migrations
                 {
                     CODE_VALUE_ID = table.Column<int>(type: "int", nullable: false),
                     CODE_TABLE_ID = table.Column<int>(type: "int", nullable: false),
-                    DECODE_TXT = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    EXTRA_INFO = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    DECODE_TXT = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EXTRA_INFO = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SL_CODE_VALUE", x => x.CODE_VALUE_ID);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "SL_SHOW",
                 columns: table => new
                 {
-                    SHOW_ID = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR SL_SHOW_SHOW_ID_SEQ"),
+                    SHOW_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     USER_ID = table.Column<int>(type: "int", nullable: false),
-                    SHOW_NAME = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SHOW_NAME = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     SHOW_TYPE_ID = table.Column<int>(type: "int", nullable: false),
                     SEASON_NUMBER = table.Column<int>(type: "int", nullable: true),
                     EPISODE_NUMBER = table.Column<int>(type: "int", nullable: true),
-                    DateWatched = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DATE_WATCHED = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SL_SHOW", x => x.SHOW_ID);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
                 table: "SL_CODE_VALUE",
@@ -67,9 +73,6 @@ namespace ShowLogger.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "SL_SHOW");
-
-            migrationBuilder.DropSequence(
-                name: "SL_SHOW_SHOW_ID_SEQ");
         }
     }
 }
