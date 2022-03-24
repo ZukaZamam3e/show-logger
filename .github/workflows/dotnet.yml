@@ -42,3 +42,11 @@ jobs:
         local_path: ./Release/*
         # files will copy to under remote_path
         remote_path: /oaprojects/show-logger
+    - name: Restart show-logger
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_IP_ADDRESS }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: sudo sh /oaprojects/scripts/restart-show-logger.sh
