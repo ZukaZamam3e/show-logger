@@ -19,8 +19,8 @@ public class OaGridColumnCustomBuilder<T> where T : class
         Parent.Column += $"<a role='button' class='oa_grid_button ss-grid-{Parent.Parent.Grid.Name}-edit fas fa-pencil-alt' onclick='oa_grid.open_editor(this)'></a>";
     }
 
-    public void Custom(string name, string iconCss, string onClick)
+    public void Custom(string name, string iconCss, string onClick, string visibleFunc = "")
     {
-        Parent.Column += $"<a role='button' role='button' class='oa_grid_button ss-grid-{Parent.Parent.Grid.Name}-{name} {iconCss}' onclick='{onClick}(this)' ></a>";
+        Parent.Column += $"<a role='button' role='button' class='oa_grid_button ss-grid-{Parent.Parent.Grid.Name}-{name} {iconCss}' onclick='{onClick}(this)' {(!string.IsNullOrEmpty(visibleFunc) ? $"visibleFunc='{visibleFunc}'" : "")}></a>";
     }
 }

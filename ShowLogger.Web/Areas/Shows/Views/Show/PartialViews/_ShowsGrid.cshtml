@@ -11,6 +11,7 @@
         columns.Commands(commands =>
         {
             commands.Edit();
+            commands.Custom("AddNextEpisode", "fas fa-plus", "shows.addNextEpisode", "shows.showAddNextEpisode");
             commands.Custom("Delete", "fas fa-trash-alt", "shows.delete");
         });
         columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
@@ -19,5 +20,10 @@
         columns.Add(model => model.EpisodeNumber).SetCssClass();
         columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
         columns.Add(model => model.ShowTypeIdZ).SetCssClass();
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
     })
 )

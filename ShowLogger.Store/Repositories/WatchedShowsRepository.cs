@@ -79,6 +79,32 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             return 0;
     }
 
+    public bool AddNextEpisode(int userId, int showId)
+    {
+        SL_SHOW entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);
+
+        if (entity != null)
+        {
+            SL_SHOW nextEpisode = new SL_SHOW
+            {
+                SHOW_NAME = entity.SHOW_NAME,
+                SHOW_TYPE_ID = entity.SHOW_TYPE_ID,
+                USER_ID = userId,
+                SEASON_NUMBER = entity.SEASON_NUMBER,
+                EPISODE_NUMBER = entity.EPISODE_NUMBER + 1,
+                DATE_WATCHED = DateTime.Now.Date,
+            };
+
+            _context.SL_SHOW.Add(nextEpisode);
+
+            _context.SaveChanges();
+
+            return true;
+        }
+        else
+            return false;
+    }
+
     public bool DeleteShow(int userId, int showId)
     {
         SL_SHOW entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);

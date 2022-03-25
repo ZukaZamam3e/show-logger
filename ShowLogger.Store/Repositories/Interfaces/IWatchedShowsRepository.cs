@@ -13,8 +13,10 @@ public interface IWatchedShowsRepository : IRepository
     IEnumerable<ShowModel> GetShows(Expression<Func<ShowModel, bool>> predicate = null);
 
     long CreateShow(int userId, ShowModel model);
-
+    
     long UpdateShow(int userId, ShowModel model);
+
+    bool AddNextEpisode(int userId, int showId);
 
     bool DeleteShow(int userId, int showId);
 }

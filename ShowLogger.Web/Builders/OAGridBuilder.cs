@@ -69,6 +69,13 @@ public static class OAGridBuilder
         return grid;
     }
 
+    public static IHtmlGrid<T> CommandVisible<T>(this IHtmlGrid<T> grid, string commandVisibleFunc) where T : class
+    {
+        grid.Grid.Attributes.Add("command_visible_func", commandVisibleFunc);
+
+        return grid;
+    }
+
     public static IHtmlGrid<T> Creator<T>(this IHtmlGrid<T> grid, string title, string? partialView, string? createUrl, string createFunc = "") where T : class
     {
         grid.Grid.Attributes.Add("creator_title", title);

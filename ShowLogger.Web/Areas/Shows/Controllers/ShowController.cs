@@ -101,6 +101,30 @@ public class ShowController : BaseController
     }
 
     [HttpPost]
+    public IActionResult AddNextEpisode(int showId)
+    {
+        bool successful = false;
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                successful = _watchedShowsRepository.AddNextEpisode(GetLoggedInUserId(), showId);
+
+                if (!successful)
+                {
+                    ModelState.AddModelError("AddNextEpisode", "Could not add next episode.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not delete show.");
+        }
+
+        return Json(new { data = successful, errors = GetErrorsFromModelState() });
+    }
+
+    [HttpPost]
     public IActionResult Delete(int showId)
     {
         bool successful = false;

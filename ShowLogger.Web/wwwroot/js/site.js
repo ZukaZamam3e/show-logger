@@ -19,6 +19,27 @@ shows = (function () {
             //e.find('#EventId').val(events.get_event_id().EventId);
         },
 
+        showAddNextEpisode: function (e) {
+            var model = oa_utilities.getModel(e);
+            return model.ShowTypeId === 1000;
+        },
+
+        addNextEpisode: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getShowsBaseURL('Show/AddNextEpisode'), {
+                "showId": model.ShowId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_deleted_notification();
+                    oa_grid.reload_grid('gvShows');
+                }
+            });
+        },
+
         delete: function (e) {
             var model = oa_utilities.getModel(e);
 
@@ -31,7 +52,6 @@ shows = (function () {
                 } else {
                     oa_utilities.show_record_deleted_notification();
                     oa_grid.reload_grid('gvShows');
-
                 }
             });
         },
@@ -245,7 +265,6 @@ oa_grid = (function () {
                     var rowModel = JSON.parse($(rows[r]).attr('model'));
 
                     if (model[idProp[0].toLowerCase() + idProp.substr(1)] === rowModel[idProp]) {
-                        debugger;
                         var modelJson = JSON.stringify(model, function (key, value) {
                             if (value && typeof value === 'object') {
                                 var replacement = {};
@@ -278,7 +297,6 @@ oa_grid = (function () {
                 });
             } else {
                 var page = $('#' + gridName).find('.mvc-grid-pager .active').data('page')
-                debugger;
                 $('#' + gridName).parent().attr('page', page);
 
                 oa_grid.reload_grid(gridName);
@@ -514,6 +532,7 @@ oa_dropdownlist = (function () {
         },
 
         getModel: function (e) {
+
             return JSON.parse(e.attr("model"));
         }
     }

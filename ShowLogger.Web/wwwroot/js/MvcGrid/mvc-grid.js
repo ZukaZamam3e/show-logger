@@ -62,6 +62,19 @@ class MvcGrid {
             MvcGrid.instances.push(grid);
         }
 
+        $('#' + grid.name + ' .oa_column_commands a[visibleFunc!=""][visibleFunc]').each((i,a) => {
+            console.log(a);
+
+            var visibleFunc = $(a).attr("visibleFunc");
+
+            if (!!visibleFunc) {
+                var func = window[visibleFunc.split(".")[0]][visibleFunc.split(".")[1]];
+                if (!func(a)) {
+                    $(a).hide();
+                }
+            }
+        })
+
         if (!element.children.length) {
             grid.reload();
         }

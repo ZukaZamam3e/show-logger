@@ -17,7 +17,7 @@
         </div>
 
         <div id="divShowNameDDL" class="col-sm-6">
-            @(Html.OA().DropDownList<string>()
+            @(Html.OA().DropDownListFor(m => m.ShowName)
                 .Name("ddlShowNames")
                 .ValueList(Url.Action("GetShowNamesDDL", "Show", new { area = "Shows" }))
                 .HtmlAttributes(new { @class = "form-control mandatory" })

@@ -133,11 +133,18 @@ public class OADropDownListBuilder<T, TValue> : OAControlBuilder<T>
             container.Attributes.Add("name", propName);
             container.Attributes.Add("id", propName);
 
-            string option = Container.Property.Compile()(_htmlHelper.ViewData.Model).ToString();
-            if (!string.IsNullOrEmpty(option))
+            TValue? model = Container.Property.Compile()(_htmlHelper.ViewData.Model);
+
+            if(model != null)
             {
-                container.Attributes.Add("defaultValue", option);
+                string option = model.ToString();
+                if (!string.IsNullOrEmpty(option))
+                {
+                    container.Attributes.Add("defaultValue", option);
+                }
             }
+
+            
         }
         else
         {
