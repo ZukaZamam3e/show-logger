@@ -92,7 +92,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 USER_ID = userId,
                 SEASON_NUMBER = entity.SEASON_NUMBER,
                 EPISODE_NUMBER = entity.EPISODE_NUMBER + 1,
-                DATE_WATCHED = DateTime.Now.Date,
+                DATE_WATCHED = DateTime.Now.GetEST().Date,
             };
 
             _context.SL_SHOW.Add(nextEpisode);

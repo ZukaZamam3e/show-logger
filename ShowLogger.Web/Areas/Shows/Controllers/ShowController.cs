@@ -51,7 +51,7 @@ public class ShowController : BaseController
     {
         ShowModel model = new ShowModel
         {
-            DateWatched = DateTime.Now.Date,
+            DateWatched = DateTime.Now.GetEST().Date,
         };
         return PartialView("~/Areas/Shows/Views/Show/Editor/_EditShow.cshtml", model);
     }

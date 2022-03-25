@@ -38,3 +38,15 @@ public class ShowNameModel
 
     public int ShowTypeId { get; set; }
 }
+
+public static class DateTimeExtensions
+{
+    public static DateTime GetEST(this DateTime date)
+    {
+        var timeUtc = DateTime.UtcNow;
+        TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+        DateTime easternTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, easternZone);
+
+        return easternTime;
+    }
+}
