@@ -130,8 +130,9 @@ public class OADropDownListBuilder<T, TValue> : OAControlBuilder<T>
         if (Container.Property != null)
         {
             propName = ((MemberExpression)Container.Property.Body).Member.Name;
+            string propId = Container.Name ?? propName;
             container.Attributes.Add("name", propName);
-            container.Attributes.Add("id", propName);
+            container.Attributes.Add("id", propId);
 
             TValue? model = Container.Property.Compile()(_htmlHelper.ViewData.Model);
 
