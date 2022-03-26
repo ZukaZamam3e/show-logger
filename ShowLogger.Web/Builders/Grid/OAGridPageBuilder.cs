@@ -20,7 +20,7 @@ public class OAGridPageBuilder<T> : OAControlBuilder<T>
         return this;
     }
 
-    public OAGridPageBuilder<T> Read(string read)
+    public OAGridPageBuilder<T> Read(string? read)
     {
         Container.Read = read;
         return this;

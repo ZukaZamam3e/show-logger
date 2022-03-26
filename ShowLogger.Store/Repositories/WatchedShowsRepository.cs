@@ -10,7 +10,6 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 {
     private readonly ShowLoggerDbContext _context;
 
-
     public WatchedShowsRepository(ShowLoggerDbContext context)
     {
         _context = context;
@@ -29,7 +28,8 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             EpisodeNumber = m.EPISODE_NUMBER,
             DateWatched = m.DATE_WATCHED,
             ShowTypeId = m.SHOW_TYPE_ID,
-            ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID]
+            ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
+            ShowNotes = m.SHOW_NOTES,
         });
 
         if (predicate != null)
@@ -51,6 +51,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             EPISODE_NUMBER = model.EpisodeNumber,
             SEASON_NUMBER = model.SeasonNumber,
             SHOW_NAME = model.ShowName,
+            SHOW_NOTES = model.ShowNotes,
             USER_ID = userId
         };
 
@@ -63,7 +64,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
     public long UpdateShow(int userId, ShowModel model)
     {
-        SL_SHOW entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == model.ShowId && m.USER_ID == userId);
+        SL_SHOW? entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == model.ShowId && m.USER_ID == userId);
 
         if (entity != null)
         {
@@ -72,6 +73,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             entity.EPISODE_NUMBER = model.EpisodeNumber;
             entity.SEASON_NUMBER = model.SeasonNumber;
             entity.SHOW_NAME = model.ShowName;
+            entity.SHOW_NOTES = model.ShowNotes;
 
             return _context.SaveChanges();
         }
@@ -81,7 +83,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
     public bool AddNextEpisode(int userId, int showId)
     {
-        SL_SHOW entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);
+        SL_SHOW? entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);
 
         if (entity != null)
         {
@@ -107,7 +109,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
     public bool DeleteShow(int userId, int showId)
     {
-        SL_SHOW entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);
+        SL_SHOW? entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);
 
         if (entity != null)
         {
@@ -149,6 +151,29 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             MovieName = m.SHOW_NAME,
             DateWatched = m.DATE_WATCHED,
         });
+
+        return query;
+    }
+
+    public IEnumerable<FriendWatchHistoryModel> GetFriendsWatchHistory(int userId)
+    {
+        int[] friends = _context.SL_FRIEND.Where(m => m.USER_ID == userId).Select(m => m.FRIEND_USER_ID)
+            .Union(_context.SL_FRIEND.Where(m => m.FRIEND_USER_ID == userId).Select(m => m.USER_ID)).ToArray();
+
+        Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
+
+        IEnumerable<FriendWatchHistoryModel> query = _context.SL_SHOW.Select(m => new FriendWatchHistoryModel
+        {
+            ShowId = m.SHOW_ID,
+            UserId = m.USER_ID,
+            ShowName = m.SHOW_NAME,
+            SeasonNumber = m.SEASON_NUMBER,
+            EpisodeNumber = m.EPISODE_NUMBER,
+            DateWatched = m.DATE_WATCHED,
+            ShowTypeId = m.SHOW_TYPE_ID,
+            ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
+            ShowNotes = m.SHOW_NOTES,
+        }).Where(m => friends.Contains(m.UserId));
 
         return query;
     }

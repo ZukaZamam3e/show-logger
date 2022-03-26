@@ -20,6 +20,7 @@
         columns.Add(model => model.EpisodeNumber).SetCssClass();
         columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
         columns.Add(model => model.ShowTypeIdZ).SetCssClass();
+        columns.Add(model => model.ShowNotes).SetCssClass();
     })
     .Pageable(pager =>
     {

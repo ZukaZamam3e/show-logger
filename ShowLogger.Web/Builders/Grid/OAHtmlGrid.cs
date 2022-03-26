@@ -11,7 +11,7 @@ public class OAHtmlGrid<T>
 {
     public bool Header => HeaderButtons.Count() > 0;
 
-    public string Read { get; set; }
+    public string? Read { get; set; }
 
     public string Name { get; set; }
 

@@ -1,0 +1,23 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<FriendWatchHistoryModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvFriendsWatchHistory")
+    .Columns(columns =>
+    {
+        columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.Add(model => model.Email).SetCssClass();
+        columns.Add(model => model.ShowName).SetCssClass();
+        columns.Add(model => model.SeasonNumber).SetCssClass();
+        columns.Add(model => model.EpisodeNumber).SetCssClass();
+        columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
+        columns.Add(model => model.ShowTypeIdZ).SetCssClass();
+        //columns.Add(model => model.ShowNotes).SetCssClass();
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

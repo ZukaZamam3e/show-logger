@@ -34,7 +34,7 @@ shows = (function () {
                     console.log('error: ', data.errors);
                     oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
                 } else {
-                    oa_utilities.show_record_deleted_notification();
+                    oa_utilities.show_record_saved_notification();
                     if (!!$('#gvShows')) {
                         oa_grid.reload_grid('gvShows');
                     }
@@ -97,6 +97,68 @@ shows = (function () {
                 $('#ShowTypeId').val(data.showTypeId);
             });
         }
+    }
+})();
+
+friends = (function () {
+    return {
+        showAcceptDenyFriendRequest: function (e) {
+            var model = oa_utilities.getModel(e);
+            return model.IsPending === true;
+        },
+
+        showDeleteFriend: function (e) {
+            var model = oa_utilities.getModel(e);
+            return model.IsPending === false;
+        },
+
+        acceptFriendRequest: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getBaseURL() + "/Home/Friend_AcceptFriendRequest", {
+                "friendRequestId": model.Id
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_saved_notification();
+                    oa_grid.reload_grid('gvFriends');
+                }
+            });
+        },
+
+        denyFriendRequest: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getBaseURL() + "/Home/Friend_DenyFriendRequest", {
+                "friendRequestId": model.Id
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_saved_notification();
+                    oa_grid.reload_grid('gvFriends');
+                }
+            });
+        },
+
+        deleteFriend: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getBaseURL() + "/Home/Friend_DeleteFriend", {
+                "friendId": model.Id
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_saved_notification();
+                    oa_grid.reload_grid('gvFriends');
+                }
+            });
+        },
     }
 })();
 

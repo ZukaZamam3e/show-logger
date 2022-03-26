@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-title" content="Show Logger" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
     <link rel="apple-touch-icon" href="~/show-logger-icon.png" />
     <link rel="apple-touch-startup-image" href="~/show-logger-icon.png" />
     <title>@ViewData["Title"] - Show Logger</title>
@@ -48,6 +49,9 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Friends">Friends</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -128,7 +132,7 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="row" style="padding-top: 15px; padding-bottom">
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
                         <div class="spinner-border"></div>
                     </div>

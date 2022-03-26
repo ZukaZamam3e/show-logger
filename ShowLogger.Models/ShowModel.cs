@@ -23,10 +23,13 @@ public class ShowModel
     [Display(Name = "Episode")]
     public int? EpisodeNumber { get; set; }
 
-    [Display(Name = "Date Watch")]
+    [Display(Name = "Watch Date")]
     public DateTime DateWatched { get; set; }
 
-    public string MobileView => $"{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.ToString().PadLeft(2, '0')}e{EpisodeNumber.ToString().PadLeft(2, '0')}" :"")}<br>{DateWatched.ToString("MM/dd/yyyy")}";
+    [Display(Name = "Show Notes")]
+    public string? ShowNotes { get; set; }
+
+    public virtual string MobileView => $"{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" :"")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
 }
 
 public class GroupedShowModel
@@ -79,6 +82,14 @@ public class ShowNameModel
     public int? EpisodeNumber { get; set; }
 
     public int ShowTypeId { get; set; }
+}
+
+public class FriendWatchHistoryModel : ShowModel
+{
+    [Display(Name = "Email")]
+    public string Email { get; set; }
+
+    public override string MobileView => $"{Email}<br>{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
 }
 
 public static class DateTimeExtensions

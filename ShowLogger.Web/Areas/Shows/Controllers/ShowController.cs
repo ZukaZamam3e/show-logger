@@ -63,7 +63,7 @@ public class ShowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Create(ShowModel model)
+    public IActionResult Create(ShowModel? model)
     {
         try
         {
@@ -82,7 +82,7 @@ public class ShowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Update(ShowModel model)
+    public IActionResult Update(ShowModel? model)
     {
         try
         {
@@ -227,5 +227,40 @@ public class ShowController : BaseController
 
         // Only grid query values will be available here.
         return PartialView("~/Areas/Shows/Views/Show/PartialViews/_MovieStatsGrid.cshtml", model);
+    }
+
+    [HttpGet]
+    public PartialViewResult FriendsWatchHistory_Read()
+    {
+
+        IEnumerable<FriendWatchHistoryModel> model = new List<FriendWatchHistoryModel>();
+
+        try
+        {
+            model = _watchedShowsRepository.GetFriendsWatchHistory(GetLoggedInUserId()).OrderByDescending(m => m.DateWatched).ThenByDescending(m => m.ShowId);
+
+            model = from m in model
+                    join u in _userManager.Users on m.UserId equals u.UserId
+                    select new FriendWatchHistoryModel
+                    {
+                        UserId = m.UserId,
+                        Email = u.Email,
+                        DateWatched = m.DateWatched,
+                        EpisodeNumber = m.EpisodeNumber,
+                        SeasonNumber = m.SeasonNumber,
+                        ShowId = m.ShowId,
+                        ShowName = m.ShowName,
+                        ShowNotes = m.ShowNotes,
+                        ShowTypeId = m.ShowTypeId,
+                        ShowTypeIdZ = m.ShowTypeIdZ,
+                    };
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load friends watch history.");
+        }
+
+        // Only grid query values will be available here.
+        return PartialView("~/Areas/Shows/Views/Show/PartialViews/_FriendsWatchHistoryGrid.cshtml", model);
     }
 }

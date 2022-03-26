@@ -1,0 +1,28 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<FriendModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvFriends")
+    .Creator("Add Friend", Url.Action("Friends_LoadCreator", "Home", new { area = "" }), Url.Action("Friends_Create", "Home", new { area = "" }))
+    .Columns(columns =>
+    {
+        columns.Commands(commands =>
+        {
+            //commands.Edit();
+            commands.Custom("AcceptFriendRequest", "fas fa-check", "friends.acceptFriendRequest", "friends.showAcceptDenyFriendRequest");
+            commands.Custom("DenyFriendRequest", "fas fa-ban", "friends.denyFriendRequest", "friends.showAcceptDenyFriendRequest");
+            commands.Custom("DeleteFriend", "fas fa-trash", "friends.deleteFriend", "friends.showDeleteFriend");
+            //commands.Custom("Delete", "fas fa-trash-alt", "shows.delete");
+        });
+        columns.Add(model => model.FriendEmail).SetCssClass();
+        columns.Add(model => model.CreatedDate).SetCssClass().Formatted("{0:d}");
+        columns.Add(model => model.IsPendingZ).SetCssClass();
+    })
+    .Empty("You ain't got no friends")
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

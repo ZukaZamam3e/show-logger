@@ -23,4 +23,6 @@ public interface IWatchedShowsRepository : IRepository
     IEnumerable<GroupedShowModel> GetTVStats(int userId);
 
     IEnumerable<MovieModel> GetMovieStats(int userId);
+
+    IEnumerable<FriendWatchHistoryModel> GetFriendsWatchHistory(int userId);
 }

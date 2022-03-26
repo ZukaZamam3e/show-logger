@@ -7,7 +7,7 @@ namespace ShowLogger.Web.Areas.Common;
 
 public class BaseController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    public readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<BaseController> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
 

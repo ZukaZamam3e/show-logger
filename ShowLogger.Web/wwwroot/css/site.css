@@ -214,82 +214,60 @@ a.oa_grid_button {
     text-decoration: none;
 }
 
-col.gvShows_Mobileview {
+col.gvShows_Mobileview,
+col.gvTVStats_Mobileview,
+col.gvMovieStats_Mobileview,
+col.gvFriendsWatchHistory_Mobileview {
     width: 350px;
 }
 
-col.gvTVStats_Mobileview {
-    width: 350px;
-}
-
-col.gvMovieStats_Mobileview {
-    width: 350px;
+.gvShows_Mobileview,
+.gvTVStats_Mobileview,
+.gvMovieStats_Mobileview,
+.gvFriendsWatchHistory_Mobileview {
+    text-align: center;
 }
 
 @media only screen and (min-width: 600px) {
-    .gvShows_Mobileview {
-        display: none;
-    }
-
-    .gvTVStats_Mobileview {
-        display: none;
-    }
-
-    .gvMovieStats_Mobileview {
+    .gvShows_Mobileview,
+    .gvTVStats_Mobileview,
+    .gvMovieStats_Mobileview,
+    .gvFriendsWatchHistory_Mobileview {
         display: none;
     }
 }
 
 @media only screen and (max-width: 599px) {
-    .gvShows_Showname {
+    .gvShows_Showname,
+    .gvShows_Seasonnumber,
+    .gvShows_Episodenumber,
+    .gvShows_Datewatched,
+    .gvShows_Showtypeidz,
+    .gvShows_Shownotes {
         display: none;
     }
 
-    .gvShows_Seasonnumber {
-        display: none;
-    }
-
-    .gvShows_Episodenumber {
-        display: none;
-    }
-
-    .gvShows_Datewatched {
-        display: none;
-    }
-
-    .gvShows_Showtypeidz {
-        display: none;
-    }
-
-    .gvTVStats_Showname {
-        display: none;
-    }
-
-    .gvTVStats_Episodeswatched {
-        display: none;
-    }
-
-    .gvTVStats_Firstwatched {
-        display: none;
-    }
-
-    .gvTVStats_Lastwatched {
-        display: none;
-    }
-
-    .gvTVStats_Episodesperday {
-        display: none;
-    }
-
+    .gvTVStats_Showname,
+    .gvTVStats_Episodeswatched,
+    .gvTVStats_Firstwatched,
+    .gvTVStats_Lastwatched,
+    .gvTVStats_Episodesperday,
     .gvTVStats_Dayssincestarting {
         display: none;
     }
 
-    .gvMovieStats_Moviename {
+    .gvMovieStats_Moviename,
+    .gvMovieStats_Datewatched {
         display: none;
     }
 
-    .gvMovieStats_Datewatched {
+    .gvFriendsWatchHistory_Email,
+    .gvFriendsWatchHistory_Showname,
+    .gvFriendsWatchHistory_Seasonnumber,
+    .gvFriendsWatchHistory_Episodenumber,
+    .gvFriendsWatchHistory_Datewatched,
+    .gvFriendsWatchHistory_Showtypeidz,
+    .gvFriendsWatchHistory_Shownotes {
         display: none;
     }
 }

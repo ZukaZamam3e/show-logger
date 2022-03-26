@@ -18,6 +18,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 string showLoggerConnectionString = builder.Configuration.GetConnectionString("ShowLoggerConnection");
 builder.Services.AddDbContext<ShowLoggerDbContext>(x => x.UseMySql(showLoggerConnectionString, ServerVersion.AutoDetect(showLoggerConnectionString)), ServiceLifetime.Transient);
 builder.Services.AddScoped<IWatchedShowsRepository, WatchedShowsRepository>();
+builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>

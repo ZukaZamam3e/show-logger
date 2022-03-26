@@ -1,0 +1,18 @@
+﻿@using ShowLogger.Models
+
+@model AddFriendModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmAddFriend" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.Email)
+        </div>
+
+        <div id="divShowNameTxt" class="col-sm-6">
+            @Html.OA().TextBoxFor(m => m.Email).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+    </div>
+}

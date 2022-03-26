@@ -19,4 +19,6 @@ public class SL_SHOW
 
     public DateTime DATE_WATCHED { get; set; }
 
+    public string? SHOW_NOTES { get; set; }
+
 }
