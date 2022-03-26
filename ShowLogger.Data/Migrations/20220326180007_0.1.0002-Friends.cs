@@ -15,7 +15,7 @@ namespace ShowLogger.Data.Migrations
                 table: "SL_SHOW",
                 type: "varchar(250)",
                 maxLength: 250,
-                nullable: false,
+                nullable: true,
                 defaultValue: "")
                 .Annotation("MySql:CharSet", "utf8mb4");
 

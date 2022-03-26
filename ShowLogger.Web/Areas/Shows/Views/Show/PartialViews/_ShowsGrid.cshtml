@@ -6,6 +6,7 @@
     .NamedAndId("gvShows")
     .Creator("Create Show", Url.Action("LoadCreator", "Show", new { area = "Shows" }), Url.Action("Create", "Show", new { area = "Shows" }))
     .Editor("Edit Show", Url.Action("LoadEditor", "Show", new { area = "Shows" }), Url.Action("Update", "Show", new { area = "Shows" }))
+    .IdProperty("ShowId")
     .Columns(columns =>
     {
         columns.Commands(commands =>

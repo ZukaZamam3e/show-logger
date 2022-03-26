@@ -269,7 +269,7 @@ oa_grid = (function () {
             var model = JSON.parse(row.attr("model"));
             var updateUrl = grid.attr("editor_update_url");
             var idProp = grid.attr("id_prop");
-            var gridName = $(grid[0].parentElement).attr("id");
+            var gridName = $(grid[0].parentElement.parentElement).attr("id");
 
             var parentName = grid.attr("parent_name");
             var parentValue = grid.attr("parent_val_func");
@@ -345,13 +345,19 @@ oa_grid = (function () {
                             return value;
                         });
 
-                        $(rows[r]).attr('model', JSON.stringify(modelJson));
+                        $(rows[r]).attr('model', modelJson);
 
                         for (var key in model) {
-                            var td = $(rows[r]).find('td.' + gridName + '_' + key[0].toUpperCase() + key.substr(1));
+                            var td = $(rows[r]).find('td.' + gridName + '_' + key[0].toUpperCase() + key.substr(1).toLowerCase());
 
                             if (!!td) {
-                                td.html(model[key]);
+                                var propVal = model[key];
+
+                                if (key.toLowerCase().includes("date") && !key.toLowerCase().includes("time")) {
+                                    propVal = moment(propVal).format('M/D/YYYY');
+                                }
+
+                                td.html(propVal);
                             }
                         }
 
@@ -726,8 +732,6 @@ oa_utilities = (function () {
                 }
 
             }
-
-            console.log(arr);
 
             return arr;
         },
