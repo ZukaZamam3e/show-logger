@@ -35,7 +35,13 @@ shows = (function () {
                     oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
                 } else {
                     oa_utilities.show_record_deleted_notification();
-                    oa_grid.reload_grid('gvShows');
+                    if (!!$('#gvShows')) {
+                        oa_grid.reload_grid('gvShows');
+                    }
+
+                    if (!!$('#gvTVStats')) {
+                        oa_grid.reload_grid('gvTVStats');
+                    }
                 }
             });
         },
@@ -90,7 +96,6 @@ shows = (function () {
                 $('#EpisodeNumber').val(data.episodeNumber);
                 $('#ShowTypeId').val(data.showTypeId);
             });
-            console.log();
         }
     }
 })();
@@ -419,6 +424,10 @@ oa_tabs = (function () {
 
                     $(e).attr("partial", "");
                 });
+            } else {
+                $("[tab=" + tab.openTab + "]").find('.mvc-grid').each((i, g) => {
+                    oa_grid.reload_grid(g.id);
+                })
             }
 
         },

@@ -63,8 +63,6 @@ class MvcGrid {
         }
 
         $('#' + grid.name + ' .oa_column_commands a[visibleFunc!=""][visibleFunc]').each((i,a) => {
-            console.log(a);
-
             var visibleFunc = $(a).attr("visibleFunc");
 
             if (!!visibleFunc) {

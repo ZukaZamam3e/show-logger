@@ -16,7 +16,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         _context = context;
     }
 
-    public IEnumerable<ShowModel> GetShows(Expression<Func<ShowModel, bool>> predicate)
+    public IEnumerable<ShowModel> GetShows(Expression<Func<ShowModel, bool>>? predicate)
     {
         Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
 
@@ -120,4 +120,37 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         else
             return false;
     }
+
+    public IEnumerable<GroupedShowModel> GetTVStats(int userId)
+    {
+        IEnumerable<GroupedShowModel> query = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && m.USER_ID == userId).GroupBy(m => new
+        {
+            m.SHOW_NAME,
+            m.USER_ID
+        })
+        .Select(m => new GroupedShowModel
+        {
+            UserId = m.Key.USER_ID,
+            ShowId = m.Max(m => m.SHOW_ID),
+            ShowName = m.Key.SHOW_NAME,
+            FirstWatched = m.Min(m => m.DATE_WATCHED),
+            LastWatched = m.Max(m => m.DATE_WATCHED),
+            EpisodesWatched = m.Count()
+        });
+
+        return query;
+    }
+
+    public IEnumerable<MovieModel> GetMovieStats(int userId)
+    {
+        IEnumerable<MovieModel> query = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.AMC || m.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE).Select(m => new MovieModel
+        {
+            UserId = m.USER_ID,
+            MovieName = m.SHOW_NAME,
+            DateWatched = m.DATE_WATCHED,
+        });
+
+        return query;
+    }
+
 }

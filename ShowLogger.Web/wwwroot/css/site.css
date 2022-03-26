@@ -8,6 +8,22 @@ html {
   }
 }
 
+/* Light mode */
+/*@media (prefers-color-scheme: light) {
+    * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+}*/
+
+/* Dark mode */
+/*@media (prefers-color-scheme: dark) {
+    * {
+        background-color: #000000 !important;
+        color: #FFFFFF !important;
+    }
+}*/
+
 html {
   position: relative;
   min-height: 100%;
@@ -202,8 +218,24 @@ col.gvShows_Mobileview {
     width: 350px;
 }
 
+col.gvTVStats_Mobileview {
+    width: 350px;
+}
+
+col.gvMovieStats_Mobileview {
+    width: 350px;
+}
+
 @media only screen and (min-width: 600px) {
     .gvShows_Mobileview {
+        display: none;
+    }
+
+    .gvTVStats_Mobileview {
+        display: none;
+    }
+
+    .gvMovieStats_Mobileview {
         display: none;
     }
 }
@@ -226,6 +258,38 @@ col.gvShows_Mobileview {
     }
 
     .gvShows_Showtypeidz {
+        display: none;
+    }
+
+    .gvTVStats_Showname {
+        display: none;
+    }
+
+    .gvTVStats_Episodeswatched {
+        display: none;
+    }
+
+    .gvTVStats_Firstwatched {
+        display: none;
+    }
+
+    .gvTVStats_Lastwatched {
+        display: none;
+    }
+
+    .gvTVStats_Episodesperday {
+        display: none;
+    }
+
+    .gvTVStats_Dayssincestarting {
+        display: none;
+    }
+
+    .gvMovieStats_Moviename {
+        display: none;
+    }
+
+    .gvMovieStats_Datewatched {
         display: none;
     }
 }

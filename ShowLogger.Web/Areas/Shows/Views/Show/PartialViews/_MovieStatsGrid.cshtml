@@ -1,0 +1,18 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<MovieModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvMovieStats")
+    .Columns(columns =>
+    {
+        columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.Add(model => model.MovieName).SetCssClass();
+        columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

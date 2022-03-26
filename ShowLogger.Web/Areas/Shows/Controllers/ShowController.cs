@@ -190,4 +190,42 @@ public class ShowController : BaseController
 
         return new JsonResult(model);
     }
+
+    [HttpGet]
+    public PartialViewResult TVStats_Read()
+    {
+
+        IEnumerable<GroupedShowModel> model = new List<GroupedShowModel>();
+
+        try
+        {
+            model = _watchedShowsRepository.GetTVStats(GetLoggedInUserId()).OrderByDescending(m => m.EpisodesWatched).ThenByDescending(m => m.ShowName);
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load tv stats.");
+        }
+
+        // Only grid query values will be available here.
+        return PartialView("~/Areas/Shows/Views/Show/PartialViews/_TVStatsGrid.cshtml", model);
+    }
+
+    [HttpGet]
+    public PartialViewResult MovieStats_Read()
+    {
+
+        IEnumerable<MovieModel> model = new List<MovieModel>();
+
+        try
+        {
+            model = _watchedShowsRepository.GetMovieStats(GetLoggedInUserId()).OrderByDescending(m => m.DateWatched).ThenByDescending(m => m.MovieName);
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load tv stats.");
+        }
+
+        // Only grid query values will be available here.
+        return PartialView("~/Areas/Shows/Views/Show/PartialViews/_MovieStatsGrid.cshtml", model);
+    }
 }
