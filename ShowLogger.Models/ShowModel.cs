@@ -48,7 +48,7 @@ public class GroupedShowModel
     public DateTime LastWatched { get; set; }
 
     [Display(Name = "Episodes Per Day")]
-    public decimal EpisodesPerDay => EpisodesWatched / (decimal)DaysSinceStarting;
+    public decimal EpisodesPerDay => Math.Max(Math.Round(EpisodesWatched / (decimal)DaysSinceStarting, 2), 1);
 
     [Display(Name = "Days Since Starting")]
     public int DaysSinceStarting => Math.Max(Convert.ToInt32((LastWatched.Date - FirstWatched.Date).TotalDays), 1);
