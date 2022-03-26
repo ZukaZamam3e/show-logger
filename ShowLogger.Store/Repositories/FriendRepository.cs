@@ -58,7 +58,7 @@ public class FriendRepository : IFriendRepository
                 {
                     SENT_USER_ID = userId,
                     RECEIVED_USER_ID = friendId,
-                    DATE_SENT = DateTime.Now,
+                    DATE_SENT = DateTime.Now.GetEST(),
                 };
 
                 _context.SL_FRIEND_REQUEST.Add(entity);
@@ -85,7 +85,7 @@ public class FriendRepository : IFriendRepository
             {
                 USER_ID = entity.SENT_USER_ID,
                 FRIEND_USER_ID = entity.RECEIVED_USER_ID,
-                CREATED_DATE = DateTime.Now,
+                CREATED_DATE = DateTime.Now.GetEST(),
             });
 
             _context.SaveChanges();
