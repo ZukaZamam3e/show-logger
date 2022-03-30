@@ -145,10 +145,13 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
     public IEnumerable<MovieModel> GetMovieStats(int userId)
     {
+        Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
+
         IEnumerable<MovieModel> query = _context.SL_SHOW.Where(m => m.USER_ID == userId && (m.SHOW_TYPE_ID == (int)CodeValueIds.AMC || m.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE)).Select(m => new MovieModel
         {
             UserId = m.USER_ID,
             MovieName = m.SHOW_NAME,
+            ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
             DateWatched = m.DATE_WATCHED,
         });
 

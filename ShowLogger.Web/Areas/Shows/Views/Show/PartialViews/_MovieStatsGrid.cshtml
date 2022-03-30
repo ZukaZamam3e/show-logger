@@ -8,6 +8,7 @@
     {
         columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
         columns.Add(model => model.MovieName).SetCssClass();
+        columns.Add(model => model.ShowTypeIdZ).SetCssClass();
         columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
     })
     .Pageable(pager =>

@@ -257,6 +257,7 @@ col.gvFriendsWatchHistory_Mobileview {
     }
 
     .gvMovieStats_Moviename,
+    .gvMovieStats_Showtypeidz,
     .gvMovieStats_Datewatched {
         display: none;
     }
