@@ -50,13 +50,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         command_timeout: 1m
-        script: sudo sh /oaprojects/scripts/stop-show-logger.sh     
-    - name: Start show-logger
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_IP_ADDRESS }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
-        command_timeout: 1m
-        script: sudo sh /oaprojects/scripts/start-show-logger.sh         
+        script: sudo sh /oaprojects/scripts/restart-show-logger.sh           
