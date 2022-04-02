@@ -15,13 +15,13 @@
             commands.Custom("AddNextEpisode", "fas fa-plus", "shows.addNextEpisode", "shows.showAddNextEpisode");
             commands.Custom("Delete", "fas fa-trash-alt", "shows.delete");
         });
-        columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
-        columns.Add(model => model.ShowName).SetCssClass();
-        columns.Add(model => model.SeasonNumber).SetCssClass();
-        columns.Add(model => model.EpisodeNumber).SetCssClass();
-        columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
-        columns.Add(model => model.ShowTypeIdZ).SetCssClass();
-        columns.Add(model => model.ShowNotes).SetCssClass();
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.ShowName);
+        columns.OAColumn(model => model.SeasonNumber);
+        columns.OAColumn(model => model.EpisodeNumber);
+        columns.OAColumn(model => model.DateWatched).Formatted("{0:d}");
+        columns.OAColumn(model => model.ShowTypeIdZ);
+        columns.OAColumn(model => model.ShowNotes);
     })
     .Pageable(pager =>
     {

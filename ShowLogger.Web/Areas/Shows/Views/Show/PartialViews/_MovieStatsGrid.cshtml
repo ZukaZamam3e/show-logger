@@ -6,10 +6,10 @@
     .NamedAndId("gvMovieStats")
     .Columns(columns =>
     {
-        columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
-        columns.Add(model => model.MovieName).SetCssClass();
-        columns.Add(model => model.ShowTypeIdZ).SetCssClass();
-        columns.Add(model => model.DateWatched).SetCssClass().Formatted("{0:d}");
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.MovieName);
+        columns.OAColumn(model => model.ShowTypeIdZ);
+        columns.OAColumn(model => model.DateWatched).Formatted("{0:d}");
     })
     .Pageable(pager =>
     {

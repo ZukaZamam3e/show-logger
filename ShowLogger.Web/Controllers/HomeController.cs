@@ -11,8 +11,6 @@ namespace ShowLogger.Web.Controllers
 {
     public class HomeController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
-
         private readonly IFriendRepository _friendRepository;
         public HomeController(
             UserManager<ApplicationUser> userManager,

@@ -10,13 +10,13 @@
         {
             commands.Custom("TVStats_AddNextEpisode", "fas fa-plus", "shows.addNextEpisode");
         });
-        columns.Add(model => model.MobileView).SetCssClass().RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
-        columns.Add(model => model.ShowName).SetCssClass();
-        columns.Add(model => model.EpisodesWatched).SetCssClass();
-        columns.Add(model => model.FirstWatched).SetCssClass().Formatted("{0:d}");
-        columns.Add(model => model.LastWatched).SetCssClass().Formatted("{0:d}");
-        columns.Add(model => model.EpisodesPerDay).SetCssClass();
-        columns.Add(model => model.DaysSinceStarting).SetCssClass();
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.ShowName);
+        columns.OAColumn(model => model.EpisodesWatched);
+        columns.OAColumn(model => model.FirstWatched).Formatted("{0:d}");
+        columns.OAColumn(model => model.LastWatched).Formatted("{0:d}");
+        columns.OAColumn(model => model.EpisodesPerDay);
+        columns.OAColumn(model => model.DaysSinceStarting);
     })
     .Pageable(pager =>
     {

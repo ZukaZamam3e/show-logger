@@ -15,9 +15,9 @@
             commands.Custom("DeleteFriend", "fas fa-trash", "friends.deleteFriend", "friends.showDeleteFriend");
             //commands.Custom("Delete", "fas fa-trash-alt", "shows.delete");
         });
-        columns.Add(model => model.FriendEmail).SetCssClass();
-        columns.Add(model => model.CreatedDate).SetCssClass().Formatted("{0:d}");
-        columns.Add(model => model.IsPendingZ).SetCssClass();
+        columns.OAColumn(model => model.FriendEmail);
+        columns.OAColumn(model => model.CreatedDate).Formatted("{0:d}");
+        columns.OAColumn(model => model.IsPendingZ);
     })
     .Empty("You ain't got no friends")
     .Pageable(pager =>

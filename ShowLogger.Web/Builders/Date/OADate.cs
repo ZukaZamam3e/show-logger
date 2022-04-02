@@ -70,7 +70,7 @@ public class OADateBuilder<T, TValue> : OAControlBuilder<T>
 
     public override void WriteTo(TextWriter writer, HtmlEncoder encoder)
     {
-        Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+        Dictionary<string, object> htmlAttributes = new();
 
         StringBuilder cssClasses = new StringBuilder();
         RouteValueDictionary attr = new RouteValueDictionary(Container.HtmlAttributes);

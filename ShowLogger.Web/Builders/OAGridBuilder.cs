@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using NonFactors.Mvc.Grid;
 using ShowLogger.Web.Builders.Grid;
 using System.Globalization;
+using System.Linq.Expressions;
 
 namespace ShowLogger.Web.Builders;
 public static class OAGridBuilder
@@ -147,6 +148,12 @@ public static class OAGridBuilder
 
 
         return column;
+    }
+
+    public static IGridColumn<T, TValue> OAColumn<T, TValue>(this IGridColumnsOf<T> column, Expression<Func<T, TValue>> expression)
+        where T : class
+    {
+        return column.Add(expression).SetCssClass();
     }
 
     public static IGridColumn<T, TValue> SetCssClass<T, TValue>(this IGridColumn<T, TValue> column)
