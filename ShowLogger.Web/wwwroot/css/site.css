@@ -221,6 +221,14 @@ col.gvFriendsWatchHistory_Mobileview {
     width: 350px;
 }
 
+col.gvShows_Commands {
+    width: 120px;
+}
+
+col.gvShows_Showname {
+    width: 350px;
+}
+
 .gvShows_Mobileview,
 .gvTVStats_Mobileview,
 .gvMovieStats_Mobileview,

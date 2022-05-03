@@ -14,7 +14,7 @@ public class OADate<T, TValue>
 
     public string Name { get; set; }
 
-    public string Format { get; set; } = "LT";
+    public string Format { get; set; }
 
     public bool ReadOnly { get; set; }
 }
@@ -125,7 +125,11 @@ public class OADateBuilder<T, TValue> : OAControlBuilder<T>
         }
 
         container.Attributes.Add("defaultDate", defaultDate);
-        container.Attributes.Add("format", Container.Format);
+
+        if (!string.IsNullOrEmpty(Container.Format))
+        {
+            container.Attributes.Add("format", Container.Format);
+        }
 
         container.MergeAttributes(htmlAttributes);
 
