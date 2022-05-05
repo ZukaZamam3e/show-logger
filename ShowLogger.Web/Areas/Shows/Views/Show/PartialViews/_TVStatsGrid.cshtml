@@ -15,7 +15,7 @@
         columns.OAColumn(model => model.EpisodesWatched);
         columns.OAColumn(model => model.FirstWatched).Formatted("{0:d}");
         columns.OAColumn(model => model.LastWatched).Formatted("{0:d}");
-        columns.OAColumn(model => model.EpisodesPerDay);
+        columns.OAColumn(model => model.LatestWatched);
         columns.OAColumn(model => model.DaysSinceStarting);
     })
     .Pageable(pager =>

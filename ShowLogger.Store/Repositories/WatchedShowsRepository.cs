@@ -137,6 +137,8 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             ShowName = m.Key.SHOW_NAME,
             FirstWatched = m.Min(m => m.DATE_WATCHED),
             LastWatched = m.Max(m => m.DATE_WATCHED),
+            SeasonNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().SEASON_NUMBER,
+            EpisodeNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().EPISODE_NUMBER,
             EpisodesWatched = m.Count()
         });
 
