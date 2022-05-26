@@ -81,7 +81,7 @@ public class MovieModel
     [Display(Name = "Date Watched")]
     public DateTime DateWatched { get; set; }
 
-    public string MobileView => $"{MovieName} - {ShowTypeIdZ} - {DateWatched.ToShortDateString()}";
+    public string MobileView => $"{MovieName}<br>{ShowTypeIdZ}<br>{DateWatched.ToShortDateString()}";
 
 }
 
