@@ -8,21 +8,7 @@ html {
   }
 }
 
-/* Light mode */
-/*@media (prefers-color-scheme: light) {
-    * {
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
-    }
-}*/
 
-/* Dark mode */
-/*@media (prefers-color-scheme: dark) {
-    * {
-        background-color: #000000 !important;
-        color: #FFFFFF !important;
-    }
-}*/
 
 html {
   position: relative;
@@ -130,7 +116,7 @@ body {
 
     /* Create an active/current tablink class */
     .tab button.active {
-        background-color: #ccc !important;
+        background-color: #ccc;
     }
 
 /* Style the tab content */
@@ -201,6 +187,23 @@ div.mandatory > input {
 
 .mvc-grid-filter::before {
     content: "\f0b0" !important;
+    font-family: 'Font Awesome 5 Free';
+}
+
+th.desc button span,
+th.asc button span {
+    display: none;
+}
+
+.desc .mvc-grid-sort::before {
+    opacity: 1 !important;
+    content: "\f0dd" !important;
+    font-family: 'Font Awesome 5 Free';
+}
+
+.asc .mvc-grid-sort::before {
+    opacity: 1 !important;
+    content: "\f0de" !important;
     font-family: 'Font Awesome 5 Free';
 }
 
@@ -288,5 +291,61 @@ col.gvShows_Showname {
     .gvFriendsWatchHistory_Showtypeidz,
     .gvFriendsWatchHistory_Shownotes {
         display: none;
+    }
+}
+
+
+
+
+
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body,
+    th,
+    td,
+    button,
+    .tab,
+    .modal-body,
+    .modal-header,
+    .modal-footer,
+    header,
+    .oa_grid_header,
+    .tabcontent,
+    .mvc-grid{
+        color: #eee !important;
+        background: #121213 !important;
+        border-color: #3a3a3c !important;
+    }
+
+
+    a {
+        color: #eee !important
+    }
+
+        a.oa_grid_button {
+            color: #eee !important;
+            text-decoration: none;
+        }
+
+    button.active {
+        color: #000 !important;
+        background-color: #aaa !important;
+    }
+
+    .form-label {
+        color: black !important;
+    }
+
+    .checkbox .form-label {
+        color: white !important;
     }
 }
