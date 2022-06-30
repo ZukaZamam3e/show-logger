@@ -183,4 +183,111 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         return query;
     }
 
+    public IEnumerable<WatchlistModel> GetWatchList(Expression<Func<WatchlistModel, bool>>? predicate)
+    {
+        Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
+
+        IEnumerable<WatchlistModel> query = _context.SL_WATCHLIST.Select(m => new WatchlistModel
+        {
+            WatchlistId = m.WATCHLIST_ID,
+            UserId = m.USER_ID,
+            ShowName = m.SHOW_NAME,
+            SeasonNumber = m.SEASON_NUMBER,
+            EpisodeNumber = m.EPISODE_NUMBER,
+            DateAdded = m.DATE_ADDED,
+            ShowTypeId = m.SHOW_TYPE_ID,
+            ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
+            ShowNotes = m.SHOW_NOTES,
+        });
+
+        if (predicate != null)
+        {
+            query = query.AsQueryable().Where(predicate);
+        }
+
+        return query;
+    }
+
+    public long CreateWatchlist(int userId, WatchlistModel model)
+    {
+        long id = 0;
+
+        SL_WATCHLIST entity = new SL_WATCHLIST
+        {
+            SHOW_TYPE_ID = model.ShowTypeId,
+            DATE_ADDED = DateTime.Now.Date,
+            EPISODE_NUMBER = model.EpisodeNumber,
+            SEASON_NUMBER = model.SeasonNumber,
+            SHOW_NAME = model.ShowName,
+            SHOW_NOTES = model.ShowNotes,
+            USER_ID = userId
+        };
+
+        _context.SL_WATCHLIST.Add(entity);
+        _context.SaveChanges();
+        id = entity.WATCHLIST_ID;
+
+        return id;
+    }
+
+    public long UpdateWatchlist(int userId, WatchlistModel model)
+    {
+        SL_WATCHLIST? entity = _context.SL_WATCHLIST.FirstOrDefault(m => m.WATCHLIST_ID == model.WatchlistId && m.USER_ID == userId);
+
+        if (entity != null)
+        {
+            entity.SHOW_TYPE_ID = model.ShowTypeId;
+            entity.EPISODE_NUMBER = model.EpisodeNumber;
+            entity.SEASON_NUMBER = model.SeasonNumber;
+            entity.SHOW_NAME = model.ShowName;
+            entity.SHOW_NOTES = model.ShowNotes;
+
+            return _context.SaveChanges();
+        }
+        else
+            return 0;
+    }
+
+    public bool DeleteWatchlist(int userId, int watchListId)
+    {
+        SL_WATCHLIST? entity = _context.SL_WATCHLIST.FirstOrDefault(m => m.WATCHLIST_ID == watchListId && m.USER_ID == userId);
+
+        if (entity != null)
+        {
+            _context.SL_WATCHLIST.Remove(entity);
+
+            _context.SaveChanges();
+
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public bool MoveWatchlistToShow(int userId, int watchListId)
+    {
+        SL_WATCHLIST? entity = _context.SL_WATCHLIST.FirstOrDefault(m => m.WATCHLIST_ID == watchListId && m.USER_ID == userId);
+
+        if (entity != null)
+        {
+            long id = CreateShow(userId, new ShowModel
+            {
+                EpisodeNumber = entity.EPISODE_NUMBER,
+                SeasonNumber = entity.SEASON_NUMBER,
+                ShowName = entity.SHOW_NAME,
+                ShowNotes = entity.SHOW_NOTES,
+                ShowTypeId = entity.SHOW_TYPE_ID,
+                DateWatched = DateTime.Now.GetEST().Date
+            });
+
+            if(id > 0)
+            {
+                DeleteWatchlist(userId, watchListId);
+            }
+
+            return true;
+        }
+        else
+            return false;
+    }
 }

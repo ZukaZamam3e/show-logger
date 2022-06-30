@@ -25,4 +25,14 @@ public interface IWatchedShowsRepository : IRepository
     IEnumerable<MovieModel> GetMovieStats(int userId);
 
     IEnumerable<FriendWatchHistoryModel> GetFriendsWatchHistory(int userId);
+
+    IEnumerable<WatchlistModel> GetWatchList(Expression<Func<WatchlistModel, bool>>? predicate = null);
+
+    long CreateWatchlist(int userId, WatchlistModel model);
+
+    long UpdateWatchlist(int userId, WatchlistModel model);
+
+    bool DeleteWatchlist(int userId, int watchListId);
+
+    bool MoveWatchlistToShow(int userId, int watchListId);
 }

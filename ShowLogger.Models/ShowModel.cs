@@ -104,6 +104,36 @@ public class FriendWatchHistoryModel : ShowModel
     public override string MobileView => $"{Email}<br>{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
 }
 
+public class WatchlistModel
+{
+    public int UserId { get; set; }
+
+    public int WatchlistId { get; set; }
+
+    [Display(Name = "Show Name")]
+    public string ShowName { get; set; }
+
+    [Display(Name = "Show Type")]
+    public int ShowTypeId { get; set; }
+
+    [Display(Name = "Show Type")]
+    public string? ShowTypeIdZ { get; set; }
+
+    [Display(Name = "Season")]
+    public int? SeasonNumber { get; set; }
+
+    [Display(Name = "Episode")]
+    public int? EpisodeNumber { get; set; }
+
+    [Display(Name = "Date Added")]
+    public DateTime DateAdded { get; set; }
+
+    [Display(Name = "Show Notes")]
+    public string? ShowNotes { get; set; }
+
+    public virtual string MobileView => $"{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateAdded.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
+}
+
 public static class DateTimeExtensions
 {
     public static DateTime GetEST(this DateTime date)

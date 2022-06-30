@@ -100,6 +100,42 @@ shows = (function () {
     }
 })();
 
+watchlist = (function () {
+    return {
+        moveToShows: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getShowsBaseURL('Watchlist/MoveToShows'), {
+                "watchlistId": model.WatchlistId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_saved_notification();
+                    oa_grid.reload_grid('gvWatchlist');
+                }
+            });
+        },
+
+        delete: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getShowsBaseURL('Watchlist/Delete'), {
+                "watchlistId": model.WatchlistId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_deleted_notification();
+                    oa_grid.reload_grid('gvWatchlist');
+                }
+            });
+        },
+    }
+})();
+
 friends = (function () {
     return {
         showAcceptDenyFriendRequest: function (e) {

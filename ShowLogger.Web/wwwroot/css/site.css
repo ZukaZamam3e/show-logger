@@ -81,6 +81,14 @@ body {
     background-color: #f1f1f1;
 }
 
+
+element.style {
+    overflow: scroll;
+    width: 369px;
+    max-height: 49px;
+    white-space: nowrap;
+}
+
     /* Style the buttons that are used to open the tab content */
     .tab button {
         background-color: inherit;
@@ -220,22 +228,26 @@ a.oa_grid_button {
 col.gvShows_Mobileview,
 col.gvTVStats_Mobileview,
 col.gvMovieStats_Mobileview,
-col.gvFriendsWatchHistory_Mobileview {
+col.gvFriendsWatchHistory_Mobileview,
+col.gvWatchlist_Mobileview {
     width: 350px;
 }
 
-col.gvShows_Commands {
+col.gvShows_Commands,
+col.gvWatchlist_Commands {
     width: 130px;
 }
 
-col.gvShows_Showname {
+col.gvShows_Showname,
+col.gvWatchlist_Showname {
     width: 350px;
 }
 
 .gvShows_Mobileview,
 .gvTVStats_Mobileview,
 .gvMovieStats_Mobileview,
-.gvFriendsWatchHistory_Mobileview {
+.gvFriendsWatchHistory_Mobileview,
+.gvWatchlist_Mobileview {
     text-align: center;
 }
 
@@ -243,7 +255,8 @@ col.gvShows_Showname {
     .gvShows_Mobileview,
     .gvTVStats_Mobileview,
     .gvMovieStats_Mobileview,
-    .gvFriendsWatchHistory_Mobileview {
+    .gvFriendsWatchHistory_Mobileview,
+    .gvWatchlist_Mobileview {
         display: none;
     }
 }
@@ -258,8 +271,8 @@ col.gvShows_Showname {
         display: none;
     }
 
-    col.gvShows_Commands {
-        
+    col.gvShows_Commands,
+    col.gvWatchlist_Commands {
         width: 10px;
     }
 
@@ -290,6 +303,15 @@ col.gvShows_Showname {
     .gvFriendsWatchHistory_Datewatched,
     .gvFriendsWatchHistory_Showtypeidz,
     .gvFriendsWatchHistory_Shownotes {
+        display: none;
+    }
+
+    .gvWatchlist_Showname,
+    .gvWatchlist_Seasonnumber,
+    .gvWatchlist_Episodenumber,
+    .gvWatchlist_Dateadded,
+    .gvWatchlist_Showtypeidz,
+    .gvWatchlist_Shownotes {
         display: none;
     }
 }
