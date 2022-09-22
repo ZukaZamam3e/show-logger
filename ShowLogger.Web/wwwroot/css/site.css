@@ -79,6 +79,13 @@ body {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+
+    width: 100%;
+    white-space: nowrap;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 
@@ -98,6 +105,9 @@ element.style {
         cursor: pointer;
         padding: 14px 16px;
         transition: 0.3s;
+
+        display: inline-block;
+        float: none;
     }
 
         .tab button.tab_button_left {
@@ -315,14 +325,12 @@ col.gvWatchlist_Showname {
         display: none;
     }
 
+    .tab {
+        overflow-x: scroll;
+    }
+
     .tab button {
-        background-color: inherit;
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
         padding: 14px 10px;
-        transition: 0.3s;
     }
 }
 
