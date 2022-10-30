@@ -199,7 +199,7 @@ public class ShowController : BaseController
 
         try
         {
-            model = _watchedShowsRepository.GetTVStats(GetLoggedInUserId()).OrderByDescending(m => m.EpisodesWatched).ThenByDescending(m => m.ShowName);
+            model = _watchedShowsRepository.GetTVStats(GetLoggedInUserId()).OrderByDescending(m => m.LastWatched).ThenByDescending(m => m.ShowName);
         }
         catch (Exception ex)
         {
