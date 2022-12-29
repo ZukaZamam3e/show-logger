@@ -20,6 +20,7 @@ public class ShowLoggerDbContext : DbContext
     public DbSet<SL_FRIEND> SL_FRIEND { get; set; }
     public DbSet<SL_FRIEND_REQUEST> SL_FRIEND_REQUEST { get; set; }
     public DbSet<SL_WATCHLIST> SL_WATCHLIST { get; set; }
+    public DbSet<SL_TRANSACTION> SL_TRANSACTION { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +33,7 @@ public class ShowLoggerDbContext : DbContext
         modelBuilder.Entity<SL_FRIEND_REQUEST>().HasKey(m => m.FRIEND_REQUEST_ID);
         modelBuilder.Entity<SL_FRIEND>().HasKey(m => m.FRIEND_ID);
         modelBuilder.Entity<SL_WATCHLIST>().HasKey(m => m.WATCHLIST_ID);
+        modelBuilder.Entity<SL_TRANSACTION>().HasKey(m => m.TRANSACTION_ID);
 
         modelBuilder.Entity<SL_CODE_VALUE>(entity =>
         {
@@ -52,7 +54,11 @@ public class ShowLoggerDbContext : DbContext
         modelBuilder.Entity<SL_CODE_VALUE>().HasData(
             new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.SHOW_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.TV, DECODE_TXT = "TV" },
             new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.SHOW_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.MOVIE, DECODE_TXT = "Movie" },
-            new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.SHOW_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.AMC, DECODE_TXT = "AMC" }
+            new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.SHOW_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.AMC, DECODE_TXT = "AMC" },
+            new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.TRANSACTION_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.ALIST_TICKET, DECODE_TXT = "A-list Ticket" },
+            new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.TRANSACTION_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.TICKET, DECODE_TXT = "Ticket" },
+            new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.TRANSACTION_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.PURCHASE, DECODE_TXT = "Purchase" },
+            new SL_CODE_VALUE { CODE_TABLE_ID = (int)CodeTableIds.TRANSACTION_TYPE_ID, CODE_VALUE_ID = (int)CodeValueIds.ALIST, DECODE_TXT = "AMC A-list" }
         );
 
         modelBuilder.Entity<SL_SHOW>(entity =>
@@ -109,6 +115,28 @@ public class ShowLoggerDbContext : DbContext
 
             entity.Property(e => e.SHOW_NOTES)
                 .HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<SL_TRANSACTION>(entity =>
+        {
+            entity.Property(e => e.TRANSACTION_ID)
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.TRANSACTION_TYPE_ID)
+                .IsRequired();
+
+            entity.Property(e => e.ITEM)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.COST_AMT)
+                .IsRequired();
+
+            entity.Property(e => e.TRANSACTION_NOTES)
+                .HasMaxLength(250);
+
+            entity.Property(e => e.TRANSACTION_DATE)
+                .IsRequired();
         });
 
     }

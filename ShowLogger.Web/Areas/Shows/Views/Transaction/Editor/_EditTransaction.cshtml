@@ -1,0 +1,117 @@
+﻿@using ShowLogger.Models
+
+@model TransactionModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmEditTransaction" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(m => m.TransactionId)
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.TransactionTypeId)
+        </div>
+
+        <div class="col-sm-8">
+            @(Html.OA().DropDownListFor(m => m.TransactionTypeId)
+                .HtmlAttributes(new { @class = "form-control mandatory" })
+                .ValueList(Url.Action("GetTransactionTypes", "Transaction", new { area = "Shows" }))
+                .DataTextName("DecodeTxt")
+                .DataTextValue("CodeValueId")
+                .OnChange("transactions.TransactionTypeId_Change")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.ShowId)
+        </div>
+
+        <div class="col-sm-8">
+            @(Html.OA().DropDownListFor(m => m.ShowId)
+                .HtmlAttributes(new { @class = "form-control mandatory" })
+                .ValueList(Url.Action("GetMovies", "Transaction", new { area = "Shows" }))
+                .DataTextName("DecodeTxt")
+                .DataTextValue("CodeValueId")
+                .EmptyOption("-- Please select a movie --")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.Item)
+        </div>
+
+        <div id="divItemTxt" class="col-sm-6" style="display: none;">
+            @Html.OA().TextBoxFor(m => m.Item).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+
+        <div id="divItemDDL" class="col-sm-6">
+            @(Html.OA().DropDownListFor(m => m.Item)
+                .Name("ddlItems")
+                .ValueList(Url.Action("GetItemsDDL", "Transaction", new { area = "Show" }))
+                .HtmlAttributes(new { @class = "form-control mandatory" })
+                .DataTextName("Item")
+                .DataTextValue("Item")
+                .OnChange("transactions.ddlItems_Change")
+                .EmptyOption("-- Please select an item --")
+            )
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnToggleItem")
+                .Text("Old")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("transactions.btnToggleItem_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.CostAmt)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.OA().NumericTextBoxFor(m => m.CostAmt).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.DiscountAmt)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.OA().NumericTextBoxFor(m => m.DiscountAmt)
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.TransactionNotes)
+        </div>
+
+        <div class="col-sm-8">
+            @(Html.OA().TextAreaFor(m => m.TransactionNotes)
+                .Rows(4)
+                .HtmlAttributes(new { @style="width:100%;" })
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.TransactionDate)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.OA().DateFor(m => m.TransactionDate).Format("L").HtmlAttributes(new { @class = "mandatory", inputmode="none" })
+        </div>
+    </div>
+
+}

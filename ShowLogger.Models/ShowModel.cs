@@ -134,6 +134,50 @@ public class WatchlistModel
     public virtual string MobileView => $"{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateAdded.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
 }
 
+public class TransactionModel
+{
+    public int UserId { get; set; }
+    public int TransactionId { get; set; }
+
+    [Display(Name = "Transaction Type")]
+    public int TransactionTypeId { get; set; }
+
+    [Display(Name = "Transaction Type")]
+    public string? TransactionTypeIdZ { get; set; }
+
+    [Display(Name = "Movie")]
+    public int? ShowId { get; set; }
+
+    [Display(Name = "Movie")]
+    public string? ShowIdZ { get; set; }
+
+    [Display(Name = "Item")]
+    public string Item { get; set; }
+
+    [Display(Name = "Cost")]
+    public decimal CostAmt { get; set; }
+
+    [Display(Name = "Discount")]
+    public decimal? DiscountAmt { get; set; }
+
+    [Display(Name = "Transaction Notes")]
+    public string? TransactionNotes { get; set; }
+
+    [Display(Name = "Transaction Date")]
+    public DateTime TransactionDate { get; set; }
+
+    public virtual string MobileView => $"{TransactionTypeIdZ}{(ShowId != null ? $"<br>{ShowIdZ}" : "")}<br>{Item}<br>{string.Format("{0:C}", CostAmt)}{(DiscountAmt != null ? $"<br>{string.Format("{0:C}", DiscountAmt)}" : "")}{(!string.IsNullOrEmpty(TransactionNotes) ? $"<br>{TransactionNotes}" : "")}<br>{TransactionDate.ToString("MM/dd/yyyy")}";
+}
+
+public class ItemModel
+{
+    public int TransactionTypeId { get; set; }
+
+    public string Item { get; set; }
+
+    public decimal CostAmt { get; set; }
+}
+
 public static class DateTimeExtensions
 {
     public static DateTime GetEST(this DateTime date)

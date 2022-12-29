@@ -198,6 +198,126 @@ friends = (function () {
     }
 })();
 
+transactions = (function () {
+    return {
+        TransactionTypeId_Change: function () {
+            var selected = parseInt($('#TransactionTypeId').val());
+            var text = $('#btnToggleItem').html();
+            var transactionId = parseInt($('#TransactionId').val());
+            $('#ddlItems option').each((i, o) => {
+                var model = $(o).attr('model');
+
+                if (!!model) {
+                    if (model.indexOf(selected.toString()) > 0) {
+                        $(o).show();
+                    } else {
+                        $(o).hide();
+                    }
+                }
+            })
+            $('#btnToggleItem').show();
+            switch (selected) {
+                case 2000:  // ALIST_TICKET
+                case 2001: { // TICKET
+                    if (text === 'Old') {
+                        $('#btnToggleItem').click();
+                    }
+
+                    if (transactionId === 0) {
+                        $("#ShowId option:eq(1)").attr('selected', 'selected');
+                        $('#CostAmt').focus();
+                        $('#Item').val('Ticket');
+                        $('#CostAmt').val('');
+                        $('#DiscountAmt').val('');
+                    }
+
+                    $('#btnToggleItem').hide();
+                    
+
+                    break;
+                }
+
+                case 2002: { // PURCHASE
+                    if (transactionId === 0) {
+                        $("#ShowId option:eq(1)").attr('selected', 'selected');
+                        if (text === 'New') {
+                            $('#btnToggleItem').click();
+                        }
+                    } else {
+                        if (text === 'Old') {
+                            $('#btnToggleItem').click();
+                        }
+                    }
+
+                    break;
+                }
+
+                case 2003: { // ALIST -- Needs to Select last A-list in dropdown
+                    if (transactionId === 0) {
+                        $("#ShowId option:eq(0)").attr('selected', 'selected');
+                        $("#ddlItems option[model*='" + selected + "']").attr('selected', 'selected');
+                        transactions.ddlItems_Change();
+                        if (text === 'New') {
+                            $('#btnToggleItem').click();
+                        }
+                    } else {
+                        if (text === 'Old') {
+                            $('#btnToggleItem').click();
+                        }
+                    }
+                    
+                    break;
+                }
+            }
+
+            
+        },
+
+        btnToggleItem_Click: function () {
+            $('#divItemTxt').toggle();
+            $('#divItemDDL').toggle();
+
+            var transactionId = parseInt($('#TransactionId').val());
+            var text = $('#btnToggleItem').html();
+
+            if (text === 'New') {
+                $('#btnToggleItem').html('Old');
+
+                if (transactionId === 0) {
+                    $('#ddlItems').val('');
+                    $('#ddlItems').focus();
+                }
+            } else {
+                $('#btnToggleItem').html('New');
+                if (transactionId === 0) {
+                    $('#Item').val('');
+                    $('#CostAmt').val('');
+                    $('#DiscountAmt').val('');
+                    $('#Item').focus();
+                }
+            }
+        },
+
+        ddlItems_Change: function () {
+            var model = oa_dropdownlist.getModel($('#ddlItems :selected'));
+
+            $('#Item').val(model.item);
+            $('#CostAmt').val(model.costAmt);
+        },
+
+        init_editor: function (e) {
+
+            setTimeout(function () {
+                var transactionId = parseInt($('#TransactionId').val());
+                transactions.TransactionTypeId_Change();
+                if (transactionId != 0) {
+                    $('#btnToggleItem').hide();
+                }
+            }, 50)
+        }
+    }
+})();
+
 account = (function () {
     return {
         login: function (e) {
@@ -267,6 +387,12 @@ oa_grid = (function () {
 
             $("#gridModelEditorTitle").html(title);
 
+            var preCreateFunc = grid.attr("pre_creator_func");
+            if (!!preCreateFunc) {
+                var func = window[preCreateFunc.split(".")[0]][preCreateFunc.split(".")[1]];
+                func($('#gridModelEditorBody'));
+            }
+
             oa_utilities.ajaxPost(url, function (data) {
                 $('#gridModelEditorBody').html(data);
 
@@ -316,6 +442,12 @@ oa_grid = (function () {
             $("#gridModelEditorTitle").html(title);
 
             var modelData = { model: model };
+
+            var preEditorFunc = grid.attr("pre_editor_func");
+            if (!!preEditorFunc) {
+                var func = window[preEditorFunc.split(".")[0]][preEditorFunc.split(".")[1]];
+                func($('#gridModelEditorBody'));
+            }
 
             oa_utilities.ajaxPostData(url, modelData, function (data) {
                 $('#gridModelEditorBody').html(data);

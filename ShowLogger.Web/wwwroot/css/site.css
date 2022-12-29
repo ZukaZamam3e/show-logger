@@ -239,12 +239,14 @@ col.gvShows_Mobileview,
 col.gvTVStats_Mobileview,
 col.gvMovieStats_Mobileview,
 col.gvFriendsWatchHistory_Mobileview,
-col.gvWatchlist_Mobileview {
+col.gvWatchlist_Mobileview,
+col.gvTransaction_Mobileview {
     width: 350px;
 }
 
 col.gvShows_Commands,
-col.gvWatchlist_Commands {
+col.gvWatchlist_Commands,
+col.gvTransaction_Commands {
     width: 130px;
 }
 
@@ -257,7 +259,8 @@ col.gvWatchlist_Showname {
 .gvTVStats_Mobileview,
 .gvMovieStats_Mobileview,
 .gvFriendsWatchHistory_Mobileview,
-.gvWatchlist_Mobileview {
+.gvWatchlist_Mobileview,
+.gvTransaction_Mobileview {
     text-align: center;
 }
 
@@ -266,7 +269,8 @@ col.gvWatchlist_Showname {
     .gvTVStats_Mobileview,
     .gvMovieStats_Mobileview,
     .gvFriendsWatchHistory_Mobileview,
-    .gvWatchlist_Mobileview {
+    .gvWatchlist_Mobileview,
+    .gvTransaction_Mobileview {
         display: none;
     }
 }
@@ -322,6 +326,16 @@ col.gvWatchlist_Showname {
     .gvWatchlist_Dateadded,
     .gvWatchlist_Showtypeidz,
     .gvWatchlist_Shownotes {
+        display: none;
+    }
+
+    .gvTransaction_Transactiontypeidz,
+    .gvTransaction_Showidz,
+    .gvTransaction_Item,
+    .gvTransaction_Costamt,
+    .gvTransaction_Discountamt,
+    .gvTransaction_Transactionnotes,
+    .gvTransaction_Transactiondate {
         display: none;
     }
 

@@ -10,6 +10,8 @@ namespace ShowLogger.Store.Repositories.Interfaces;
 
 public interface IWatchedShowsRepository : IRepository
 {
+    IEnumerable<CodeValueModel> GetCodeValues(Expression<Func<CodeValueModel, bool>>? predicate = null);
+
     IEnumerable<ShowModel> GetShows(Expression<Func<ShowModel, bool>>? predicate = null);
 
     long CreateShow(int userId, ShowModel model);
@@ -35,4 +37,12 @@ public interface IWatchedShowsRepository : IRepository
     bool DeleteWatchlist(int userId, int watchListId);
 
     bool MoveWatchlistToShow(int userId, int watchListId);
+
+    IEnumerable<TransactionModel> GetTransactions(int userId, Expression<Func<TransactionModel, bool>>? predicate = null);
+
+    long CreateTransaction(int userId, TransactionModel model);
+
+    long UpdateTransaction(int userId, TransactionModel model);
+
+    bool DeleteTransaction(int userId, int transactionId);
 }

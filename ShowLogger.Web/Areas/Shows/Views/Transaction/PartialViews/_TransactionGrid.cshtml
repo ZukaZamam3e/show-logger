@@ -1,0 +1,39 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<TransactionModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvTransaction")
+    .Creator("Create Transaction", 
+        Url.Action("LoadCreator", "Transaction", new { area = "Shows" }), 
+        Url.Action("Create", "Transaction", new { area = "Shows" }),
+        "",
+        "transactions.init_editor")
+    .Editor("Edit Transaction", 
+        Url.Action("LoadEditor", "Transaction", new { area = "Shows" }), 
+        Url.Action("Update", "Transaction", new { area = "Shows" }),
+        "",
+        "transactions.init_editor")
+    .IdProperty("TransactionId")
+    .Columns(columns =>
+    {
+        columns.Commands(commands =>
+        {
+            commands.Edit();
+            commands.Custom("Delete", "fas fa-trash-alt", "transaction.delete");
+        });
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.TransactionTypeIdZ);
+        columns.OAColumn(model => model.ShowIdZ);
+        columns.OAColumn(model => model.Item);
+        columns.OAColumn(model => model.CostAmt).Formatted("{0:c}");
+        columns.OAColumn(model => model.DiscountAmt).Formatted("{0:c}");
+        columns.OAColumn(model => model.TransactionNotes);
+        columns.OAColumn(model => model.TransactionDate).Formatted("{0:d}");
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

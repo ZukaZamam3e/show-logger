@@ -173,8 +173,7 @@ public class ShowController : BaseController
         try
         {
             model = _watchedShowsRepository.GetShows(m => m.UserId == GetLoggedInUserId() && m.ShowName == showName)
-                .OrderByDescending(m => m.SeasonNumber)
-                .ThenByDescending(m => m.EpisodeNumber)
+                .OrderByDescending(m => m.ShowId)
                 .Select(m => new ShowNameModel 
                 { 
                     ShowName = m.ShowName,
