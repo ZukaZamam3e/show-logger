@@ -76,7 +76,8 @@ public class OANumericTextboxBuilder<T> : OAControlBuilder<T>
     {
         Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
 
-        htmlAttributes.Add("type", "tel");
+        htmlAttributes.Add("type", "text");
+        htmlAttributes.Add("inputmode", "decimal");
 
         StringBuilder cssClasses = new StringBuilder();
         cssClasses.Append("form-control oa_textbox");
