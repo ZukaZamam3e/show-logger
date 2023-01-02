@@ -261,7 +261,7 @@ col.gvShows_Commands,
 col.gvWatchlist_Commands,
 col.gvTransactions_Commands,
 col.gvBooks_Commands {
-    width: 130px;
+    width: 150px;
 }
 
 col.gvShows_Showname,

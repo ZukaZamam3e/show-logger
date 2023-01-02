@@ -24,6 +24,11 @@ shows = (function () {
             return model.ShowTypeId === 1000;
         },
 
+        showAddRange: function (e) {
+            var model = oa_utilities.getModel(e);
+            return model.ShowTypeId === 1000 && (!!model.SeasonNumber || !!model.EpisodeNumber);
+        },
+
         addNextEpisode: function (e) {
             var model = oa_utilities.getModel(e);
 
@@ -46,6 +51,55 @@ shows = (function () {
             });
         },
 
+        addRange: function (e) {
+            var model = oa_utilities.getModel(e);
+            oa_window.open('wAddRange');
+            oa_utilities.hide_validation_errors('frmAddRange');
+
+            $('#AddRangeShowName').val(model.ShowName);
+            $('#AddRangeSeasonNumber').val(model.SeasonNumber);
+            $('#AddRangeStartEpisode').val(model.EpisodeNumber + 1);
+            $('#AddRangeEndEpisode').val(model.EpisodeNumber + 2);
+        },
+
+        btnSaveAddRange_Click: function () {
+            var formData = oa_utilities.getFormData($('#frmAddRange'));
+
+            oa_utilities.ajaxPostData(getShowsBaseURL('Show/AddRange'), formData, function (data) {
+                if (data.errors.length > 0) {
+                    oa_utilities.show_validation_errors('frmAddRange', data.errors);
+                } else {
+                    oa_window.close('wAddRange');
+                    oa_grid.reload_grid('gvShows');
+                    oa_utilities.show_record_saved_notification();
+                }
+            });
+        },
+
+        btnCloseAddRange_Click: function (e) {
+            oa_window.close('wAddRange');
+        },
+
+        btnAddRangeSeason_Click: function () {
+            $('#AddRangeSeasonNumber').val(parseInt(($('#AddRangeSeasonNumber').val()) || 0) + 1);
+        },
+
+        btnAddRangeStartEpisodeAdd_Click: function () {
+            $('#AddRangeStartEpisode').val(parseInt(($('#AddRangeStartEpisode').val()) || 0) + 1);
+        },
+
+        btnAddRangeStartEpisodeMinus_Click: function () {
+            $('#AddRangeStartEpisode').val(parseInt(($('#AddRangeStartEpisode').val()) || 0) - 1);
+        },
+
+        btnAddRangeEndEpisodeAdd_Click: function () {
+            $('#AddRangeEndEpisode').val(parseInt(($('#AddRangeEndEpisode').val()) || 0) + 1);
+        },
+
+        btnAddRangeEndEpisodeMinus_Click: function () {
+            $('#AddRangeEndEpisode').val(parseInt(($('#AddRangeEndEpisode').val()) || 0) - 1);
+        },
+
         delete: function (e) {
             var model = oa_utilities.getModel(e);
 
@@ -53,7 +107,6 @@ shows = (function () {
                 "showId": model.ShowId
             }, function (data) {
                 if (data.errors.length > 0) {
-                    console.log('error: ', data.errors);
                     oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
                 } else {
                     oa_utilities.show_record_deleted_notification();
@@ -82,7 +135,7 @@ shows = (function () {
         },
 
         btnAddSeason_Click: function () {
-            $('#SeasonNumber').val(parseInt($('#SeasonNumber').val()) + 1);
+            $('#SeasonNumber').val(parseInt(($('#SeasonNumber').val()) || 0) + 1);
         },
 
         btnResetEpisode_Click: function () {
@@ -420,7 +473,7 @@ getBooksBaseURL = function (action) { return getBaseURL() + "/Books/" + action }
 oa_window = (function () {
     return {
         open: function (windowId) {
-            $("#" + windowId).modal();
+            $("#" + windowId).modal('show');
         },
 
         close: function (windowId) {
@@ -580,11 +633,12 @@ oa_grid = (function () {
                             if (!!td) {
                                 var propVal = model[key];
 
-                                if (key.toLowerCase().includes("date") && !key.toLowerCase().includes("time")) {
-                                    propVal = moment(propVal).format('M/D/YYYY');
+                                if (!!propVal) {
+                                    if (key.toLowerCase().includes("date") && !key.toLowerCase().includes("time")) {
+                                        propVal = moment(propVal).format('M/D/YYYY');
+                                    }
+                                    td.html(propVal);
                                 }
-
-                                td.html(propVal);
                             }
                         }
 

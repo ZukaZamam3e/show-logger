@@ -17,6 +17,8 @@ public class OAWindow
 
     public int Width { get; set; }
 
+    public Type ObjectType { get; set; }
+
     public Func<object, IHtmlContent> Content { get; set; }
 }
 
@@ -52,6 +54,12 @@ public class OAWindowBuilder<T> : OAControlBuilder<T>
     {
         Container.Content = null;
         Container.Partial = partial;
+        return this;
+    }
+
+    public OAWindowBuilder<T> ObjectType(Type objectType)
+    {
+        Container.ObjectType = objectType;
         return this;
     }
 
@@ -123,7 +131,8 @@ public class OAWindowBuilder<T> : OAControlBuilder<T>
         TagBuilder modalClose = new TagBuilder("button");
         modalClose.AddCssClass("close");
         modalClose.Attributes.Add("type", "button");
-        modalClose.Attributes.Add("data-dismiss", "modal");
+        modalClose.Attributes.Add("data-bs-dismiss", "modal");
+        modalClose.AddCssClass("close btn btn-secondary");
         modalClose.InnerHtml.AppendHtml("&times;");
 
         modalHeader.InnerHtml.AppendHtml(modalClose);
@@ -132,11 +141,16 @@ public class OAWindowBuilder<T> : OAControlBuilder<T>
         modalBody.AddCssClass("modal-body");
         modalBody.Attributes.Add("id", $"{Container.Name}_Body");
 
+        object? obj = null;
 
+        if(Container.ObjectType != null)
+        {
+            obj = Activator.CreateInstance(Container.ObjectType);
+        }
 
         if (!string.IsNullOrEmpty(Container.Partial))
         {
-            modalBody.InnerHtml.AppendHtml(GetHtmlContent(_htmlHelper.PartialAsync(Container.Partial).Result));
+            modalBody.InnerHtml.AppendHtml(GetHtmlContent(_htmlHelper.PartialAsync(Container.Partial, obj).Result));
         }
         else if (Container.Content != null)
         {

@@ -85,6 +85,21 @@ public class MovieModel
 
 }
 
+public class AddRangeModel 
+{
+    [Display(Name = "Show Name")]
+    public string AddRangeShowName { get; set; }
+
+    [Display(Name = "Season")]
+    public int? AddRangeSeasonNumber { get; set; }
+
+    [Display(Name = "Start Episode")]
+    public int AddRangeStartEpisode { get; set; }
+
+    [Display(Name = "End Episode")]
+    public int? AddRangeEndEpisode { get; set; }
+}
+
 public class ShowNameModel
 {
     public string ShowName { get; set; }

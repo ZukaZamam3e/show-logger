@@ -124,6 +124,32 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             return false;
     }
 
+    public bool AddRange(int userId, AddRangeModel model)
+    {
+        bool successful = false;
+
+        for(int i = model.AddRangeStartEpisode; i <= model.AddRangeEndEpisode; i++)
+        {
+            SL_SHOW nextEpisode = new SL_SHOW
+            {
+                SHOW_NAME = model.AddRangeShowName,
+                SHOW_TYPE_ID = (int)CodeValueIds.TV,
+                USER_ID = userId,
+                SEASON_NUMBER = model.AddRangeSeasonNumber,
+                EPISODE_NUMBER = i,
+                DATE_WATCHED = DateTime.Now.GetEST().Date,
+            };
+
+            _context.SL_SHOW.Add(nextEpisode);
+        }
+
+        _context.SaveChanges();
+
+        successful = true;
+
+        return successful;
+    }
+
     public bool DeleteShow(int userId, int showId)
     {
         SL_SHOW? entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);

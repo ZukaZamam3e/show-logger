@@ -13,6 +13,7 @@
         {
             commands.Edit();
             commands.Custom("AddNextEpisode", "fas fa-plus", "shows.addNextEpisode", "shows.showAddNextEpisode");
+            commands.Custom("AddRange", "fas fa-check-double", "shows.addRange", "shows.showAddRange");
             commands.Custom("Delete", "fas fa-trash-alt", "shows.delete");
         });
         columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);

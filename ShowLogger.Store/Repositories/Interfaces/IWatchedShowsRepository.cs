@@ -20,6 +20,8 @@ public interface IWatchedShowsRepository : IRepository
 
     bool AddNextEpisode(int userId, int showId);
 
+    bool AddRange(int userId, AddRangeModel model);
+
     bool DeleteShow(int userId, int showId);
 
     IEnumerable<GroupedShowModel> GetTVStats(int userId);

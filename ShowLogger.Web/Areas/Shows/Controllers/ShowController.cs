@@ -134,7 +134,36 @@ public class ShowController : BaseController
         }
         catch (Exception ex)
         {
-            HandleException(ex, "Could not delete show.");
+            HandleException(ex, "Could not add next episode.");
+        }
+
+        return Json(new { data = successful, errors = GetErrorsFromModelState() });
+    }
+
+    [HttpPost]
+    public IActionResult AddRange(AddRangeModel model)
+    {
+        bool successful = false;
+        try
+        {
+            if(model.AddRangeStartEpisode >= model.AddRangeEndEpisode)
+            {
+                ModelState.AddModelError("AddRangeStartEpisode", "Start Episode cannot be greater than End Episode.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                successful = _watchedShowsRepository.AddRange(GetLoggedInUserId(), model);
+
+                if (!successful)
+                {
+                    ModelState.AddModelError("AddRange", "Could not add range.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not add range.");
         }
 
         return Json(new { data = successful, errors = GetErrorsFromModelState() });

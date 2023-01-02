@@ -1,0 +1,109 @@
+﻿@using ShowLogger.Models
+
+@model AddRangeModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmAddRange" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.AddRangeShowName)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().TextBoxFor(m => m.AddRangeShowName).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.AddRangeSeasonNumber)
+        </div>
+
+        <div class="col-sm-4">
+            @Html.OA().NumericTextBoxFor(m => m.AddRangeSeasonNumber)
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnAddRangeSeason")
+                .Text("Add")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnAddRangeSeason_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.AddRangeStartEpisode)
+        </div>
+
+        <div class="col-sm-4">
+            @Html.OA().NumericTextBoxFor(m => m.AddRangeStartEpisode)
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnAddRangeStartEpisodeAdd")
+                .Icon("fa fa-plus")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnAddRangeStartEpisodeAdd_Click()")
+            )
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnAddRangeStartEpisodeMinus")
+                .Icon("fa fa-minus")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnAddRangeStartEpisodeMinus_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.AddRangeEndEpisode)
+        </div>
+
+        <div class="col-sm-4">
+            @Html.OA().NumericTextBoxFor(m => m.AddRangeEndEpisode)
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnAddRangeEndEpisodeAdd")
+                .Icon("fa fa-plus")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnAddRangeEndEpisodeAdd_Click()")
+            )
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnAddRangeEndEpisodeMinus")
+                .Icon("fa fa-minus")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("shows.btnAddRangeEndEpisodeMinus_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        @(Html.OA().Button()
+            .Name("btnSaveAddRange")
+            .Text("Save")
+            .HtmlAttributes(new { @class = "btn-primary" })
+            .Click("shows.btnSaveAddRange_Click()")
+        )
+
+        @(Html.OA().Button()
+            .Name("btnCloseAddRange")
+            .Text("Close")
+            .HtmlAttributes(new { @class = "btn-danger" })
+            .Click("shows.btnCloseAddRange_Click()")
+        )
+    </div>
+}
