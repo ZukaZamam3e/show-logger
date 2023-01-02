@@ -12,18 +12,41 @@ namespace ShowLogger.Web.Controllers
     public class HomeController : BaseController
     {
         private readonly IFriendRepository _friendRepository;
+        private readonly IUserRepository _userRepository;
         public HomeController(
             UserManager<ApplicationUser> userManager,
             IFriendRepository friendRepository,
+            IUserRepository userRepository,
             ILogger<BaseController> logger,
             IHttpContextAccessor httpContextAccessor
                 ) : base(userManager, logger, httpContextAccessor)
         {
             _friendRepository = friendRepository;
+            _userRepository = userRepository;
         }
 
         public IActionResult Index()
         {
+            string area = _userRepository.GetDefaultArea(GetLoggedInUserId());
+
+            if(!string.IsNullOrEmpty(area))
+            {
+                switch(area)
+                {
+                    case "Shows":
+                        {
+                            return RedirectToAction("Index", "Show", new { area = "Shows" });
+                        }
+
+                    case "Books":
+                        {
+                            return RedirectToAction("Index", "Book", new { area = "Books" });
+                        }
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -161,6 +184,8 @@ namespace ShowLogger.Web.Controllers
 
             return Json(new { data = successful, errors = GetErrorsFromModelState() });
         }
+
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

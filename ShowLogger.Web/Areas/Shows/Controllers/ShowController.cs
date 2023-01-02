@@ -4,27 +4,43 @@ using Microsoft.AspNetCore.Mvc;
 using ShowLogger.Models;
 using ShowLogger.Store.Repositories.Interfaces;
 using ShowLogger.Web.Areas.Common;
+using ShowLogger.Web.Areas.Shows.Views.Show.ViewModels;
 using ShowLogger.Web.Data;
 
 namespace ShowLogger.Areas.Shows.Controllers;
 
+[Area("Shows")]
 public class ShowController : BaseController
 {
-    IWatchedShowsRepository _watchedShowsRepository;
+    private readonly IWatchedShowsRepository _watchedShowsRepository;
+    private readonly IUserRepository _userRepository;
 
     public ShowController(
         UserManager<ApplicationUser> userManager,
         ILogger<BaseController> logger,
         IHttpContextAccessor httpContextAccessor,
-        IWatchedShowsRepository watchedShowsRepository
+        IWatchedShowsRepository watchedShowsRepository,
+        IUserRepository userRepository
     ) : base(userManager, logger, httpContextAccessor)
     {
         _watchedShowsRepository = watchedShowsRepository;
+        _userRepository = userRepository;
     }
 
     public IActionResult Index()
     {
-        return View();
+        ShowPageModel model = new ShowPageModel();
+
+        try
+        {
+            model.HasShowAreaAsDefault = _userRepository.GetDefaultArea(GetLoggedInUserId()) == "Shows";
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not index page.");
+        }
+
+        return View(model);
     }
 
     [HttpGet]

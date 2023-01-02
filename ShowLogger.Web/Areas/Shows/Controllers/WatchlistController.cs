@@ -8,6 +8,7 @@ using ShowLogger.Web.Data;
 
 namespace ShowLogger.Areas.Shows.Controllers;
 
+[Area("Shows")]
 public class WatchlistController : BaseController
 {
     IWatchedShowsRepository _watchedShowsRepository;

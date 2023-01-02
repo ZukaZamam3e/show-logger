@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ShowLogger.Data.Context;
@@ -19,6 +20,8 @@ string showLoggerConnectionString = builder.Configuration.GetConnectionString("S
 builder.Services.AddDbContext<ShowLoggerDbContext>(x => x.UseMySql(showLoggerConnectionString, ServerVersion.AutoDetect(showLoggerConnectionString)), ServiceLifetime.Transient);
 builder.Services.AddScoped<IWatchedShowsRepository, WatchedShowsRepository>();
 builder.Services.AddScoped<IFriendRepository, FriendRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
@@ -49,6 +52,11 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en-US"),
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -1,0 +1,23 @@
+﻿@using ShowLogger.Web.Areas.Shows.Views.Show.ViewModels
+
+@model ShowPageModel
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <partial name="~/Areas/Shows/Views/Show/PartialViews/_Show.cshtml" />
+    </div>
+</div>
+
+@if(!Model.HasShowAreaAsDefault)
+{
+    <div class="row" style="padding-top: 25px;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            @(Html.OA().Button()
+                .Name("btnSetShowsAreaAsDefault")
+                .Text("Set Shows Area As Default")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("areas.btnSetShowsAreaAsDefault_Click()")
+            )
+        </div>
+    </div>
+}

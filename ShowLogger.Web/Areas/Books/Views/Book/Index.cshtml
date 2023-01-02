@@ -1,0 +1,23 @@
+﻿@using ShowLogger.Web.Areas.Books.Views.Book.ViewModels
+
+@model BookPageModel
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <partial name="~/Areas/Books/Views/Book/PartialViews/_Books.cshtml" />
+    </div>
+</div>
+
+@if(!Model.HasBookAreaAsDefault)
+{
+    <div class="row" style="padding-top: 25px;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            @(Html.OA().Button()
+                .Name("btnSetBooksAreaAsDefault")
+                .Text("Set Books Area As Default")
+                .HtmlAttributes(new { @class = "btn btn-primary", style="width: 100%" })
+                .Click("areas.btnSetBooksAreaAsDefault_Click()")
+            )
+        </div>
+    </div>
+}

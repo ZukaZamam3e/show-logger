@@ -235,23 +235,38 @@ a.oa_grid_button {
     text-decoration: none;
 }
 
+td.day {
+    border-color: white;
+    border-width: 1px;
+    border-radius: 2px;
+}
+
+td.day.today {
+    border-color: green;
+    border-width: 1px;
+    border-radius: 2px;
+}
+
 col.gvShows_Mobileview,
 col.gvTVStats_Mobileview,
 col.gvMovieStats_Mobileview,
 col.gvFriendsWatchHistory_Mobileview,
 col.gvWatchlist_Mobileview,
-col.gvTransaction_Mobileview {
+col.gvTransactions_Mobileview,
+col.gvBooks_Mobileview {
     width: 350px;
 }
 
 col.gvShows_Commands,
 col.gvWatchlist_Commands,
-col.gvTransaction_Commands {
+col.gvTransactions_Commands,
+col.gvBooks_Commands {
     width: 130px;
 }
 
 col.gvShows_Showname,
-col.gvWatchlist_Showname {
+col.gvWatchlist_Showname,
+col.gvBooks_Bookname {
     width: 350px;
 }
 
@@ -260,7 +275,8 @@ col.gvWatchlist_Showname {
 .gvMovieStats_Mobileview,
 .gvFriendsWatchHistory_Mobileview,
 .gvWatchlist_Mobileview,
-.gvTransaction_Mobileview {
+.gvTransactions_Mobileview,
+.gvBooks_Mobileview {
     text-align: center;
 }
 
@@ -270,7 +286,8 @@ col.gvWatchlist_Showname {
     .gvMovieStats_Mobileview,
     .gvFriendsWatchHistory_Mobileview,
     .gvWatchlist_Mobileview,
-    .gvTransaction_Mobileview {
+    .gvTransactions_Mobileview,
+    .gvBooks_Mobileview {
         display: none;
     }
 }
@@ -286,7 +303,8 @@ col.gvWatchlist_Showname {
     }
 
     col.gvShows_Commands,
-    col.gvWatchlist_Commands {
+    col.gvWatchlist_Commands,
+    col.gvBooks_Commands {
         width: 10px;
     }
 
@@ -329,13 +347,22 @@ col.gvWatchlist_Showname {
         display: none;
     }
 
-    .gvTransaction_Transactiontypeidz,
-    .gvTransaction_Showidz,
-    .gvTransaction_Item,
-    .gvTransaction_Costamt,
-    .gvTransaction_Discountamt,
-    .gvTransaction_Transactionnotes,
-    .gvTransaction_Transactiondate {
+    .gvTransactions_Transactiontypeidz,
+    .gvTransactions_Showidz,
+    .gvTransactions_Item,
+    .gvTransactions_Costamt,
+    .gvTransactions_Discountamt,
+    .gvTransactions_Transactionnotes,
+    .gvTransactions_Transactiondate {
+        display: none;
+    }
+
+    .gvBooks_Bookname,
+    .gvBooks_Startdate,
+    .gvBooks_Enddate,
+    .gvBooks_Chapters,
+    .gvBooks_Pages,
+    .gvBooks_Booknotes {
         display: none;
     }
 
@@ -401,5 +428,9 @@ col.gvWatchlist_Showname {
 
     .checkbox .form-label {
         color: white !important;
+    }
+
+    .text-dark {
+        color: white;
     }
 }

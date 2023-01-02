@@ -314,6 +314,64 @@ transactions = (function () {
                     $('#btnToggleItem').hide();
                 }
             }, 50)
+        },
+
+        delete: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getShowsBaseURL('Transaction/Delete'), {
+                "transactionId": model.TransactionId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_deleted_notification();
+                    oa_grid.reload_grid('gvTransactions');
+                }
+            });
+        },
+    }
+})();
+
+books = (function () {
+    return {
+        delete: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getBooksBaseURL('Book/Delete'), {
+                "bookId": model.BookId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_deleted_notification();
+                    oa_grid.reload_grid('gvBooks');
+                }
+            });
+        },
+    }
+})();
+
+areas = (function () {
+    return {
+        btnSetShowsAreaAsDefault_Click: function () {
+            oa_utilities.ajaxPostData(getCommonBaseURL('User/SetDefaultArea'), {
+                "area": "Shows"
+            }, function (data) {
+                $('#btnSetShowsAreaAsDefault').hide();
+                oa_utilities.show_record_saved_notification();
+            });
+        },
+
+        btnSetBooksAreaAsDefault_Click: function () {
+            oa_utilities.ajaxPostData(getCommonBaseURL('User/SetDefaultArea'), {
+                "area": "Books"
+            }, function (data) {
+                $('#btnSetBooksAreaAsDefault').hide();
+                oa_utilities.show_record_saved_notification();
+            });
         }
     }
 })();
@@ -355,8 +413,9 @@ account = (function () {
 })();
 
 getBaseURL = function () { return $("#hdnRootPath").val(); }
-getCommonBaseURL = function () { return getBaseURL() + "/Common/"; }
-getShowsBaseURL = function (action) { return getBaseURL() + "/" + action + "?area=Shows/"; }
+getCommonBaseURL = function (action) { return getBaseURL() + "/Common/" + action; }
+getShowsBaseURL = function (action) { return getBaseURL() + "/Shows/" + action }
+getBooksBaseURL = function (action) { return getBaseURL() + "/Books/" + action }
 
 oa_window = (function () {
     return {

@@ -3,7 +3,7 @@
 @model IEnumerable<TransactionModel>
 
 @(Html.OAGrid(Model)
-    .NamedAndId("gvTransaction")
+    .NamedAndId("gvTransactions")
     .Creator("Create Transaction", 
         Url.Action("LoadCreator", "Transaction", new { area = "Shows" }), 
         Url.Action("Create", "Transaction", new { area = "Shows" }),
@@ -20,7 +20,7 @@
         columns.Commands(commands =>
         {
             commands.Edit();
-            commands.Custom("Delete", "fas fa-trash-alt", "transaction.delete");
+            commands.Custom("Delete", "fas fa-trash-alt", "transactions.delete");
         });
         columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
         columns.OAColumn(model => model.TransactionTypeIdZ);

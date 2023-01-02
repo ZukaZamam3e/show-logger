@@ -7,6 +7,7 @@ using ShowLogger.Store.Repositories.Interfaces;
 using ShowLogger.Web.Areas.Common;
 using ShowLogger.Web.Data;
 
+[Area("Shows")]
 public class TransactionController : BaseController
 {
     IWatchedShowsRepository _watchedShowsRepository;

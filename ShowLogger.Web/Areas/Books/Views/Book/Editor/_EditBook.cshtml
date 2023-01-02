@@ -1,0 +1,73 @@
+﻿@using ShowLogger.Models
+
+@model BookModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmEditBook" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(m => m.BookId)
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.BookName)
+        </div>
+
+        <div id="divShowNameTxt" class="col-sm-6">
+            @Html.OA().TextBoxFor(m => m.BookName).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.StartDate)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.OA().DateFor(m => m.StartDate).Format("L").HtmlAttributes(new { @class = "", inputmode="none" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.EndDate)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.OA().DateFor(m => m.EndDate).Format("L").HtmlAttributes(new { @class = "", inputmode="none" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.Chapters)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().NumericTextBoxFor(m => m.Chapters)
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.Pages)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().NumericTextBoxFor(m => m.Pages)
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.BookNotes)
+        </div>
+
+        <div class="col-sm-8">
+            @(Html.OA().TextAreaFor(m => m.BookNotes)
+                .Rows(4)
+                .HtmlAttributes(new { @style="width:100%;" })
+            )
+        </div>
+    </div>
+
+}

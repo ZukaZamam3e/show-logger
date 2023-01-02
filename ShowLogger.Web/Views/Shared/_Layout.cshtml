@@ -51,6 +51,12 @@
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" asp-area="Shows" asp-controller="Show" asp-action="Index">Shows</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Books" asp-controller="Book" asp-action="Index">Books</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Friends">Friends</a>
                         </li>
                         <li class="nav-item">
@@ -155,6 +161,7 @@
             $(element).datetimepicker();
         });
     </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
