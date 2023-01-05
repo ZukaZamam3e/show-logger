@@ -496,7 +496,6 @@ oa_window = (function () {
 
                 $('#oaWindowSave').prop("onclick", null).off("click");
                 if (!!postWindowFunc) {
-                    debugger;
                     var postFunc = window[postWindowFunc.split(".")[0]][postWindowFunc.split(".")[1]];
                     $('#oaWindowSave').bind('click', postFunc);
                 }
