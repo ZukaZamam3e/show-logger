@@ -17,9 +17,15 @@
         @(Html.OA().Window()
             .Name("wAddRange")
             .Title("Add Range")
-            .Partial("~/Areas/Shows/Views/Show/Editor/_AddRange.cshtml")
-            .ObjectType(typeof(AddRangeModel))
+            .Partial(Url.Action("LoadAddRangeWindow", "Show", new { area = "Shows" }))
+            .PostWindowFunc("shows.postAddRange")
             .Width(365)
         )
     </div>
 </div>
+
+<script>
+    $(function () {
+        shows.init();
+    })
+</script>

@@ -137,7 +137,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 USER_ID = userId,
                 SEASON_NUMBER = model.AddRangeSeasonNumber,
                 EPISODE_NUMBER = i,
-                DATE_WATCHED = DateTime.Now.GetEST().Date,
+                DATE_WATCHED = model.AddRangeDateWatched.Date,
             };
 
             _context.SL_SHOW.Add(nextEpisode);

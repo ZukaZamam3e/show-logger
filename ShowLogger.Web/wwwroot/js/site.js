@@ -5,6 +5,10 @@
 
 shows = (function () {
     return {
+        init: function () {
+            //oa_utilities.init_page($('#wAddRange'));
+        },
+
         get_show_id: function () {
             return {
                 ShowId: $('#hdnShowId').val()
@@ -51,18 +55,19 @@ shows = (function () {
             });
         },
 
-        addRange: function (e) {
+        openAddRange: function (e) {
             var model = oa_utilities.getModel(e);
-            oa_window.open('wAddRange');
-            oa_utilities.hide_validation_errors('frmAddRange');
+            oa_window.open('wAddRange', function () {
+                oa_utilities.hide_validation_errors('frmAddRange');
 
-            $('#AddRangeShowName').val(model.ShowName);
-            $('#AddRangeSeasonNumber').val(model.SeasonNumber);
-            $('#AddRangeStartEpisode').val(model.EpisodeNumber + 1);
-            $('#AddRangeEndEpisode').val(model.EpisodeNumber + 2);
+                $('#AddRangeShowName').val(model.ShowName);
+                $('#AddRangeSeasonNumber').val(model.SeasonNumber);
+                $('#AddRangeStartEpisode').val(model.EpisodeNumber + 1);
+                $('#AddRangeEndEpisode').val(model.EpisodeNumber + 2);
+            });
         },
 
-        btnSaveAddRange_Click: function () {
+        postAddRange: function (e) {
             var formData = oa_utilities.getFormData($('#frmAddRange'));
 
             oa_utilities.ajaxPostData(getShowsBaseURL('Show/AddRange'), formData, function (data) {
@@ -472,12 +477,44 @@ getBooksBaseURL = function (action) { return getBaseURL() + "/Books/" + action }
 
 oa_window = (function () {
     return {
-        open: function (windowId) {
-            $("#" + windowId).modal('show');
+        open: function (windowId, e) {
+            var w = $('#' + windowId);
+            var title = w.attr("windowTitle");
+            $("#oaWindowTitle").html(title);
+            var postWindowFunc = w.attr("postWindowFunc");
+            var url = w.attr('windowPartial');
+            $('#oaWindowSave').prop("onclick", null).off("click")
+            
+            oa_utilities.ajaxPost(url, function (data) {
+                $('#oaWindowBody').html(data);
+
+                if (!!e) {
+                    e();
+                }
+
+                oa_utilities.init_page($('#oaWindowBody'));
+
+                $('#oaWindowSave').prop("onclick", null).off("click");
+                if (!!postWindowFunc) {
+                    debugger;
+                    var postFunc = window[postWindowFunc.split(".")[0]][postWindowFunc.split(".")[1]];
+                    $('#oaWindowSave').bind('click', postFunc);
+                }
+                
+                $("#oaWindow").modal('show');
+
+                $('#oaWindow').on('hidden.bs.modal', function () {
+                    $("#oaWindowTitle").html('');
+                    $('#oaWindowBody').html('');
+                    $('#oaWindowSave').prop("onclick", null).off("click")
+                })
+            });
+
+            
         },
 
         close: function (windowId) {
-            $("#" + windowId).modal('toggle');
+            $("#oaWindow").modal('toggle');
         }
     }
 })();

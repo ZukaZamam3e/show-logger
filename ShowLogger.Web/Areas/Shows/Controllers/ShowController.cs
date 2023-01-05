@@ -141,6 +141,16 @@ public class ShowController : BaseController
     }
 
     [HttpPost]
+    public IActionResult LoadAddRangeWindow()
+    {
+        AddRangeModel model = new AddRangeModel
+        {
+            AddRangeDateWatched = DateTime.Now.GetEST().Date,
+        };
+        return PartialView("~/Areas/Shows/Views/Show/Editor/_AddRange.cshtml", model);
+    }
+
+    [HttpPost]
     public IActionResult AddRange(AddRangeModel model)
     {
         bool successful = false;
@@ -148,7 +158,12 @@ public class ShowController : BaseController
         {
             if(model.AddRangeStartEpisode >= model.AddRangeEndEpisode)
             {
-                ModelState.AddModelError("AddRangeStartEpisode", "Start Episode cannot be greater than End Episode.");
+                ModelState.AddModelError("AddRangeStartEpisode", "Start cannot be greater than End.");
+            }
+
+            if (model.AddRangeDateWatched == null)
+            {
+                ModelState.AddModelError("AddRangeDateWatched", "Please select a date you watched the episodes on.");
             }
 
             if (ModelState.IsValid)

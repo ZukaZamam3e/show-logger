@@ -87,17 +87,25 @@ public class MovieModel
 
 public class AddRangeModel 
 {
+    public AddRangeModel()
+    {
+        AddRangeDateWatched = DateTime.Now.Date;
+    }
+
     [Display(Name = "Show Name")]
     public string AddRangeShowName { get; set; }
 
     [Display(Name = "Season")]
     public int? AddRangeSeasonNumber { get; set; }
 
-    [Display(Name = "Start Episode")]
+    [Display(Name = "Start")]
     public int AddRangeStartEpisode { get; set; }
 
-    [Display(Name = "End Episode")]
+    [Display(Name = "End")]
     public int? AddRangeEndEpisode { get; set; }
+
+    [Display(Name = "Date")]
+    public DateTime AddRangeDateWatched { get; set; }
 }
 
 public class ShowNameModel

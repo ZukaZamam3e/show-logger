@@ -25,7 +25,7 @@
             @Html.OA().NumericTextBoxFor(m => m.AddRangeSeasonNumber)
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-4">
             @(Html.OA().Button()
                 .Name("btnAddRangeSeason")
                 .Text("Add")
@@ -91,19 +91,13 @@
         </div>
     </div>
 
-    <div class="modal-footer">
-        @(Html.OA().Button()
-            .Name("btnSaveAddRange")
-            .Text("Save")
-            .HtmlAttributes(new { @class = "btn-primary" })
-            .Click("shows.btnSaveAddRange_Click()")
-        )
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.AddRangeDateWatched)
+        </div>
 
-        @(Html.OA().Button()
-            .Name("btnCloseAddRange")
-            .Text("Close")
-            .HtmlAttributes(new { @class = "btn-danger" })
-            .Click("shows.btnCloseAddRange_Click()")
-        )
+        <div class="col-sm-8">
+            @Html.OA().DateFor(m => m.AddRangeDateWatched).Format("L").HtmlAttributes(new { @class = "mandatory", inputmode="none" })
+        </div>
     </div>
 }

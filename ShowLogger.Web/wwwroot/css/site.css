@@ -247,6 +247,10 @@ td.day.today {
     border-radius: 2px;
 }
 
+.form-group.row {
+    padding-top: 3px;
+}
+
 col.gvShows_Mobileview,
 col.gvTVStats_Mobileview,
 col.gvMovieStats_Mobileview,
