@@ -309,7 +309,7 @@ col.gvBooks_Bookname {
     col.gvShows_Commands,
     col.gvWatchlist_Commands,
     col.gvBooks_Commands {
-        width: 10px;
+        width: 120px;
     }
 
     .oa_grid_button {
