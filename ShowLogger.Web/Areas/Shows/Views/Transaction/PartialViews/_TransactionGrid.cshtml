@@ -28,7 +28,6 @@
         columns.OAColumn(model => model.Item);
         columns.OAColumn(model => model.CostAmt).Formatted("{0:c}");
         columns.OAColumn(model => model.DiscountAmtZ).Formatted("{0:c}");
-        @*columns.OAColumn(model => model.BenefitAmt).Formatted("{0:c}");*@
         columns.OAColumn(model => model.TransactionNotes);
         columns.OAColumn(model => model.TransactionDate).Formatted("{0:d}");
     })

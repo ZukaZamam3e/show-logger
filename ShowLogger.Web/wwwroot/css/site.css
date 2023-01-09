@@ -335,7 +335,7 @@ col.gvBooks_Bookname {
         display: none;
     }
 
-    .gvFriendsWatchHistory_Email,
+    .gvFriendsWatchHistory_Name,
     .gvFriendsWatchHistory_Showname,
     .gvFriendsWatchHistory_Seasonnumber,
     .gvFriendsWatchHistory_Episodenumber,
@@ -358,14 +358,14 @@ col.gvBooks_Bookname {
     .gvTransactions_Showidz,
     .gvTransactions_Item,
     .gvTransactions_Costamt,
-    .gvTransactions_Discountamt,
+    .gvTransactions_Discountamtz,
     .gvTransactions_Transactionnotes,
     .gvTransactions_Transactiondate {
         display: none;
     }
 
     .gvYearStats_Year,
-    .gvYearStats_Userdisplayname,
+    .gvYearStats_Name,
     .gvYearStats_Tvcnt,
     .gvYearStats_Moviescnt,
     .gvYearStats_Amccnt {
