@@ -7,7 +7,7 @@
     .Columns(columns =>
     {
         columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
-        columns.OAColumn(model => model.Email);
+        columns.OAColumn(model => model.Name);
         columns.OAColumn(model => model.ShowName);
         columns.OAColumn(model => model.SeasonNumber);
         columns.OAColumn(model => model.EpisodeNumber);

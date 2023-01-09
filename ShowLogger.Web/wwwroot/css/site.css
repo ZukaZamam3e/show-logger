@@ -257,7 +257,8 @@ col.gvMovieStats_Mobileview,
 col.gvFriendsWatchHistory_Mobileview,
 col.gvWatchlist_Mobileview,
 col.gvTransactions_Mobileview,
-col.gvBooks_Mobileview {
+col.gvBooks_Mobileview,
+col.gvYearStats_Mobileview {
     width: 350px;
 }
 
@@ -280,7 +281,8 @@ col.gvBooks_Bookname {
 .gvFriendsWatchHistory_Mobileview,
 .gvWatchlist_Mobileview,
 .gvTransactions_Mobileview,
-.gvBooks_Mobileview {
+.gvBooks_Mobileview,
+.gvYearStats_Mobileview {
     text-align: center;
 }
 
@@ -291,7 +293,8 @@ col.gvBooks_Bookname {
     .gvFriendsWatchHistory_Mobileview,
     .gvWatchlist_Mobileview,
     .gvTransactions_Mobileview,
-    .gvBooks_Mobileview {
+    .gvBooks_Mobileview,
+    .gvYearStats_Mobileview {
         display: none;
     }
 }
@@ -358,6 +361,14 @@ col.gvBooks_Bookname {
     .gvTransactions_Discountamt,
     .gvTransactions_Transactionnotes,
     .gvTransactions_Transactiondate {
+        display: none;
+    }
+
+    .gvYearStats_Year,
+    .gvYearStats_Userdisplayname,
+    .gvYearStats_Tvcnt,
+    .gvYearStats_Moviescnt,
+    .gvYearStats_Amccnt {
         display: none;
     }
 

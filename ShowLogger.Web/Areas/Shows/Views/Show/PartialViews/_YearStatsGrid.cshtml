@@ -1,0 +1,21 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<YearStatsModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvYearStats")
+    .Columns(columns =>
+    {
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.Year);
+        columns.OAColumn(model => model.Name);
+        columns.OAColumn(model => model.TvCnt);
+        columns.OAColumn(model => model.MoviesCnt);
+        columns.OAColumn(model => model.AmcCnt);
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

@@ -297,22 +297,6 @@ public class ShowController : BaseController
         try
         {
             model = _watchedShowsRepository.GetFriendsWatchHistory(GetLoggedInUserId()).OrderByDescending(m => m.DateWatched).ThenByDescending(m => m.ShowId);
-
-            model = from m in model
-                    join u in _userManager.Users on m.UserId equals u.UserId
-                    select new FriendWatchHistoryModel
-                    {
-                        UserId = m.UserId,
-                        Email = u.Email,
-                        DateWatched = m.DateWatched,
-                        EpisodeNumber = m.EpisodeNumber,
-                        SeasonNumber = m.SeasonNumber,
-                        ShowId = m.ShowId,
-                        ShowName = m.ShowName,
-                        ShowNotes = m.ShowNotes,
-                        ShowTypeId = m.ShowTypeId,
-                        ShowTypeIdZ = m.ShowTypeIdZ,
-                    };
         }
         catch (Exception ex)
         {
@@ -321,5 +305,24 @@ public class ShowController : BaseController
 
         // Only grid query values will be available here.
         return PartialView("~/Areas/Shows/Views/Show/PartialViews/_FriendsWatchHistoryGrid.cshtml", model);
+    }
+
+    [HttpGet]
+    public PartialViewResult YearStats_Read()
+    {
+
+        IEnumerable<YearStatsModel> model = new List<YearStatsModel>();
+
+        try
+        {
+            model = _watchedShowsRepository.GetYearStats(GetLoggedInUserId()).OrderByDescending(m => m.Year).ThenByDescending(m => m.Name);
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load year stats.");
+        }
+
+        // Only grid query values will be available here.
+        return PartialView("~/Areas/Shows/Views/Show/PartialViews/_YearStatsGrid.cshtml", model);
     }
 }

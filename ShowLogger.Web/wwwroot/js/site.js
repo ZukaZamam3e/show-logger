@@ -297,10 +297,10 @@ transactions = (function () {
 
                 case 2002: { // PURCHASE
                     if (transactionId === 0) {
-                        $("#ShowId option:eq(1)").attr('selected', 'selected');
                         if (text === 'New') {
                             $('#btnToggleItem').click();
                         }
+                        $("#ShowId option:eq(1)").attr('selected', 'selected');
                     } else {
                         if (text === 'Old') {
                             $('#btnToggleItem').click();

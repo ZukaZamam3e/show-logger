@@ -47,4 +47,6 @@ public interface IWatchedShowsRepository : IRepository
     long UpdateTransaction(int userId, TransactionModel model);
 
     bool DeleteTransaction(int userId, int transactionId);
+
+    IEnumerable<YearStatsModel> GetYearStats(int userId);
 }

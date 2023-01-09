@@ -1,0 +1,12 @@
+﻿<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @(Html.OA().GridPage()
+            .Name("gvYearStats")
+            .Header(header =>
+            {
+                header.Refresh();
+            })
+            .Read(Url.Action("YearStats_Read", "Show", new { area = "Shows" }))
+        )
+    </div>
+</div>

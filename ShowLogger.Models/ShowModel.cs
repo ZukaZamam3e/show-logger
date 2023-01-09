@@ -121,10 +121,10 @@ public class ShowNameModel
 
 public class FriendWatchHistoryModel : ShowModel
 {
-    [Display(Name = "Email")]
-    public string Email { get; set; }
+    [Display(Name = "Name")]
+    public string Name { get; set; }
 
-    public override string MobileView => $"{Email}<br>{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
+    public override string MobileView => $"{Name}<br>{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
 }
 
 public class WatchlistModel
@@ -183,6 +183,12 @@ public class TransactionModel
     [Display(Name = "Discount")]
     public decimal? DiscountAmt { get; set; }
 
+    [Display(Name = "Benefits")]
+    public decimal? BenefitAmt { get; set; }
+
+    [Display(Name = "Discount")]
+    public decimal? DiscountAmtZ => (DiscountAmt ?? 0) + (BenefitAmt ?? 0);
+
     [Display(Name = "Transaction Notes")]
     public string? TransactionNotes { get; set; }
 
@@ -199,6 +205,29 @@ public class ItemModel
     public string Item { get; set; }
 
     public decimal CostAmt { get; set; }
+}
+
+public class YearStatsModel
+{
+    [Display(Name = "User Id")]
+    public int UserId { get; set; }
+
+    [Display(Name = "Name")]
+    public string Name { get; set; }
+
+    [Display(Name = "Year")]
+    public int Year { get; set; }
+
+    [Display(Name = "TV")]
+    public int TvCnt { get; set; }
+
+    [Display(Name = "Movies")]
+    public int MoviesCnt { get; set; }
+
+    [Display(Name = "AMC")]
+    public int AmcCnt { get; set; }
+
+    public virtual string MobileView => $"{Year}<br>{Name}<br>TV: {TvCnt}<br>Movies: {MoviesCnt}<br>AMC: {AmcCnt}";
 }
 
 public static class DateTimeExtensions

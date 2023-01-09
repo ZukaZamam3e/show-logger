@@ -23,6 +23,7 @@ public class ShowLoggerDbContext : DbContext
     public DbSet<SL_TRANSACTION> SL_TRANSACTION { get; set; }
     public DbSet<SL_USER_PREF> SL_USER_PREF { get; set; }
     public DbSet<SL_BOOK> SL_BOOK { get; set; }
+    public DbSet<OA_USERS> OA_USERS { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,6 +39,7 @@ public class ShowLoggerDbContext : DbContext
         modelBuilder.Entity<SL_TRANSACTION>().HasKey(m => m.TRANSACTION_ID);
         modelBuilder.Entity<SL_USER_PREF>().HasKey(m => m.USER_PREF_ID);
         modelBuilder.Entity<SL_BOOK>().HasKey(m => m.BOOK_ID);
+        modelBuilder.Entity<OA_USERS>().HasKey(m => m.USER_ID);
 
         modelBuilder.Entity<SL_CODE_VALUE>(entity =>
         {

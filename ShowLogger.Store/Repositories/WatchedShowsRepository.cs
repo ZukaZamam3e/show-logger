@@ -210,18 +210,21 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
         Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
 
-        IEnumerable<FriendWatchHistoryModel> query = _context.SL_SHOW.Select(m => new FriendWatchHistoryModel
-        {
-            ShowId = m.SHOW_ID,
-            UserId = m.USER_ID,
-            ShowName = m.SHOW_NAME,
-            SeasonNumber = m.SEASON_NUMBER,
-            EpisodeNumber = m.EPISODE_NUMBER,
-            DateWatched = m.DATE_WATCHED,
-            ShowTypeId = m.SHOW_TYPE_ID,
-            ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
-            ShowNotes = m.SHOW_NOTES,
-        }).Where(m => friends.Contains(m.UserId));
+        IEnumerable<FriendWatchHistoryModel> query = (from m in _context.SL_SHOW
+                                                      join u in _context.OA_USERS on m.USER_ID equals u.USER_ID
+                                                      select new FriendWatchHistoryModel
+                                                      {
+                                                          ShowId = m.SHOW_ID,
+                                                          UserId = m.USER_ID,
+                                                          Name = $"{u.LAST_NAME}, {u.FIRST_NAME}",
+                                                          ShowName = m.SHOW_NAME,
+                                                          SeasonNumber = m.SEASON_NUMBER,
+                                                          EpisodeNumber = m.EPISODE_NUMBER,
+                                                          DateWatched = m.DATE_WATCHED,
+                                                          ShowTypeId = m.SHOW_TYPE_ID,
+                                                          ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
+                                                          ShowNotes = m.SHOW_NOTES,
+                                                      }).Where(m => friends.Contains(m.UserId));
 
         return query;
     }
@@ -350,6 +353,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             Item = m.ITEM,
             CostAmt = m.COST_AMT,
             DiscountAmt = m.DISCOUNT_AMT,
+            BenefitAmt = m.BENEFIT_AMT,
             TransactionNotes = m.TRANSACTION_NOTES,
             TransactionDate = m.TRANSACTION_DATE,
         });
@@ -373,6 +377,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             ITEM = model.Item,
             COST_AMT = model.CostAmt,
             DISCOUNT_AMT = model.DiscountAmt,
+            BENEFIT_AMT = model.BenefitAmt,
             TRANSACTION_NOTES = model.TransactionNotes,
             TRANSACTION_DATE = model.TransactionDate,
             USER_ID = userId
@@ -396,6 +401,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             entity.ITEM = model.Item;
             entity.COST_AMT = model.CostAmt;
             entity.DISCOUNT_AMT = model.DiscountAmt;
+            entity.BENEFIT_AMT = model.BenefitAmt;
             entity.TRANSACTION_NOTES = model.TransactionNotes;
             entity.TRANSACTION_DATE = model.TransactionDate;
 
@@ -419,5 +425,27 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         }
         else
             return false;
+    }
+
+    public IEnumerable<YearStatsModel> GetYearStats(int userId)
+    {
+        int[] friends = _context.SL_FRIEND.Where(m => m.USER_ID == userId).Select(m => m.FRIEND_USER_ID)
+            .Union(_context.SL_FRIEND.Where(m => m.FRIEND_USER_ID == userId).Select(m => m.USER_ID)).ToArray();
+
+        IEnumerable<YearStatsModel> model = (from x in _context.SL_SHOW
+                                             join u in _context.OA_USERS on x.USER_ID equals u.USER_ID
+                                             group new { x, u } by new { x.USER_ID, x.DATE_WATCHED.Year, u.FIRST_NAME, u.LAST_NAME, u.USER_NAME } into g
+                                             select new YearStatsModel
+                                             {
+                                                 UserId = g.Key.USER_ID,
+                                                 Name = $"{g.Key.LAST_NAME}, {g.Key.FIRST_NAME}",
+                                                 Year = g.Key.Year,
+                                                 TvCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.TV),
+                                                 MoviesCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE),
+                                                 AmcCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.AMC)
+                                             }).Where(m => m.UserId == userId || friends.Contains(m.UserId));
+
+
+        return model;
     }
 }

@@ -23,6 +23,8 @@ public class SL_TRANSACTION
 
     public decimal? DISCOUNT_AMT { get; set; }
 
+    public decimal? BENEFIT_AMT { get; set; }
+
     public string? TRANSACTION_NOTES { get; set; }
 
     public DateTime TRANSACTION_DATE { get; set; }
