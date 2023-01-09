@@ -10,6 +10,9 @@
         columns.OAColumn(model => model.MovieName);
         columns.OAColumn(model => model.ShowTypeIdZ);
         columns.OAColumn(model => model.DateWatched).Formatted("{0:d}");
+        columns.OAColumn(model => model.AlistTicketAmt).Formatted("{0:c}");
+        columns.OAColumn(model => model.TicketAmt).Formatted("{0:c}");
+        columns.OAColumn(model => model.PurchaseAmt).Formatted("{0:c}");
     })
     .Pageable(pager =>
     {

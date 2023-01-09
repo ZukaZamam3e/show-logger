@@ -8,12 +8,14 @@
         Url.Action("LoadCreator", "Transaction", new { area = "Shows" }), 
         Url.Action("Create", "Transaction", new { area = "Shows" }),
         "",
-        "transactions.init_editor")
+        "transactions.init_editor",
+        "transactions.post_save")
     .Editor("Edit Transaction", 
         Url.Action("LoadEditor", "Transaction", new { area = "Shows" }), 
         Url.Action("Update", "Transaction", new { area = "Shows" }),
         "",
-        "transactions.init_editor")
+        "transactions.init_editor",
+        "transactions.post_save")
     .IdProperty("TransactionId")
     .Columns(columns =>
     {

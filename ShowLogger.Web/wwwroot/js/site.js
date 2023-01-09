@@ -389,6 +389,12 @@ transactions = (function () {
                 }
             });
         },
+
+        post_save: function (e) {
+            if (!!$('#gvMovieStats')) {
+                oa_grid.reload_grid('gvMovieStats');
+            }
+        }
     }
 })();
 
@@ -563,6 +569,12 @@ oa_grid = (function () {
                             $('#gridModelEditor').modal('toggle');
                             oa_grid.reload_grid(gridName);
                             oa_utilities.show_record_saved_notification();
+
+                            var postCreateFunc = grid.attr("post_creator_func");
+                            if (!!postCreateFunc) {
+                                var func = window[postCreateFunc.split(".")[0]][postCreateFunc.split(".")[1]];
+                                func($('#gridModelEditorBody'));
+                            }
                         }
                     });
 
@@ -619,6 +631,12 @@ oa_grid = (function () {
                             $('#gridModelEditor').modal('toggle');
                             oa_grid.update_row(gridName, data.data, idProp);
                             oa_utilities.show_record_saved_notification();
+
+                            var postUpdateFunc = grid.attr("post_updator_func");
+                            if (!!postUpdateFunc) {
+                                var func = window[postUpdateFunc.split(".")[0]][postUpdateFunc.split(".")[1]];
+                                func($('#gridModelEditorBody'));
+                            }
                         }
                     });
                 });

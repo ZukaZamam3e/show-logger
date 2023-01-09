@@ -57,7 +57,7 @@ public static class OAGridBuilder
             ;
     }
 
-    public static IHtmlGrid<T> Editor<T>(this IHtmlGrid<T> grid, string title, string? partialView, string? updateUrl, string updateFunc = "", string preUpdateFunc = "") where T : class
+    public static IHtmlGrid<T> Editor<T>(this IHtmlGrid<T> grid, string title, string? partialView, string? updateUrl, string updateFunc = "", string preUpdateFunc = "", string postUpdateFunc = "") where T : class
     {
         grid.Grid.Attributes.Add("editor_title", title);
         grid.Grid.Attributes.Add("editor_view", partialView);
@@ -72,6 +72,11 @@ public static class OAGridBuilder
             grid.Grid.Attributes.Add("pre_editor_func", preUpdateFunc);
         }
 
+        if (!string.IsNullOrEmpty(postUpdateFunc))
+        {
+            grid.Grid.Attributes.Add("post_editor_func", postUpdateFunc);
+        }
+
         return grid;
     }
 
@@ -82,7 +87,7 @@ public static class OAGridBuilder
         return grid;
     }
 
-    public static IHtmlGrid<T> Creator<T>(this IHtmlGrid<T> grid, string title, string? partialView, string? createUrl, string createFunc = "", string preCreateFunc = "") where T : class
+    public static IHtmlGrid<T> Creator<T>(this IHtmlGrid<T> grid, string title, string? partialView, string? createUrl, string createFunc = "", string preCreateFunc = "", string postCreateFunc = "") where T : class
     {
         grid.Grid.Attributes.Add("creator_title", title);
         grid.Grid.Attributes.Add("creator_view", partialView);
@@ -95,6 +100,11 @@ public static class OAGridBuilder
         if (!string.IsNullOrEmpty(preCreateFunc))
         {
             grid.Grid.Attributes.Add("pre_creator_func", preCreateFunc);
+        }
+
+        if (!string.IsNullOrEmpty(postCreateFunc))
+        {
+            grid.Grid.Attributes.Add("post_creator_func", postCreateFunc);
         }
 
         return grid;

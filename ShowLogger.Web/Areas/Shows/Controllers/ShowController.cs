@@ -277,7 +277,7 @@ public class ShowController : BaseController
 
         try
         {
-            model = _watchedShowsRepository.GetMovieStats(GetLoggedInUserId()).OrderByDescending(m => m.DateWatched).ThenByDescending(m => m.MovieName);
+            model = _watchedShowsRepository.GetMovieStats(GetLoggedInUserId()).OrderByDescending(m => m.DateWatched).ThenByDescending(m => m.MovieName).ToList();
         }
         catch (Exception ex)
         {
@@ -315,7 +315,7 @@ public class ShowController : BaseController
 
         try
         {
-            model = _watchedShowsRepository.GetYearStats(GetLoggedInUserId()).OrderByDescending(m => m.Year).ThenByDescending(m => m.Name);
+            model = _watchedShowsRepository.GetYearStats(GetLoggedInUserId()).OrderByDescending(m => m.Year).ThenBy(m => m.Name);
         }
         catch (Exception ex)
         {

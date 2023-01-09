@@ -75,13 +75,28 @@ public class MovieModel
     [Display(Name = "Movie Name")]
     public string MovieName { get; set; }
 
+    [Display(Name = "Show Id")]
+    public int ShowId { get; set; }
+
+    [Display(Name = "Show Type")]
+    public int ShowTypeId { get; set; }
+
     [Display(Name = "Show Type")]
     public string? ShowTypeIdZ { get; set; }
 
     [Display(Name = "Date Watched")]
     public DateTime DateWatched { get; set; }
 
-    public string MobileView => $"{MovieName}<br>{ShowTypeIdZ}<br>{DateWatched.ToShortDateString()}";
+    [Display(Name = "A-List")]
+    public decimal? AlistTicketAmt { get; set; }
+
+    [Display(Name = "Ticket")]
+    public decimal? TicketAmt { get; set; }
+
+    [Display(Name = "Purchase")]
+    public decimal? PurchaseAmt { get; set; }
+
+    public string MobileView => $"{MovieName}<br>{ShowTypeIdZ}<br>{DateWatched.ToShortDateString()}{(ShowTypeId == 1002 ? $"<br>A-List: {string.Format("{0:C}", AlistTicketAmt)}<br>Ticket: {string.Format("{0:C}", TicketAmt)}<br>Purchase: {string.Format("{0:C}", PurchaseAmt)}" : "")}";
 
 }
 

@@ -192,13 +192,31 @@ public class WatchedShowsRepository : IWatchedShowsRepository
     {
         Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
 
-        IEnumerable<MovieModel> query = _context.SL_SHOW.Where(m => m.USER_ID == userId && (m.SHOW_TYPE_ID == (int)CodeValueIds.AMC || m.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE)).Select(m => new MovieModel
+        List<MovieModel> query = _context.SL_SHOW.Where(m => m.USER_ID == userId && (m.SHOW_TYPE_ID == (int)CodeValueIds.AMC || m.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE)).Select(m => new MovieModel
         {
             UserId = m.USER_ID,
             MovieName = m.SHOW_NAME,
+            ShowId = m.SHOW_ID,
+            ShowTypeId = m.SHOW_TYPE_ID,
             ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
             DateWatched = m.DATE_WATCHED,
-        });
+        }).ToList();
+
+        int[] amcIds = query.Where(m => m.ShowTypeId == (int)CodeValueIds.AMC).Select(m => m.ShowId).ToArray();
+
+        if(amcIds.Length > 0)
+        {
+            IEnumerable<IGrouping<int, SL_TRANSACTION>> transactions = _context.SL_TRANSACTION.Where(m => m.SHOW_ID != null).AsEnumerable().GroupBy(m => m.SHOW_ID.Value);
+
+            foreach(IGrouping<int, SL_TRANSACTION> transaction in transactions)
+            {
+                MovieModel movie = query.First(m => m.ShowId == transaction.Key);
+
+                movie.AlistTicketAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.ALIST_TICKET).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
+                movie.TicketAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.TICKET).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
+                movie.PurchaseAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.PURCHASE).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
+            }
+        }
 
         return query;
     }

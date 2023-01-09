@@ -52,7 +52,7 @@
         <div id="divItemDDL" class="col-sm-6">
             @(Html.OA().DropDownListFor(m => m.Item)
                 .Name("ddlItems")
-                .ValueList(Url.Action("GetItemsDDL", "Transaction", new { area = "Show" }))
+                .ValueList(Url.Action("GetItemsDDL", "Transaction", new { area = "Shows" }))
                 .HtmlAttributes(new { @class = "form-control mandatory" })
                 .DataTextName("Item")
                 .DataTextValue("Item")
