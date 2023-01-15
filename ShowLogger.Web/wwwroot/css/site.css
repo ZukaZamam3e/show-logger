@@ -331,7 +331,10 @@ col.gvBooks_Bookname {
 
     .gvMovieStats_Moviename,
     .gvMovieStats_Showtypeidz,
-    .gvMovieStats_Datewatched {
+    .gvMovieStats_Datewatched,
+    .gvMovieStats_Alistticketamt,
+    .gvMovieStats_Ticketamt,
+    .gvMovieStats_Purchaseamt {
         display: none;
     }
 

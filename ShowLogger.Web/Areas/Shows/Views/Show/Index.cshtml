@@ -1,6 +1,12 @@
 ﻿@using ShowLogger.Web.Areas.Shows.Views.Show.ViewModels
-
 @model ShowPageModel
+
+@{
+    if(Model.HomePage)
+    {
+        ViewBag.Title = "Home Page";
+    }
+}
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

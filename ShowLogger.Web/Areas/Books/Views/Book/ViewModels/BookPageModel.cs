@@ -3,4 +3,5 @@
 public class BookPageModel
 {
     public bool HasBookAreaAsDefault { get; set; }
+    public bool HomePage { get; set; }
 }

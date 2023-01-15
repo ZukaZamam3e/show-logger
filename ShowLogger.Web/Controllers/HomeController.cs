@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ShowLogger.Models;
 using ShowLogger.Store.Repositories.Interfaces;
+using ShowLogger.Web.Areas.Books.Views.Book.ViewModels;
 using ShowLogger.Web.Areas.Common;
+using ShowLogger.Web.Areas.Shows.Views.Show.ViewModels;
 using ShowLogger.Web.Data;
 using ShowLogger.Web.Models;
 using System.Diagnostics;
@@ -35,16 +37,22 @@ namespace ShowLogger.Web.Controllers
                 {
                     case "Shows":
                         {
-                            return RedirectToAction("Index", "Show", new { area = "Shows" });
+                            return View("~/Areas/Shows/Views/Show/Index.cshtml", new ShowPageModel
+                            {
+                                HasShowAreaAsDefault = true,
+                                HomePage = true
+                            }); ;
                         }
 
                     case "Books":
                         {
-                            return RedirectToAction("Index", "Book", new { area = "Books" });
+                            return View("~/Areas/Books/Views/Book/Index.cshtml", new BookPageModel
+                            {
+                                HasBookAreaAsDefault = true,
+                                HomePage = true
+                            });
                         }
                 }
-
-                return RedirectToAction("Index", "Home");
             }
 
             return View();
