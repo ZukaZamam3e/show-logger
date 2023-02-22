@@ -242,7 +242,18 @@ public class YearStatsModel
     [Display(Name = "AMC")]
     public int AmcCnt { get; set; }
 
-    public virtual string MobileView => $"{Year}<br>{Name}<br>TV: {TvCnt}<br>Movies: {MoviesCnt}<br>AMC: {AmcCnt}";
+    [Display(Name = "A-List Membership")]
+    public decimal AListMembership { get; set; }
+
+    [Display(Name = "A-List Tickets")]
+    public decimal AListTickets { get; set; }
+
+    [Display(Name = "AMC Purchases")]
+    public decimal AmcPurchases { get; set; }
+
+    public virtual string MobileView => $"{Year}<br>{Name}<br>TV: {TvCnt}<br>Movies: {MoviesCnt}<br>AMC: {AmcCnt}" +
+        $"<br>A-List Membership: {string.Format("{0:C}", AListMembership)}<br>A-List Tickets: {string.Format("{0:C}", AListTickets)}" +
+        $"<br>AMC Purchases: {string.Format("{0:C}", AmcPurchases)}";
 }
 
 public static class DateTimeExtensions

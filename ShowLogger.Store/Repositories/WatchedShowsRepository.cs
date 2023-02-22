@@ -450,19 +450,47 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         int[] friends = _context.SL_FRIEND.Where(m => m.USER_ID == userId).Select(m => m.FRIEND_USER_ID)
             .Union(_context.SL_FRIEND.Where(m => m.FRIEND_USER_ID == userId).Select(m => m.USER_ID)).ToArray();
 
-        IEnumerable<YearStatsModel> model = (from x in _context.SL_SHOW
-                                             join u in _context.OA_USERS on x.USER_ID equals u.USER_ID
-                                             group new { x, u } by new { x.USER_ID, x.DATE_WATCHED.Year, u.FIRST_NAME, u.LAST_NAME, u.USER_NAME } into g
+        IEnumerable<YearStatsModel> modelShows = (from u in _context.OA_USERS
+                                                  join x in _context.SL_SHOW on u.USER_ID equals x.USER_ID
+                                                  group new { x, u } by new { x.USER_ID, x.DATE_WATCHED.Year, u.FIRST_NAME, u.LAST_NAME, u.USER_NAME } into g
+                                                  select new YearStatsModel
+                                                  {
+                                                      UserId = g.Key.USER_ID,
+                                                      Name = $"{g.Key.LAST_NAME}, {g.Key.FIRST_NAME}",
+                                                      Year = g.Key.Year,
+                                                      TvCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.TV),
+                                                      MoviesCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE),
+                                                      AmcCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.AMC),
+                                                  }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
+
+        IEnumerable<YearStatsModel> modelTransactions = (from u in _context.OA_USERS
+                                     join t in _context.SL_TRANSACTION on u.USER_ID equals t.USER_ID
+                                     group new { t, u } by new { u.USER_ID, t.TRANSACTION_DATE.Year, u.FIRST_NAME, u.LAST_NAME, u.USER_NAME } into g
+                                     select new YearStatsModel
+                                     {
+                                         UserId = g.Key.USER_ID,
+                                         Name = $"{g.Key.LAST_NAME}, {g.Key.FIRST_NAME}",
+                                         Year = g.Key.Year,
+                                         AListMembership = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.ALIST).Sum(m => m.t.COST_AMT),
+                                         AListTickets = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.ALIST_TICKET).Sum(m => m.t.COST_AMT),
+                                         AmcPurchases = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.TICKET || m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.PURCHASE).Sum(m => m.t.COST_AMT - m.t.BENEFIT_AMT - m.t.DISCOUNT_AMT) ?? 0,
+                                     }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
+
+        IEnumerable<YearStatsModel> model = (from s in modelShows
+                                             join t in modelTransactions on new { s.UserId, s.Year } equals new { t.UserId, t.Year } into ts
+                                             from t in ts.DefaultIfEmpty()
                                              select new YearStatsModel
                                              {
-                                                 UserId = g.Key.USER_ID,
-                                                 Name = $"{g.Key.LAST_NAME}, {g.Key.FIRST_NAME}",
-                                                 Year = g.Key.Year,
-                                                 TvCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.TV),
-                                                 MoviesCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE),
-                                                 AmcCnt = g.Count(m => m.x.SHOW_TYPE_ID == (int)CodeValueIds.AMC)
-                                             }).Where(m => m.UserId == userId || friends.Contains(m.UserId));
-
+                                                 UserId = s.UserId,
+                                                 Year = s.Year,
+                                                 Name = s.Name,
+                                                 TvCnt = s.TvCnt,
+                                                 MoviesCnt = s.MoviesCnt,
+                                                 AmcCnt = s.AmcCnt,
+                                                 AListMembership = t?.AListMembership ?? 0,
+                                                 AListTickets = t?.AListTickets ?? 0,
+                                                 AmcPurchases = t?.AmcPurchases ?? 0
+                                             });
 
         return model;
     }

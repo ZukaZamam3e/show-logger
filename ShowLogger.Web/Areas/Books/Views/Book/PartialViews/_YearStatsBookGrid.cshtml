@@ -1,0 +1,21 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<YearStatsBookModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvYearStatsBook")
+    .Columns(columns =>
+    {
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.Year);
+        columns.OAColumn(model => model.Name);
+        columns.OAColumn(model => model.BookCnt);
+        columns.OAColumn(model => model.ChapterCnt);
+        columns.OAColumn(model => model.PageCnt);
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

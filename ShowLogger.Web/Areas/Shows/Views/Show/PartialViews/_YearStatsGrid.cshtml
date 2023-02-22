@@ -12,6 +12,9 @@
         columns.OAColumn(model => model.TvCnt);
         columns.OAColumn(model => model.MoviesCnt);
         columns.OAColumn(model => model.AmcCnt);
+        columns.OAColumn(model => model.AListMembership).Formatted("{0:c}");
+        columns.OAColumn(model => model.AListTickets).Formatted("{0:c}");
+        columns.OAColumn(model => model.AmcPurchases).Formatted("{0:c}");
     })
     .Pageable(pager =>
     {

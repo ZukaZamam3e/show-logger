@@ -97,4 +97,26 @@ public class BookRepository : IBookRepository
         else
             return false;
     }
+
+    public IEnumerable<YearStatsBookModel> GetYearStats(int userId)
+    {
+        int[] friends = _context.SL_FRIEND.Where(m => m.USER_ID == userId).Select(m => m.FRIEND_USER_ID)
+            .Union(_context.SL_FRIEND.Where(m => m.FRIEND_USER_ID == userId).Select(m => m.USER_ID)).ToArray();
+
+        IEnumerable<YearStatsBookModel> model = from u in _context.OA_USERS
+                                                join x in _context.SL_BOOK on u.USER_ID equals x.USER_ID
+                                                where x.END_DATE != null
+                                                group new { x, u } by new { x.USER_ID, x.END_DATE.Value.Year, u.FIRST_NAME, u.LAST_NAME, u.USER_NAME } into g
+                                                select new YearStatsBookModel
+                                                {
+                                                    UserId = g.Key.USER_ID,
+                                                    Name = $"{g.Key.LAST_NAME}, {g.Key.FIRST_NAME}",
+                                                    Year = g.Key.Year,
+                                                    BookCnt = g.Count(),
+                                                    ChapterCnt = g.Sum(m => m.x.CHAPTERS) ?? 0,
+                                                    PageCnt = g.Sum(m => m.x.PAGES) ?? 0,
+                                                };
+
+        return model;
+    }
 }

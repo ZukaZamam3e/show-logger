@@ -37,3 +37,30 @@ public class BookModel
         $"{(Pages != null ? $"<br>Pages: {Pages}" : "")}" +
         $"{(!string.IsNullOrEmpty(BookNotes) ? $"<br>{BookNotes}" : "")}";
 }
+
+public class YearStatsBookModel
+{
+    [Display(Name = "User Id")]
+    public int UserId { get; set; }
+
+    [Display(Name = "Name")]
+    public string Name { get; set; }
+
+    [Display(Name = "Year")]
+    public int Year { get; set; }
+
+    [Display(Name = "Books")]
+    public int BookCnt { get; set; }
+
+    [Display(Name = "Chapters")]
+    public int ChapterCnt { get; set; }
+
+    [Display(Name = "Pages")]
+    public int PageCnt { get; set; }
+
+    public virtual string MobileView => $"{Year}" +
+        $"<br>{Name}" +
+        $"<br>Books: {BookCnt}" +
+        $"<br>Chapters: {ChapterCnt}" +
+        $"<br>Pages: {PageCnt}";
+}

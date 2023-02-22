@@ -134,4 +134,23 @@ public class BookController : BaseController
 
         return Json(new { data = successful, errors = GetErrorsFromModelState() });
     }
+
+    [HttpGet]
+    public PartialViewResult BookYearStats_Read()
+    {
+
+        IEnumerable<YearStatsBookModel> model = new List<YearStatsBookModel>();
+
+        try
+        {
+            model = _bookRepository.GetYearStats(GetLoggedInUserId()).OrderByDescending(m => m.Year).ThenBy(m => m.Name);
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load year stats.");
+        }
+
+        // Only grid query values will be available here.
+        return PartialView("~/Areas/Books/Views/Book/PartialViews/_YearStatsBookGrid.cshtml", model);
+    }
 }

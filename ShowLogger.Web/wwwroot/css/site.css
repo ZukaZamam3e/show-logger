@@ -258,7 +258,8 @@ col.gvFriendsWatchHistory_Mobileview,
 col.gvWatchlist_Mobileview,
 col.gvTransactions_Mobileview,
 col.gvBooks_Mobileview,
-col.gvYearStats_Mobileview {
+col.gvYearStats_Mobileview,
+col.gvYearStatsBook_Mobileview {
     width: 350px;
 }
 
@@ -282,7 +283,8 @@ col.gvBooks_Bookname {
 .gvWatchlist_Mobileview,
 .gvTransactions_Mobileview,
 .gvBooks_Mobileview,
-.gvYearStats_Mobileview {
+.gvYearStats_Mobileview,
+.gvYearStatsBook_Mobileview {
     text-align: center;
 }
 
@@ -294,7 +296,8 @@ col.gvBooks_Bookname {
     .gvWatchlist_Mobileview,
     .gvTransactions_Mobileview,
     .gvBooks_Mobileview,
-    .gvYearStats_Mobileview {
+    .gvYearStats_Mobileview,
+    .gvYearStatsBook_Mobileview {
         display: none;
     }
 }
@@ -371,7 +374,10 @@ col.gvBooks_Bookname {
     .gvYearStats_Name,
     .gvYearStats_Tvcnt,
     .gvYearStats_Moviescnt,
-    .gvYearStats_Amccnt {
+    .gvYearStats_Amccnt,
+    .gvYearStats_Alistmembership,
+    .gvYearStats_Alisttickets,
+    .gvYearStats_Amcpurchases {
         display: none;
     }
 
@@ -381,6 +387,14 @@ col.gvBooks_Bookname {
     .gvBooks_Chapters,
     .gvBooks_Pages,
     .gvBooks_Booknotes {
+        display: none;
+    }
+
+    .gvYearStatsBook_Year,
+    .gvYearStatsBook_Name,
+    .gvYearStatsBook_Bookcnt,
+    .gvYearStatsBook_Chaptercnt,
+    .gvYearStatsBook_Pagecnt {
         display: none;
     }
 

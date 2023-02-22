@@ -16,4 +16,6 @@ public interface IBookRepository : IRepository
     long UpdateBook(int userId, BookModel model);
 
     bool DeleteBook(int userId, int showId);
+
+    IEnumerable<YearStatsBookModel> GetYearStats(int userId);
 }
