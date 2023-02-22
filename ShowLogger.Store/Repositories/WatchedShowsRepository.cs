@@ -473,7 +473,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                          Year = g.Key.Year,
                                          AListMembership = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.ALIST).Sum(m => m.t.COST_AMT),
                                          AListTickets = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.ALIST_TICKET).Sum(m => m.t.COST_AMT),
-                                         AmcPurchases = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.TICKET || m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.PURCHASE).Sum(m => m.t.COST_AMT - m.t.BENEFIT_AMT - m.t.DISCOUNT_AMT) ?? 0,
+                                         AmcPurchases = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.TICKET || m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.PURCHASE).Sum(m => m.t.COST_AMT - (m.t.BENEFIT_AMT ?? 0) - (m.t.DISCOUNT_AMT ?? 0)),
                                      }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
 
         IEnumerable<YearStatsModel> model = (from s in modelShows
