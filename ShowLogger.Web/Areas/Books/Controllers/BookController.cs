@@ -49,7 +49,7 @@ public class BookController : BaseController
 
         try
         {
-            model = _bookRepository.GetBooks(m => m.UserId == GetLoggedInUserId()).OrderByDescending(m => m.StartDate).ThenByDescending(m => m.EndDate);
+            model = _bookRepository.GetBooks(m => m.UserId == GetLoggedInUserId()).OrderByDescending(m => m.EndDate == null).ThenByDescending(m => m.EndDate).ThenByDescending(m => m.StartDate);
         }
         catch (Exception ex)
         {

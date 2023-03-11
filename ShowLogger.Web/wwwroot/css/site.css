@@ -394,7 +394,10 @@ col.gvBooks_Bookname {
     .gvYearStatsBook_Name,
     .gvYearStatsBook_Bookcnt,
     .gvYearStatsBook_Chaptercnt,
-    .gvYearStatsBook_Pagecnt {
+    .gvYearStatsBook_Pagecnt,
+    .gvYearStatsBook_Dayavgz,
+    .gvYearStatsBook_Chapteravgz,
+    .gvYearStatsBook_Pageavgz {
         display: none;
     }
 

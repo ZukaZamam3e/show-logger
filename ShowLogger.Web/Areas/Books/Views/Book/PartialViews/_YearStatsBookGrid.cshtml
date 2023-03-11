@@ -12,6 +12,9 @@
         columns.OAColumn(model => model.BookCnt);
         columns.OAColumn(model => model.ChapterCnt);
         columns.OAColumn(model => model.PageCnt);
+        columns.OAColumn(model => model.DayAvgZ);
+        columns.OAColumn(model => model.ChapterAvgZ);
+        columns.OAColumn(model => model.PageAvgZ);
     })
     .Pageable(pager =>
     {

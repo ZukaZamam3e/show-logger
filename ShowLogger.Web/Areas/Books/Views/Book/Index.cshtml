@@ -2,10 +2,7 @@
 @model BookPageModel
 
 @{
-    if(Model.HomePage)
-    {
-        ViewBag.Title = "Home Page";
-    }
+    ViewBag.Title = Model.HomePage ? "Home Page" : "Books";
 }
 
 <div class="row">

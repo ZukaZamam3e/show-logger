@@ -58,9 +58,33 @@ public class YearStatsBookModel
     [Display(Name = "Pages")]
     public int PageCnt { get; set; }
 
+    [Display(Name = "Total Days")]
+    public decimal TotalDays { get; set; }
+
+    [Display(Name = "Average Days")]
+    public decimal DayAvg => TotalDays / BookCnt;
+
+    [Display(Name = "Average Days")]
+    public string DayAvgZ => $"{Math.Round(DayAvg, 2):0.##}";
+
+    [Display(Name = "Average Chapters")]
+    public decimal ChapterAvg => (decimal)ChapterCnt / BookCnt;
+
+    [Display(Name = "Average Chapters")]
+    public string ChapterAvgZ => $"{Math.Round(ChapterAvg, 2):0.##}";
+
+    [Display(Name = "Average Pages")]
+    public decimal PageAvg => (decimal)PageCnt / BookCnt;
+
+    [Display(Name = "Average Pages")]
+    public string PageAvgZ => $"{Math.Round(PageAvg, 2):0.##}";
+
     public virtual string MobileView => $"{Year}" +
         $"<br>{Name}" +
         $"<br>Books: {BookCnt}" +
         $"<br>Chapters: {ChapterCnt}" +
-        $"<br>Pages: {PageCnt}";
+        $"<br>Pages: {PageCnt}" +
+        $"<br>Average Days: {DayAvgZ}" +
+        $"<br>Average Chapters: {ChapterAvgZ}" +
+        $"<br>Average Pages: {PageAvgZ}";
 }
