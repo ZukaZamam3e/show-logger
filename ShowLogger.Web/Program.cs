@@ -7,6 +7,7 @@ using ShowLogger.Data.Context;
 using ShowLogger.Store.Repositories;
 using ShowLogger.Store.Repositories.Interfaces;
 using ShowLogger.Web.Data;
+using ShowLogger.Web.TokenProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +28,15 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
+        options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
     })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders()
+    .AddTokenProvider<EmailConfirmationTokenProvider<ApplicationUser>>("emailconfirmation");
+
+builder.Services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
+     opt.TokenLifespan = TimeSpan.FromDays(3));
+
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddControllers(config =>
