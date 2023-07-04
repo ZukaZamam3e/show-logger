@@ -206,15 +206,18 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
         if(amcIds.Length > 0)
         {
-            IEnumerable<IGrouping<int, SL_TRANSACTION>> transactions = _context.SL_TRANSACTION.Where(m => m.SHOW_ID != null).AsEnumerable().GroupBy(m => m.SHOW_ID.Value);
+            IEnumerable<IGrouping<int, SL_TRANSACTION>> transactions = _context.SL_TRANSACTION.Where(m => m.SHOW_ID != null && m.USER_ID == userId).AsEnumerable().GroupBy(m => m.SHOW_ID.Value);
 
-            foreach(IGrouping<int, SL_TRANSACTION> transaction in transactions)
+            if(transactions != null && transactions.Count() > 0)
             {
-                MovieModel movie = query.First(m => m.ShowId == transaction.Key);
+                foreach (IGrouping<int, SL_TRANSACTION> transaction in transactions)
+                {
+                    MovieModel movie = query.First(m => m.ShowId == transaction.Key);
 
-                movie.AlistTicketAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.ALIST_TICKET).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
-                movie.TicketAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.TICKET).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
-                movie.PurchaseAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.PURCHASE).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
+                    movie.AlistTicketAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.ALIST_TICKET).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
+                    movie.TicketAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.TICKET).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
+                    movie.PurchaseAmt = transaction.Where(m => m.TRANSACTION_TYPE_ID == (int)CodeValueIds.PURCHASE).Sum(m => m.COST_AMT - (m.DISCOUNT_AMT ?? 0) - (m.BENEFIT_AMT ?? 0));
+                }
             }
         }
 
