@@ -267,7 +267,7 @@ col.gvShows_Commands,
 col.gvWatchlist_Commands,
 col.gvTransactions_Commands,
 col.gvBooks_Commands {
-    width: 150px;
+    width: 255px;
 }
 
 col.gvShows_Showname,
@@ -327,7 +327,7 @@ col.gvBooks_Bookname {
     .gvTVStats_Firstwatched,
     .gvTVStats_Lastwatched,
     .gvTVStats_Episodesperday,
-    .gvTVStats_Latestwatched,
+    .gvTVStats_Watched,
     .gvTVStats_Dayssincestarting {
         display: none;
     }

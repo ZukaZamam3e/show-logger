@@ -33,10 +33,64 @@ shows = (function () {
             return model.ShowTypeId === 1000 && (!!model.SeasonNumber || !!model.EpisodeNumber);
         },
 
+        showAddOneDay: function (e) {
+            var model = oa_utilities.getModel(e);
+            return model.ShowTypeId === 1000;
+        },
+
+        showSubtractOneDay: function (e) {
+            var model = oa_utilities.getModel(e);
+            return model.ShowTypeId === 1000;
+        },
+
         addNextEpisode: function (e) {
             var model = oa_utilities.getModel(e);
 
             oa_utilities.ajaxPostData(getShowsBaseURL('Show/AddNextEpisode'), {
+                "showId": model.ShowId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_saved_notification();
+                    if (!!$('#gvShows')) {
+                        oa_grid.reload_grid('gvShows');
+                    }
+
+                    if (!!$('#gvTVStats')) {
+                        oa_grid.reload_grid('gvTVStats');
+                    }
+                }
+            });
+        },
+
+        addOneDay: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getShowsBaseURL('Show/AddOneDay'), {
+                "showId": model.ShowId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    console.log('error: ', data.errors);
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_saved_notification();
+                    if (!!$('#gvShows')) {
+                        oa_grid.reload_grid('gvShows');
+                    }
+
+                    if (!!$('#gvTVStats')) {
+                        oa_grid.reload_grid('gvTVStats');
+                    }
+                }
+            });
+        },
+
+        subtractOneDay: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getShowsBaseURL('Show/SubtractOneDay'), {
                 "showId": model.ShowId
             }, function (data) {
                 if (data.errors.length > 0) {

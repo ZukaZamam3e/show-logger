@@ -20,6 +20,10 @@ public interface IWatchedShowsRepository : IRepository
 
     bool AddNextEpisode(int userId, int showId);
 
+    bool AddOneDay(int userId, int showId);
+    
+    bool SubtractOneDay(int userId, int showId);
+
     bool AddRange(int userId, AddRangeModel model);
 
     bool DeleteShow(int userId, int showId);

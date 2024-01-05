@@ -44,14 +44,26 @@ public class GroupedShowModel
     [Display(Name = "Episodes Watched")]
     public int EpisodesWatched { get; set; }
 
+    [Display(Name = "First Season Watched")]
+    public int? StartingSeasonNumber { get; set; }
+
+    [Display(Name = "First Episode Watched")]
+    public int? StartingEpisodeNumber { get; set; }
+
+    [Display(Name = "First Watched")]
+    public string StartingWatched => StartingSeasonNumber != null && StartingEpisodeNumber != null ? $"s{StartingSeasonNumber.Value.ToString().PadLeft(2, '0')}e{StartingEpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "";
+
     [Display(Name = "Lastest Season Watched")]
-    public int? SeasonNumber { get; set; }
+    public int? LatestSeasonNumber { get; set; }
 
     [Display(Name = "Lastest Episode Watched")]
-    public int? EpisodeNumber { get; set; }
+    public int? LatestEpisodeNumber { get; set; }
 
     [Display(Name = "Latest Watched")]
-    public string LatestWatched => SeasonNumber != null && EpisodeNumber != null ? $"s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "";
+    public string LatestWatched => LatestSeasonNumber != null && LatestEpisodeNumber != null ? $"s{LatestSeasonNumber.Value.ToString().PadLeft(2, '0')}e{LatestEpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "";
+
+    [Display(Name = "Watched")]
+    public string Watched => $"{StartingWatched} - {LatestWatched}";
 
     [Display(Name = "First Watched")]
     public DateTime FirstWatched { get; set; }
@@ -65,7 +77,7 @@ public class GroupedShowModel
     [Display(Name = "Days Since Starting")]
     public int DaysSinceStarting => Math.Max(Convert.ToInt32((LastWatched.Date - FirstWatched.Date).TotalDays), 1);
 
-    public string MobileView => $"{ShowName}<br>{FirstWatched.ToShortDateString()} - {LastWatched.ToShortDateString()}<br>{(!string.IsNullOrEmpty(LatestWatched) ? $"{LatestWatched}<br>" : "")}{EpisodesWatched} total - {DaysSinceStarting} days";
+    public string MobileView => $"{ShowName}<br>{FirstWatched.ToShortDateString()} - {LastWatched.ToShortDateString()}<br>{(!string.IsNullOrEmpty(Watched) ? $"{Watched}<br>" : "")}{EpisodesWatched} total - {DaysSinceStarting} days";
 }
 
 public class MovieModel

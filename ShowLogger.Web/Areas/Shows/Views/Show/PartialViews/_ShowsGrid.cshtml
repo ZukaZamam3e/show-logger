@@ -15,6 +15,8 @@
             commands.Custom("AddNextEpisode", "fas fa-plus", "shows.addNextEpisode", "shows.showAddNextEpisode");
             commands.Custom("AddRange", "fas fa-check-double", "shows.openAddRange", "shows.showAddRange");
             commands.Custom("Delete", "fas fa-trash-alt", "shows.delete");
+            commands.Custom("SubtractOneDay", "fas fa-backward", "shows.subtractOneDay", "shows.showSubtractOneDay");
+            commands.Custom("AddOneDay", "fas fa-forward", "shows.addOneDay", "shows.showAddOneDay");
         });
         columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
         columns.OAColumn(model => model.ShowName);

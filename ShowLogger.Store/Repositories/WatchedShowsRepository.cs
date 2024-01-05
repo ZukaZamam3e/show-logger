@@ -124,6 +124,38 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             return false;
     }
 
+    public bool AddOneDay(int userId, int showId)
+    {
+        SL_SHOW? entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);
+
+        if (entity != null)
+        {
+            entity.DATE_WATCHED = entity.DATE_WATCHED.AddDays(1);
+
+            _context.SaveChanges();
+
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public bool SubtractOneDay(int userId, int showId)
+    {
+        SL_SHOW? entity = _context.SL_SHOW.FirstOrDefault(m => m.SHOW_ID == showId && m.USER_ID == userId);
+
+        if (entity != null)
+        {
+            entity.DATE_WATCHED = entity.DATE_WATCHED.AddDays(-1);
+
+            _context.SaveChanges();
+
+            return true;
+        }
+        else
+            return false;
+    }
+
     public bool AddRange(int userId, AddRangeModel model)
     {
         bool successful = false;
@@ -180,12 +212,78 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             ShowName = m.Key.SHOW_NAME,
             FirstWatched = m.Min(m => m.DATE_WATCHED),
             LastWatched = m.Max(m => m.DATE_WATCHED),
-            SeasonNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().SEASON_NUMBER,
-            EpisodeNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().EPISODE_NUMBER,
+            LatestSeasonNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().SEASON_NUMBER,
+            LatestEpisodeNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().EPISODE_NUMBER,
             EpisodesWatched = m.Count()
-        });
+        }).ToList();
 
-        return query;
+        IEnumerable<SL_SHOW> shows = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && m.USER_ID == userId)
+            .OrderBy(m => m.SHOW_NAME)
+            .ThenBy(m => m.DATE_WATCHED)
+            .ThenBy(m => m.SHOW_ID);
+
+        GroupedShowModel model = new GroupedShowModel();
+        int count = 0;
+        SL_SHOW? previousShow = null;
+
+        List<GroupedShowModel> list = new List<GroupedShowModel>();
+
+        foreach (SL_SHOW? show in shows)
+        {
+            if(model.ShowName != show.SHOW_NAME)
+            {
+                if(previousShow != null)
+                {
+                    model.LastWatched = previousShow.DATE_WATCHED;
+                    model.EpisodesWatched = count;
+                    model.LatestSeasonNumber = previousShow.SEASON_NUMBER;
+                    model.LatestEpisodeNumber = previousShow.EPISODE_NUMBER;
+                    model.ShowId = previousShow.SHOW_ID;
+
+                    list.Add(model);
+                }
+
+                model = new GroupedShowModel
+                {
+                    UserId = userId,
+                    ShowName = show.SHOW_NAME,
+                    FirstWatched = show.DATE_WATCHED,
+                    StartingSeasonNumber = show.SEASON_NUMBER,
+                    StartingEpisodeNumber = show.EPISODE_NUMBER,
+                };
+
+                count = 1;
+            }
+            else if(previousShow != null && previousShow.DATE_WATCHED.AddMonths(4) < show.DATE_WATCHED)
+            {
+                model.LastWatched = previousShow.DATE_WATCHED;
+                model.EpisodesWatched = count;
+                model.LatestSeasonNumber = previousShow.SEASON_NUMBER;
+                model.LatestEpisodeNumber = previousShow.EPISODE_NUMBER;
+
+                list.Add(model);
+
+                model = new GroupedShowModel
+                {
+                    UserId = userId,
+                    ShowName = show.SHOW_NAME,
+                    FirstWatched = show.DATE_WATCHED,
+                    StartingSeasonNumber = show.SEASON_NUMBER,
+                    StartingEpisodeNumber = show.EPISODE_NUMBER,
+                };
+
+                count = 1;
+            }
+            else 
+            {
+                ++count;
+            }
+
+            previousShow = show;
+        }
+
+
+        return list;
     }
 
     public IEnumerable<MovieModel> GetMovieStats(int userId)

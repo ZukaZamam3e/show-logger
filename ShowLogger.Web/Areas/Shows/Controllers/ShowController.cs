@@ -141,6 +141,54 @@ public class ShowController : BaseController
     }
 
     [HttpPost]
+    public IActionResult AddOneDay(int showId)
+    {
+        bool successful = false;
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                successful = _watchedShowsRepository.AddOneDay(GetLoggedInUserId(), showId);
+
+                if (!successful)
+                {
+                    ModelState.AddModelError("AddOneDay", "Could not subtract one day to episode.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not add one day to episode.");
+        }
+
+        return Json(new { data = successful, errors = GetErrorsFromModelState() });
+    }
+
+    [HttpPost]
+    public IActionResult SubtractOneDay(int showId)
+    {
+        bool successful = false;
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                successful = _watchedShowsRepository.SubtractOneDay(GetLoggedInUserId(), showId);
+
+                if (!successful)
+                {
+                    ModelState.AddModelError("SubtractOneDay", "Could not subtract one day to episode.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not add one day to episode.");
+        }
+
+        return Json(new { data = successful, errors = GetErrorsFromModelState() });
+    }
+
+    [HttpPost]
     public IActionResult LoadAddRangeWindow()
     {
         AddRangeModel model = new AddRangeModel
