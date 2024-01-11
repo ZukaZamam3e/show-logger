@@ -231,8 +231,8 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         foreach (SL_SHOW? show in shows)
         {
             if(model.ShowName != show.SHOW_NAME
-                || (previousShow?.SHOW_NAME == show.SHOW_NAME
-                    && previousShow.SEASON_NUMBER > show.SEASON_NUMBER)
+                //|| (previousShow?.SHOW_NAME == show.SHOW_NAME
+                //    && previousShow.SEASON_NUMBER > show.SEASON_NUMBER)
                )
             {
                 if(previousShow != null)
