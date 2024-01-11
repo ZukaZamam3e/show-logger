@@ -200,22 +200,22 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
     public IEnumerable<GroupedShowModel> GetTVStats(int userId)
     {
-        IEnumerable<GroupedShowModel> query = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && m.USER_ID == userId).GroupBy(m => new
-        {
-            m.SHOW_NAME,
-            m.USER_ID
-        })
-        .Select(m => new GroupedShowModel
-        {
-            UserId = m.Key.USER_ID,
-            ShowId = m.Max(m => m.SHOW_ID),
-            ShowName = m.Key.SHOW_NAME,
-            FirstWatched = m.Min(m => m.DATE_WATCHED),
-            LastWatched = m.Max(m => m.DATE_WATCHED),
-            LatestSeasonNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().SEASON_NUMBER,
-            LatestEpisodeNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().EPISODE_NUMBER,
-            EpisodesWatched = m.Count()
-        }).ToList();
+        //IEnumerable<GroupedShowModel> query = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && m.USER_ID == userId).GroupBy(m => new
+        //{
+        //    m.SHOW_NAME,
+        //    m.USER_ID
+        //})
+        //.Select(m => new GroupedShowModel
+        //{
+        //    UserId = m.Key.USER_ID,
+        //    ShowId = m.Max(m => m.SHOW_ID),
+        //    ShowName = m.Key.SHOW_NAME,
+        //    FirstWatched = m.Min(m => m.DATE_WATCHED),
+        //    LastWatched = m.Max(m => m.DATE_WATCHED),
+        //    LatestSeasonNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().SEASON_NUMBER,
+        //    LatestEpisodeNumber = m.OrderByDescending(m => m.SHOW_ID).FirstOrDefault().EPISODE_NUMBER,
+        //    EpisodesWatched = m.Count()
+        //}).ToList();
 
         IEnumerable<SL_SHOW> shows = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && m.USER_ID == userId)
             .OrderBy(m => m.SHOW_NAME)
@@ -230,14 +230,17 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
         foreach (SL_SHOW? show in shows)
         {
-            if(model.ShowName != show.SHOW_NAME)
+            if(model.ShowName != show.SHOW_NAME
+                || (previousShow?.SHOW_NAME == show.SHOW_NAME
+                    && previousShow.SEASON_NUMBER > show.SEASON_NUMBER)
+               )
             {
                 if(previousShow != null)
                 {
                     model.LastWatched = previousShow.DATE_WATCHED;
-                    model.EpisodesWatched = count;
                     model.LatestSeasonNumber = previousShow.SEASON_NUMBER;
                     model.LatestEpisodeNumber = previousShow.EPISODE_NUMBER;
+                    model.EpisodesWatched = (model.LatestSeasonNumber == previousShow.SEASON_NUMBER && model.LatestEpisodeNumber == previousShow.EPISODE_NUMBER ? count : ++count);
                     model.ShowId = previousShow.SHOW_ID;
 
                     list.Add(model);
@@ -257,9 +260,10 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             else if(previousShow != null && previousShow.DATE_WATCHED.AddMonths(4) < show.DATE_WATCHED)
             {
                 model.LastWatched = previousShow.DATE_WATCHED;
-                model.EpisodesWatched = count;
                 model.LatestSeasonNumber = previousShow.SEASON_NUMBER;
                 model.LatestEpisodeNumber = previousShow.EPISODE_NUMBER;
+                model.EpisodesWatched = (model.LatestSeasonNumber == previousShow.SEASON_NUMBER && model.LatestEpisodeNumber == previousShow.EPISODE_NUMBER ? count : ++count);
+                model.ShowId = previousShow.SHOW_ID;
 
                 list.Add(model);
 
