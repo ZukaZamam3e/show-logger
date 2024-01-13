@@ -47,6 +47,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             ShowTypeId = m.SHOW_TYPE_ID,
             ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
             ShowNotes = m.SHOW_NOTES,
+            RestartBinge = m.RESTART_BINGE
         });
 
         if (predicate != null)
@@ -69,6 +70,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             SEASON_NUMBER = model.SeasonNumber,
             SHOW_NAME = model.ShowName,
             SHOW_NOTES = model.ShowNotes,
+            RESTART_BINGE = model.RestartBinge,
             USER_ID = userId
         };
 
@@ -91,6 +93,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             entity.SEASON_NUMBER = model.SeasonNumber;
             entity.SHOW_NAME = model.ShowName;
             entity.SHOW_NOTES = model.ShowNotes;
+            entity.RESTART_BINGE = model.RestartBinge;
 
             return _context.SaveChanges();
         }
@@ -231,6 +234,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         foreach (SL_SHOW? show in shows)
         {
             if(model.ShowName != show.SHOW_NAME
+                || show.RESTART_BINGE
                 //|| (previousShow?.SHOW_NAME == show.SHOW_NAME
                 //    && previousShow.SEASON_NUMBER > show.SEASON_NUMBER)
                )

@@ -21,4 +21,6 @@ public class SL_SHOW
 
     public string? SHOW_NOTES { get; set; }
 
+    public bool RESTART_BINGE { get; set; }
+
 }

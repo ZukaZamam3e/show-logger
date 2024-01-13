@@ -29,6 +29,9 @@ public class ShowModel
     [Display(Name = "Show Notes")]
     public string? ShowNotes { get; set; }
 
+    [Display(Name = "Restart Binge")]
+    public bool RestartBinge { get; set; }
+
     public virtual string MobileView => $"{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" :"")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
 }
 
@@ -75,7 +78,7 @@ public class GroupedShowModel
     public decimal EpisodesPerDay => Math.Max(Math.Round(EpisodesWatched / (decimal)DaysSinceStarting, 2), 1);
 
     [Display(Name = "Days Since Starting")]
-    public int DaysSinceStarting => Math.Max(Convert.ToInt32((LastWatched.Date - FirstWatched.Date).TotalDays), 1);
+    public int DaysSinceStarting => Math.Max(Convert.ToInt32((LastWatched.Date - FirstWatched.Date.AddDays(-1)).TotalDays), 1);
 
     public string MobileView => $"{ShowName}<br>{FirstWatched.ToShortDateString()} - {LastWatched.ToShortDateString()}<br>{(!string.IsNullOrEmpty(Watched) ? $"{Watched}<br>" : "")}{EpisodesWatched} total - {DaysSinceStarting} days";
 }
