@@ -1,5 +1,6 @@
 ﻿using ShowLogger.Models.Api;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace ShowLogger.Models;
 
@@ -312,11 +313,38 @@ public class YearStatsModel
     [Display(Name = "TV")]
     public int TvCnt { get; set; }
 
+    [Display(Name = "TV Runtime")]
+    public int? TvRuntime { get; set; }
+
+    [Display(Name = "TV Runtime")]
+    public string TvRuntimeZ => ConvertRuntime(TvRuntime);
+
+    [Display(Name = "TV Stats")]
+    public string TvStats => $"{TvCnt}{TvRuntimeZ}";
+
     [Display(Name = "Movies")]
     public int MoviesCnt { get; set; }
 
+    [Display(Name = "Movies Runtime")]
+    public int? MoviesRuntime { get; set; }
+
+    [Display(Name = "Movies Runtime")]
+    public string MoviesRuntimeZ => ConvertRuntime(MoviesRuntime);
+
+    [Display(Name = "Movies Stats")]
+    public string MovieStats => $"{MoviesCnt}{MoviesRuntimeZ}";
+
     [Display(Name = "AMC")]
     public int AmcCnt { get; set; }
+
+    [Display(Name = "AMC Runtime")]
+    public int? AmcRuntime { get; set; }
+
+    [Display(Name = "AMC Runtime")]
+    public string AmcRuntimeZ => ConvertRuntime(AmcRuntime);
+
+    [Display(Name = "AMC Stats")]
+    public string AmcStats => $"{AmcCnt}{AmcRuntimeZ}";
 
     [Display(Name = "A-List Membership")]
     public decimal AListMembership { get; set; }
@@ -327,9 +355,57 @@ public class YearStatsModel
     [Display(Name = "AMC Purchases")]
     public decimal AmcPurchases { get; set; }
 
-    public virtual string MobileView => $"{Year}<br>{Name}<br>TV: {TvCnt}<br>Movies: {MoviesCnt}<br>AMC: {AmcCnt}" +
+    public virtual string MobileView => $"{Year}<br>{Name}<br>TV: {TvStats}<br>Movies: {MovieStats}<br>AMC: {AmcStats}" +
         $"<br>A-List Membership: {string.Format("{0:C}", AListMembership)}<br>A-List Tickets: {string.Format("{0:C}", AListTickets)}" +
         $"<br>AMC Purchases: {string.Format("{0:C}", AmcPurchases)}";
+
+    private string ConvertRuntime(int? minutes)
+    {
+        if (minutes == null)
+            return "";
+
+        TimeSpan timespan = TimeSpan.FromMinutes(minutes.Value);
+
+        StringBuilder result = new StringBuilder("<br>");
+
+        if(timespan.Days > 0)
+        {
+            result.Append($"{timespan.Days} day");
+
+            if(timespan.Days > 1)
+            {
+                result.Append("s");
+            }
+
+            result.Append(" ");
+        }
+
+        if (timespan.Hours > 0)
+        {
+            result.Append($"{timespan.Hours} hour");
+
+            if (timespan.Hours > 1)
+            {
+                result.Append("s");
+            }
+
+            result.Append(" ");
+        }
+
+        if (timespan.Minutes > 0)
+        {
+            result.Append($"{timespan.Minutes} minute");
+
+            if (timespan.Minutes > 1)
+            {
+                result.Append("s");
+            }
+
+            result.Append(" ");
+        }
+
+        return result.ToString();
+    }
 }
 
 public class LoadWatchFromSearchModel

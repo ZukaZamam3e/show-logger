@@ -510,6 +510,8 @@ public class InfoRepository : IInfoRepository
     {
         TvInfoModel model = GetTvInfos(m => m.TvInfoId == infoId).First();
 
+
+
         long result = RefreshTvInfo(model);
 
         return result;
