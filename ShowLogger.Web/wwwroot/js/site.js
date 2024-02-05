@@ -597,7 +597,7 @@ infos = (function () {
                 "id": id
             }, function (e) {
                 if (e.data.isSuccessful) {
-                    var openCard = $('#SearchOpenInfo:checked').val();
+                    var openCard = $('#SearchOpen:checked').val();
 
                     var message = " downloaded.";
 
