@@ -24,7 +24,9 @@ public class ShowLoggerDbContext : DbContext
     public DbSet<SL_USER_PREF> SL_USER_PREF { get; set; }
     public DbSet<SL_BOOK> SL_BOOK { get; set; }
     public DbSet<OA_USERS> OA_USERS { get; set; }
-
+    public DbSet<SL_TV_INFO> SL_TV_INFO { get; set; }
+    public DbSet<SL_TV_EPISODE_INFO> SL_TV_EPISODE_INFO { get; set; }
+    public DbSet<SL_MOVIE_INFO> SL_MOVIE_INFO { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +42,13 @@ public class ShowLoggerDbContext : DbContext
         modelBuilder.Entity<SL_USER_PREF>().HasKey(m => m.USER_PREF_ID);
         modelBuilder.Entity<SL_BOOK>().HasKey(m => m.BOOK_ID);
         modelBuilder.Entity<OA_USERS>().HasKey(m => m.USER_ID);
+        modelBuilder.Entity<SL_TV_INFO>().HasKey(m => m.TV_INFO_ID);
+        modelBuilder.Entity<SL_TV_EPISODE_INFO>().HasKey(m => m.TV_EPISODE_INFO_ID);
+        modelBuilder.Entity<SL_MOVIE_INFO>().HasKey(m => m.MOVIE_INFO_ID);
+
+        modelBuilder.Entity<SL_TV_INFO>().HasMany(m => m.EPISODE_INFOS)
+            .WithOne(m => m.TV_INFO)
+            .HasForeignKey(m => m.TV_INFO_ID);
 
         modelBuilder.Entity<SL_CODE_VALUE>(entity =>
         {
@@ -172,6 +181,73 @@ public class ShowLoggerDbContext : DbContext
 
             entity.Property(e => e.BOOK_NOTES)
                 .HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<SL_TV_INFO>(entity =>
+        {
+            entity.Property(e => e.TV_INFO_ID)
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.SHOW_NAME)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.SHOW_OVERVIEW)
+                .HasMaxLength(4000)
+                .IsRequired();
+
+            entity.Property(e => e.OTHER_NAMES)
+                .HasMaxLength(150);
+
+            entity.Property(e => e.LAST_DATA_REFRESH)
+                .IsRequired();
+
+            entity.Property(e => e.LAST_UPDATED)
+                .IsRequired();
+
+            entity.Property(e => e.API_ID)
+                .HasMaxLength(25);
+        });
+
+        modelBuilder.Entity<SL_TV_EPISODE_INFO>(entity =>
+        {
+            entity.Property(e => e.TV_EPISODE_INFO_ID)
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.SEASON_NAME)
+                .HasMaxLength(100);
+
+            entity.Property(e => e.EPISODE_NAME)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.EPISODE_OVERVIEW)
+                .HasMaxLength(4000);
+
+            entity.Property(e => e.API_ID)
+                .HasMaxLength(25);
+
+        });
+
+        modelBuilder.Entity<SL_MOVIE_INFO>(entity =>
+        {
+            entity.Property(e => e.MOVIE_INFO_ID)
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.MOVIE_NAME)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.MOVIE_OVERVIEW)
+                .HasMaxLength(4000)
+                .IsRequired();
+
+            entity.Property(e => e.API_ID)
+                .HasMaxLength(25);
+
+            entity.Property(e => e.LAST_DATA_REFRESH)
+                .IsRequired();
+
+            entity.Property(e => e.LAST_UPDATED)
+                .IsRequired();
         });
     }
 }

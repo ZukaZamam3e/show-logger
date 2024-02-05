@@ -1,0 +1,9 @@
+﻿<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @(Html.OA().GridPage()
+            .Name("gvTvEpisodeInfos")
+            .Read(Url.Action("ReadTVEpisodesInfo", "Info", new { area = "Infos" }))
+            .Init("infos.grid_init")
+        )
+    </div>
+</div>

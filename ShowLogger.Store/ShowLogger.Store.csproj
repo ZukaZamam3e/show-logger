@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OMDB_API_Wrapper" Version="2.0.0" />
+    <PackageReference Include="TMDbLib" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ShowLogger.Data\ShowLogger.Data.csproj" />
     <ProjectReference Include="..\ShowLogger.Models\ShowLogger.Models.csproj" />
   </ItemGroup>

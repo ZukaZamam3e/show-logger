@@ -1,0 +1,131 @@
+﻿@using ShowLogger.Models
+
+@model WatchFromSearchModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmWatchFromSearch" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(m => m.ShowId)
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.Type)
+    @Html.HiddenFor(m => m.API)
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.ShowName)
+        </div>
+
+        <div id="divShowNameTxt" class="col-sm-6">
+            @Html.OA().TextBoxFor(m => m.ShowName)
+
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.ShowTypeId)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DropDownListFor(m => m.ShowTypeId, new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1000", Text = "TV" },
+                new SelectListItem { Value = "1001", Text = "Movie" },
+                new SelectListItem { Value = "1002", Text = "AMC" },
+            }, new { @class = "form-control mandatory" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.SeasonNumber)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().NumericTextBoxFor(m => m.SeasonNumber)
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnAddSeason")
+                .Text("Add")
+                .HtmlAttributes(new { @class = "btn btn-primary", style = "width: 100%" })
+                .Click("shows.btnAddSeason_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.EpisodeNumber)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().NumericTextBoxFor(m => m.EpisodeNumber)
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnResetEpisode")
+                .Text("Reset")
+                .HtmlAttributes(new { @class = "btn btn-primary", style = "width: 100%" })
+                .Click("shows.btnResetEpisode_Click()")
+            )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.DateWatched)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.OA().DateFor(m => m.DateWatched).Format("L").HtmlAttributes(new { @class = "mandatory", inputmode = "none" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.RestartBinge)
+        </div>
+
+        <div class="col-sm-8">
+            @Html.CheckBoxFor(m => m.RestartBinge)
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.ShowNotes)
+        </div>
+
+        <div class="col-sm-8">
+            @(Html.OA().TextAreaFor(m => m.ShowNotes)
+                .Rows(4)
+                .HtmlAttributes(new { @style = "width:100%;" })
+                )
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnSaveWatchFromShow")
+                .Text("Save")
+                .HtmlAttributes(new { @class = "btn btn-primary", style = "width: 100%" })
+                .Click("shows.btnSaveWatchFromShow_Click()")
+            )
+        </div>
+
+        <div class="col-sm-2">
+            @(Html.OA().Button()
+                .Name("btnCancelWatchFromShow")
+                .Text("Cancel")
+                .HtmlAttributes(new { @class = "btn btn-primary", style = "width: 100%" })
+                .Click("shows.btnCancelWatchFromShow_Click()")
+            )
+        </div>
+    </div>
+
+}

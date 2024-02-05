@@ -27,4 +27,8 @@
     <ProjectReference Include="..\ShowLogger.Store\ShowLogger.Store.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Infos\Views\Info\ViewModels\" />
+  </ItemGroup>
+
 </Project>

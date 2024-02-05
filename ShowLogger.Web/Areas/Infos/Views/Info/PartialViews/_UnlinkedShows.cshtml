@@ -1,0 +1,24 @@
+﻿<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @(Html.OA().GridPage()
+            .Name("gvUnlinkedShows")
+            .Header(header =>
+            {
+                header.Refresh();
+            })
+            .Read(Url.Action("ReadUnlinkedShows", "Info", new { area = "Infos" }))
+        )
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @(Html.OA().Window()
+            .Name("wUpdateUnlinkedShowName")
+            .Title("Update Unlinked Show Name")
+            .Partial(Url.Action("LoadUpdateUnlinkedShowNameWindow", "Info", new { area = "Infos" }))
+            .PostWindowFunc("infos.saveUpdateUnlinkedShowName")
+            .Width(365)
+        )
+    </div>
+</div>

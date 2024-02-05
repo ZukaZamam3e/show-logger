@@ -1,0 +1,64 @@
+﻿@using ShowLogger.Models.Api
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmSearch" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="form-group row" style="padding-bottom: 10px;">
+        <div class="col-3 col-sm-1">
+            @Html.Label("SearchName", "Name", new { @class = "oa_label" })
+        </div>
+
+        <div class="col-9 col-sm-3" style="padding-bottom: 10px;">
+            @(Html.OA().TextBox()
+                .Name("SearchName")
+                .HtmlAttributes(new { @class = "form-control mandatory" })
+            )
+        </div>
+
+        <div class="col-3 col-sm-1" style="padding-bottom: 10px;">
+            @Html.Label("SearchType", "Type", new { @class = "oa_label" })
+        </div>
+
+        <div class="col-9 col-sm-1">
+            @Html.DropDownList("SearchType", new List<SelectListItem>
+            {
+                new SelectListItem { Value = ((int)INFO_TYPE.TV).ToString(), Text = "TV" },
+                new SelectListItem { Value = ((int)INFO_TYPE.MOVIE).ToString(), Text = "Movie" },
+            }, new { @class = "form-control mandatory" })
+        </div>
+
+        <div class="col-3 col-3 col-sm-1" style="padding-bottom: 10px;">
+            @Html.Label("SearchAPI", "API", new { @class = "oa_label" })
+        </div>
+
+        <div class="col-9 col-sm-1">
+            @Html.DropDownList("SearchAPI", new List<SelectListItem>
+            {
+                new SelectListItem { Value = ((int)INFO_API.TMDB_API).ToString(), Text = "TMDB" },
+                //new SelectListItem { Value = ((int)INFO_API.OMDB_API).ToString(), Text = "OMDB" },
+            }, new { @class = "form-control mandatory" })
+        </div>
+
+        <div class="col-12 col-sm-2" style="padding-bottom: 10px;">
+            @(Html.OA().Button()
+                .Name("btnSearchAPI")
+                .Text("Search")
+                .HtmlAttributes(new { @class = "btn btn-primary", style = "width: 100%" })
+                .Click("shows.btnSearchAPI_Click()")
+            )
+        </div>
+
+        <div class="col-12 col-sm-2" style="padding-bottom: 10px;">
+            @(Html.OA().Button()
+                .Name("btnCloseSearch")
+                .Text("Close")
+                .HtmlAttributes(new { @class = "btn btn-primary", style = "width: 100%" })
+                .Click("shows.closeSearch()")
+            )
+        </div>
+    </div>
+}
+
+<div id="divSearch">
+</div>
