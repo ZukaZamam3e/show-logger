@@ -12,13 +12,13 @@ public interface IWatchedShowsRepository : IRepository
 {
     IEnumerable<CodeValueModel> GetCodeValues(Expression<Func<CodeValueModel, bool>>? predicate = null);
 
-    IEnumerable<ShowModel> GetShows(Expression<Func<ShowModel, bool>>? predicate = null);
+    IEnumerable<ShowModel> GetShows(Expression<Func<ShowInfoModel, bool>>? predicate = null);
 
     long CreateShow(int userId, ShowModel model);
     
     long UpdateShow(int userId, ShowModel model);
 
-    bool AddNextEpisode(int userId, int showId);
+    int AddNextEpisode(int userId, int showId);
 
     bool AddOneDay(int userId, int showId);
     
@@ -53,4 +53,8 @@ public interface IWatchedShowsRepository : IRepository
     bool DeleteTransaction(int userId, int transactionId);
 
     IEnumerable<YearStatsModel> GetYearStats(int userId);
+
+    bool UpdateShowNames(UpdateUnlinkedShowNameModel model);
+
+    bool LinkShows(LinkShowsModel model);
 }

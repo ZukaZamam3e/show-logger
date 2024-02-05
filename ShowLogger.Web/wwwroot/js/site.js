@@ -2,6 +2,11 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+getBaseURL = function () { return $("#hdnRootPath").val(); }
+getCommonBaseURL = function (action) { return getBaseURL() + "/Common/" + action; }
+getShowsBaseURL = function (action) { return getBaseURL() + "/Shows/" + action }
+getBooksBaseURL = function (action) { return getBaseURL() + "/Books/" + action }
+getInfosBaseURL = function (action) { return getBaseURL() + "/Infos/" + action }
 
 shows = (function () {
     return {
@@ -50,7 +55,6 @@ shows = (function () {
                 "showId": model.ShowId
             }, function (data) {
                 if (data.errors.length > 0) {
-                    console.log('error: ', data.errors);
                     oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
                 } else {
                     oa_utilities.show_record_saved_notification();
@@ -72,7 +76,6 @@ shows = (function () {
                 "showId": model.ShowId
             }, function (data) {
                 if (data.errors.length > 0) {
-                    console.log('error: ', data.errors);
                     oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
                 } else {
                     oa_utilities.show_record_saved_notification();
@@ -208,7 +211,81 @@ shows = (function () {
                 $('#EpisodeNumber').val(data.episodeNumber);
                 $('#ShowTypeId').val(data.showTypeId);
             });
-        }
+        },
+
+        openSearch: function () {
+            $('.show_container').hide();
+            $('.search_container').show();
+            window.scrollTo(0, 0);
+        },
+
+        btnSearchAPI_Click: function () {
+            oa_utilities.ajaxPostData(getShowsBaseURL('Show/SearchApi'), {
+                "api": $('#SearchAPI').val(),
+                "type": $('#SearchType').val(),
+                "name": $('#SearchName').val()
+            }, function (e) {
+                if (!!e.data) {
+                    $("#divSearch").html(e.data);
+                } else {
+                    $("#divSearch").html(e);
+                }
+            });
+        },
+
+        closeSearch: function () {
+            $('.search_container').hide();
+            $("#divSearch").html('');
+            $('.show_container').show();
+            window.scrollTo(0, 0);
+        },
+
+        card_watch: function (api, type, id, name, airDate) {
+            oa_utilities.ajaxPostData(getShowsBaseURL('Show/WatchFromSearch'), {
+                "api": api,
+                "type": type,
+                "id": id,
+                "name": name,
+                "airDate": airDate
+            }, function (e) {
+                $('.search_container').hide();
+                $('.watch_from_search_container').show();
+                window.scrollTo(0, 0);
+                $("#divWatchFromSearch").html(e);
+                oa_utilities.init_page($('#divWatchFromSearch'));
+            });
+        },
+
+        btnSaveWatchFromShow_Click: function () {
+            var form = $('#frmWatchFromSearch');
+            var formData = oa_utilities.getFormData(form);
+
+            var loginUrl = getShowsBaseURL('Show/AddWatchFromSearch');
+            oa_utilities.ajaxPostData(loginUrl, formData, function (data) {
+                if (data.errors.length > 0) {
+                    oa_utilities.show_validation_errors('frmWatchFromSearch', data.errors);
+                } else {
+                    oa_utilities.hide_validation_errors('frmWatchFromSearch');
+                    $('#divWatchFromSearch').hide();
+                    $("#divWatchFromSearch").html('');
+
+                    $('.search_container').hide();
+                    $("#divSearch").html('');
+                    $('.show_container').show();
+                    window.scrollTo(0, 0);
+
+                    oa_grid.reload_grid('gvShows');
+                    oa_utilities.show_record_saved_notification();
+                }
+            });
+        },
+
+        btnCancelWatchFromShow_Click: function () {
+            $('#divWatchFromSearch').hide();
+            $("#divWatchFromSearch").html('');
+            $('.search_container').show();
+            window.scrollTo(0, 0);
+        },
     }
 })();
 
@@ -336,7 +413,9 @@ transactions = (function () {
                     }
 
                     if (transactionId === 0) {
-                        $("#ShowId option:eq(1)").attr('selected', 'selected');
+                        setTimeout(function () {
+                            $("#ShowId option:eq(1)").attr('selected', 'selected');
+                        }, 50);
                         $('#CostAmt').focus();
                         $('#Item').val('Ticket');
                         $('#CostAmt').val('');
@@ -354,7 +433,9 @@ transactions = (function () {
                         if (text === 'New') {
                             $('#btnToggleItem').click();
                         }
-                        $("#ShowId option:eq(1)").attr('selected', 'selected');
+                        setTimeout(function () {
+                            $("#ShowId option:eq(1)").attr('selected', 'selected');
+                        }, 50);
                     } else {
                         if (text === 'Old') {
                             $('#btnToggleItem').click();
@@ -366,8 +447,11 @@ transactions = (function () {
 
                 case 2003: { // ALIST -- Needs to Select last A-list in dropdown
                     if (transactionId === 0) {
-                        $("#ShowId option:eq(0)").attr('selected', 'selected');
-                        $("#ddlItems option[model*='" + selected + "']").attr('selected', 'selected');
+                        setTimeout(function () {
+                            $("#ShowId option:eq(0)").attr('selected', 'selected');
+                            $("#ddlItems option[model*='" + selected + "']").attr('selected', 'selected');
+                        }, 50);
+                        
                         transactions.ddlItems_Change();
                         if (text === 'New') {
                             $('#btnToggleItem').click();
@@ -472,6 +556,200 @@ books = (function () {
     }
 })();
 
+infos = (function () {
+    return {
+        btnSearchAPI_Click: function () {
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/SearchApi'), {
+                "api": $('#SearchAPI').val(),
+                "type": $('#SearchType').val(),
+                "name": $('#SearchName').val()
+            }, function (data) {
+                $("#divSearch").html(data);
+            });
+        },
+
+        open: function (e) {
+            var model = oa_utilities.getModel(e);
+            window.open(model.Link, '_blank').focus();
+        },
+
+        download: function (e) {
+            var model = oa_utilities.getModel(e);
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/DownloadInfo'), {
+                "api": model.Api,
+                "type": model.Type,
+                "id": model.Id
+            }, function (data) {
+                if (data.result === "Success") {
+                    if (data.Type === 0) {
+                        window.location.href = getInfosBaseURL('Info/TVInfo') + "/" + model.Id;
+                    } else if (data.Type === 1) {
+                        window.location.href = getInfosBaseURL('Info/MovieInfo') + "/" + model.Id;
+                    }
+                }
+            });
+        },
+
+        card_download: function (api, type, id) {
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/DownloadInfo'), {
+                "api": api,
+                "type": type,
+                "id": id
+            }, function (e) {
+                if (e.data.isSuccessful) {
+                    var openCard = $('#SearchOpenInfo:checked').val();
+
+                    var message = " downloaded.";
+
+                    if (openCard) {
+                        message += " Redirecting."
+                    }
+
+                    if (e.data.type === 0) {
+                        oa_utilities.show_record_saved_message('TV Show' + message);
+                    } else if (e.data.type === 1) {
+                        oa_utilities.show_record_saved_message('Movie' + message);
+                    }
+
+                    setTimeout(function () {
+                        if (openCard) {
+                            if (e.data.type === 0) {
+                                window.location.href = getInfosBaseURL('Info/TVInfo') + "/" + e.data.id;
+                            } else if (e.data.type === 1) {
+                                window.location.href = getInfosBaseURL('Info/MovieInfo') + "/" + e.data.id;
+                            }
+                        }
+                    }, 2000);
+                } else {
+                    oa_utilities.show_record_error_notification(e.data.result);
+                }
+            });
+        },
+
+        openTVInfo: function (e) {
+            var model = oa_utilities.getModel(e);
+            window.location.href = getInfosBaseURL('Info/TVInfo') + "/" + model.TvInfoId;
+        },
+
+        btnUpdateOtherNames_Click: function () {
+
+        },
+
+        btnRefreshTVInfo_Click: function () {
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/RefreshTVInfo'), {
+                "id": $("#TvInfoId").val(),
+            }, function (e) {
+                if (e.data.isSuccessful) {
+                    oa_utilities.show_record_saved_message('TV Show updated. Refreshing page.');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    oa_utilities.show_record_error_notification(e.data.result);
+                }
+            });
+        },
+
+        get_tv_info_id() {
+            return {
+                "TvInfoId": $('#TvInfoId').val()
+            }
+        },
+
+        grid_init: function (e) {
+            e.url.searchParams.set('tvInfoId', infos.get_tv_info_id().TvInfoId);
+        },
+
+        openMovieInfo: function (e) {
+            var model = oa_utilities.getModel(e);
+            window.location.href = getInfosBaseURL('Info/MovieInfo') + "/" + model.MovieInfoId;
+        },
+
+        btnUpdateMovieOtherNames_Click: function () {
+
+        }, 
+
+        btnRefreshMovieInfo_Click: function () {
+            var model = oa_utilities.getModel(e);
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/RefreshMovieInfo'), {
+                "id": $("#MovieInfoId").val(),
+            }, function (data) {
+                if (data.isSuccessful) {
+                    oa_utilities.show_record_saved_message('Movie updated. Refreshing page.');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    oa_utilities.show_record_error_notification(data.result);
+                }
+            });
+        },
+
+        get_movie_info_id() {
+            return {
+                "MovieInfoId": $('#MovieInfoId').val()
+            }
+        },
+
+        openUpdateUnlinkedShowName: function (e) {
+            var model = oa_utilities.getModel(e);
+            oa_window.open('wUpdateUnlinkedShowName', function () {
+                oa_utilities.hide_validation_errors('frmUpdateUnlinkedShowName');
+
+                $('#UpdateUnlinkedShowNameShowName').val(model.ShowName);
+                $('#UpdateUnlinkedShowNameNewShowName').val('');
+                $('#UpdateUnlinkedShowNameShowTypeId').val(model.ShowTypeId);
+            });
+        },
+
+        saveUpdateUnlinkedShowName: function (e) {
+            var formData = oa_utilities.getFormData($('#frmUpdateUnlinkedShowName'));
+
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/UpdateUnlinkedShowName'), formData, function (data) {
+                if (data.errors.length > 0) {
+                    oa_utilities.show_validation_errors('frmUpdateUnlinkedShowName', data.errors);
+                } else {
+                    oa_window.close('wUpdateUnlinkedShowName');
+                    oa_grid.reload_grid('gvUnlinkedShows');
+                    oa_utilities.show_record_saved_notification();
+                }
+            });
+        },
+
+        searchUnlinkedShow: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            $('#SearchName').val(model.ShowName);
+            $('#SearchType').val(model.ShowTypeId === 1000 ? 0 : 1);
+            $('#SearchOpen').prop("checked", false);
+
+            $('button[opentab="tbInfos-Search"]').click();
+            $('#btnSearchAPI').click();
+        },
+
+        linkShows: function (e) {
+            var model = oa_utilities.getModel(e);
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/LinkShows'), {
+                "showName": model.ShowName,
+                "showTypeId": model.ShowTypeId,
+                "infoId": model.InfoId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_grid.reload_grid('gvUnlinkedShows');
+                    oa_utilities.show_record_saved_notification();
+                }
+            });
+        },
+
+        showLinkShows: function (e) {
+            var model = oa_utilities.getModel(e);
+            return model.InShowLoggerIndc;
+        }
+    }
+})();
+
 areas = (function () {
     return {
         btnSetShowsAreaAsDefault_Click: function () {
@@ -493,6 +771,8 @@ areas = (function () {
         }
     }
 })();
+
+
 
 account = (function () {
     return {
@@ -530,10 +810,6 @@ account = (function () {
     }
 })();
 
-getBaseURL = function () { return $("#hdnRootPath").val(); }
-getCommonBaseURL = function (action) { return getBaseURL() + "/Common/" + action; }
-getShowsBaseURL = function (action) { return getBaseURL() + "/Shows/" + action }
-getBooksBaseURL = function (action) { return getBaseURL() + "/Books/" + action }
 
 oa_window = (function () {
     return {
@@ -1039,7 +1315,16 @@ oa_utilities = (function () {
             return $(e.parentElement.parentElement);
         },
 
+        getCard: function (e) {
+            return $(e.parentElement.parentElement.parentElement.parentElement);
+        },
+
         getModel: function (e) {
+            var row = oa_utilities.getRow(e);
+            return JSON.parse(row.attr("model"));
+        },
+
+        getModelCard: function (e) {
             var row = oa_utilities.getRow(e);
             return JSON.parse(row.attr("model"));
         },
@@ -1165,6 +1450,10 @@ oa_utilities = (function () {
 
         show_record_deleted_notification: function () {
             toastr.success('Record deleted successfully.', 'Record deleted.', { timeOut: 2000, positionClass: "toast-bottom-right" })
+        },
+
+        show_record_saved_message: function (message) {
+            toastr.success('Record saved successfully.', message, { timeOut: 0, positionClass: "toast-bottom-right" })
         },
 
         show_record_error_notification: function (message) {
@@ -1311,11 +1600,11 @@ oa_utilities = (function () {
                         }
                     }
                 }
-
-
             }
+        },
 
+        open_url(url) {
+            window.open(url, "_blank");
         }
-
     }
 })();

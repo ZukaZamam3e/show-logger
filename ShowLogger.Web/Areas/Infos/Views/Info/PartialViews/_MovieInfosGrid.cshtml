@@ -1,0 +1,29 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<MovieInfoModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvMovieInfos")
+    .IdProperty("MovieInfoId")
+    .Columns(columns =>
+    {
+        columns.Commands(commands =>
+        {
+            commands.Custom("Open", "fas fa-eye", "infos.openMovieInfo");
+            //commands.Custom("Delete", "fas fa-trash-alt", "infos.delete");
+        });
+        //columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.MovieName);
+        columns.OAColumn(model => model.MovieOverview);
+        columns.OAColumn(model => model.OtherNames);
+        columns.OAColumn(model => model.Runtime);
+        columns.OAColumn(model => model.AirDate).Formatted("{0:d}");
+        columns.OAColumn(model => model.LastDataRefresh);
+        columns.OAColumn(model => model.LastUpdated);
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

@@ -4,12 +4,20 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ShowLogger.Data.Context;
+using ShowLogger.Models.Api;
 using ShowLogger.Store.Repositories;
 using ShowLogger.Store.Repositories.Interfaces;
 using ShowLogger.Web.Data;
 using ShowLogger.Web.TokenProviders;
+using System.Configuration;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if(Debugger.IsAttached)
+{
+    builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
+}
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("IdentityConnection");
@@ -23,7 +31,13 @@ builder.Services.AddScoped<IWatchedShowsRepository, WatchedShowsRepository>();
 builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IInfoRepository, InfoRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+ApisConfig apisConfig = new ApisConfig();
+builder.Configuration.GetSection("Apis").Bind(apisConfig);
+builder.Services.AddSingleton(apisConfig);
+
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     {

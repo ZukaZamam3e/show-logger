@@ -87,6 +87,8 @@ class MvcGrid {
         grid.isAjax = typeof options.isAjax === "boolean" ? options.isAjax : grid.isAjax;
         grid.filters = Object.assign(grid.filters, options.filters);
 
+        this.set_init_query();
+
         for (const column of grid.columns) {
             if (column.filter && grid.filters[column.filter.name]) {
                 column.filter.instance = new grid.filters[column.filter.name](column);
@@ -96,6 +98,19 @@ class MvcGrid {
 
         return grid;
     }
+
+    set_init_query() {
+        const grid = this;
+        var parent = this.element.parentElement;
+
+        var gridInit = $(parent).attr("init_function");
+
+        if (!!gridInit) {
+            var func = window[gridInit.split(".")[0]][gridInit.split(".")[1]];
+            func(this);
+        }
+    }
+
     showConfiguration(anchor) {
         MvcGridPopup.showConfiguration(this, anchor);
     }

@@ -1,0 +1,25 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<UnlinkedShowsModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvUnlinkedShows")
+    .Columns(columns =>
+    {
+        columns.Commands(commands =>
+        {
+            commands.Custom("SearchUnlinkedShowName", "fas fa-search", "infos.searchUnlinkedShow");
+            commands.Custom("UpdateUnlinkedShowName", "fas fa-check", "infos.openUpdateUnlinkedShowName");
+            commands.Custom("UpdateUnlinkedShowName", "fas fa-link", "infos.linkShows", "infos.showLinkShows");
+        });
+        columns.OAColumn(model => model.ShowName);
+        columns.OAColumn(model => model.ShowTypeIdZ);
+        columns.OAColumn(model => model.WatchCount);
+        columns.OAColumn(model => model.InShowLoggerIndc);
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

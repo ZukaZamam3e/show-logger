@@ -176,12 +176,23 @@ public static class OAGridBuilder
         return column.Add(expression).SetCssClass();
     }
 
-    public static IGridColumn<T, TValue> SetCssClass<T, TValue>(this IGridColumn<T, TValue> column)
+    public static IGridColumn<T, TValue> OAColumn<T, TValue>(this IGridColumnsOf<T> column, string columnName, Expression<Func<T, TValue>> expression)
+        where T : class
+    {
+        return column.Add(expression).SetCssClass(columnName);
+    }
+
+    public static IGridColumn<T, TValue> SetCssClass<T, TValue>(this IGridColumn<T, TValue> column, string columnName = "")
         where T : class
     {
         TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
 
-        string name = myTI.ToTitleCase(column.Name).Replace("-", String.Empty);
+        if(string.IsNullOrEmpty(columnName))
+        {
+            columnName = column.Name;
+        }
+
+        string name = myTI.ToTitleCase(columnName).Replace("-", String.Empty);
         column.AppendCss($"{column.Grid.Name}_{name}");
         return column;
     }

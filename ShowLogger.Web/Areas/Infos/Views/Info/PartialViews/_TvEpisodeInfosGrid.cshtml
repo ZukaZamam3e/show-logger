@@ -1,0 +1,23 @@
+﻿@using ShowLogger.Models
+
+@model IEnumerable<TvEpisodeInfoModel>
+
+@(Html.OAGrid(Model)
+    .NamedAndId("gvTvEpisodeInfos")
+    .Columns(columns =>
+    {
+        columns.OAColumn(model => model.OverallEpisodeNumber);
+        columns.OAColumn(model => model.SeasonEpisode);
+        //columns.OAColumn(model => model.SeasonName);
+        columns.OAColumn(model => model.EpisodeName);
+        columns.OAColumn(model => model.EpisodeOverview);
+        columns.OAColumn(model => model.Runtime);
+        columns.OAColumn(model => model.AirDate).Formatted("{0:d}");
+        columns.Add(model => !string.IsNullOrEmpty(model.ImageUrl) ? $"<img src=\"{model.ImageUrl}\" style='width: 178px; height: 100px;'/>" : "").Encoded(false);
+    })
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 3;
+        pager.RowsPerPage = 10;
+    })
+)

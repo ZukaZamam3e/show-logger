@@ -23,4 +23,6 @@ public class SL_SHOW
 
     public bool RESTART_BINGE { get; set; }
 
+    public int? INFO_ID { get; set; }
+
 }

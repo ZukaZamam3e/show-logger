@@ -1,0 +1,30 @@
+﻿@using ShowLogger.Models
+
+@model UpdateUnlinkedShowNameModel
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmUpdateUnlinkedShowName" }))
+{
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(m => m.UpdateUnlinkedShowNameShowTypeId)
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.UpdateUnlinkedShowNameShowName)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().TextBoxFor(m => m.UpdateUnlinkedShowNameShowName).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            @Html.OA().LabelFor(m => m.UpdateUnlinkedShowNameNewShowName)
+        </div>
+
+        <div class="col-sm-6">
+            @Html.OA().TextBoxFor(m => m.UpdateUnlinkedShowNameNewShowName).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+    </div>
+}

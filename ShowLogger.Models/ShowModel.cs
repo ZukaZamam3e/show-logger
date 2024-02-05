@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ShowLogger.Models.Api;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShowLogger.Models;
 
@@ -32,7 +33,67 @@ public class ShowModel
     [Display(Name = "Restart Binge")]
     public bool RestartBinge { get; set; }
 
-    public virtual string MobileView => $"{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" :"")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
+    [Display(Name = "Info Id")]
+    public int? InfoId { get; set; }
+
+    [Display(Name = "Episode Name")]
+    public string? EpisodeName { get; set; }
+
+    [Display(Name = "Runtime")]
+    public int? Runtime { get; set; }
+
+    [Display(Name = "Runtime")]
+    public string RuntimeZ => Runtime != null ? $"{Runtime} minutes" : "";
+
+    public string? ImageUrl { get; set; }
+
+    public string? InfoUrl { get; set; }
+
+    [Display(Name = "Season Episode")]
+    public string SeasonEpisode => SeasonNumber != null && EpisodeNumber != null ? $"s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "";
+
+    [Display(Name = "Season Episode / Runtime")]
+    public string SeasonEpisodeRuntime => $"{SeasonEpisode}{(Runtime != null ? $"{(ShowTypeId == 1000 ? " - " : "")}{RuntimeZ}" : "")}";
+
+    //public virtual string MobileView => $"{ShowName}<br>" +
+    //    $"{ShowTypeIdZ}{(ShowTypeId == 1000 ? $" - {SeasonEpisode}" : "")}<br>" +
+    //    $"{DateWatched:MM/dd/yyyy}<br>" +
+    //    $"{(!string.IsNullOrEmpty(EpisodeName) ? $"{$"<a href =\"{InfoUrl}\" target=\"blank\">{EpisodeName}</a>"}<br>" : "")}" +
+    //    $"{(Runtime != null ? $"{RuntimeZ}<br>" : "")}" +
+    //    $"{ShowNotes}";
+
+    [Display(Name = "Show Name")]
+    public string ShowNameZ => $"{(ShowTypeId == 1000 ? GetShowShowNameZ : GetMovieShowNameZ)}";
+
+    private string GetShowShowNameZ => $"{ShowName}{$"{(!string.IsNullOrEmpty(EpisodeName) ? $"{$" - <a href =\"{InfoUrl}\" target=\"_blank\">{EpisodeName}</a>"}<br>" : "")}"}";
+    private string GetMovieShowNameZ => $"{(InfoId != null ? $"<a href =\"{InfoUrl}\" target=\"_blank\">{ShowName}</a>" : ShowName)}";
+
+    public virtual string MobileView => $"{(ShowTypeId == 1000 ? GetShowMobileView : GetMovieMobileView)}";
+
+    private string GetShowMobileView => $"{ShowName}<br>" +
+        $"{(!string.IsNullOrEmpty(EpisodeName) ? $"{$"<a href =\"{InfoUrl}\" target=\"_blank\">{EpisodeName}</a>"}<br>" : "")}" +
+        $"{ShowTypeIdZ} - {SeasonEpisode}<br>" +
+        $"{DateWatched:MM/dd/yyyy}<br>" +
+        $"{(Runtime != null ? $"{RuntimeZ}<br>" : "")}" +
+        $"{ShowNotes}";
+
+    private string GetMovieMobileView => $"{(InfoId != null ? $"<a href =\"{InfoUrl}\" target=\"_blank\">{ShowName}</a>" : ShowName)}<br>" +
+        $"{ShowTypeIdZ}<br>" +
+        $"{DateWatched:MM/dd/yyyy}<br>" +
+        $"{(Runtime != null ? $"{RuntimeZ}<br>" : "")}" +
+        $"{ShowNotes}";
+
+
+}
+
+public class ShowInfoModel : ShowModel
+{
+    public int? InfoSeasonNumber { get; set; }
+    public int? InfoEpisodeNumber { get; set; }
+    public int? InfoApiType { get; set; }
+    public string? InfoApiId { get; set; }
+    public string? InfoImageUrl { get; set; }
+
 }
 
 public class GroupedShowModel
@@ -269,6 +330,28 @@ public class YearStatsModel
     public virtual string MobileView => $"{Year}<br>{Name}<br>TV: {TvCnt}<br>Movies: {MoviesCnt}<br>AMC: {AmcCnt}" +
         $"<br>A-List Membership: {string.Format("{0:C}", AListMembership)}<br>A-List Tickets: {string.Format("{0:C}", AListTickets)}" +
         $"<br>AMC Purchases: {string.Format("{0:C}", AmcPurchases)}";
+}
+
+public class LoadWatchFromSearchModel
+{
+    public INFO_API API { get; set; }
+
+    public INFO_TYPE Type { get; set; }
+
+    public string Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string AirDate { get; set; }
+}
+
+public class WatchFromSearchModel : ShowModel
+{
+    public INFO_API API { get; set; }
+
+    public INFO_TYPE Type { get; set; }
+
+    public string Id { get; set; }
 }
 
 public static class DateTimeExtensions

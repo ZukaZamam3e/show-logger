@@ -183,6 +183,52 @@ namespace ShowLogger.Data.Migrations
                     b.ToTable("SL_FRIEND_REQUEST");
                 });
 
+            modelBuilder.Entity("ShowLogger.Data.Entities.SL_MOVIE_INFO", b =>
+                {
+                    b.Property<int>("MOVIE_INFO_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("AIR_DATE")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("API_ID")
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int?>("API_TYPE")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IMAGE_URL")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("LAST_DATA_REFRESH")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("LAST_UPDATED")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("MOVIE_NAME")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("MOVIE_OVERVIEW")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("varchar(4000)");
+
+                    b.Property<string>("OTHER_NAMES")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("RUNTIME")
+                        .HasColumnType("int");
+
+                    b.HasKey("MOVIE_INFO_ID");
+
+                    b.ToTable("SL_MOVIE_INFO");
+                });
+
             modelBuilder.Entity("ShowLogger.Data.Entities.SL_SHOW", b =>
                 {
                     b.Property<int>("SHOW_ID")
@@ -193,6 +239,9 @@ namespace ShowLogger.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<int?>("EPISODE_NUMBER")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("INFO_ID")
                         .HasColumnType("int");
 
                     b.Property<bool>("RESTART_BINGE")
@@ -262,6 +311,97 @@ namespace ShowLogger.Data.Migrations
                     b.ToTable("SL_TRANSACTION");
                 });
 
+            modelBuilder.Entity("ShowLogger.Data.Entities.SL_TV_EPISODE_INFO", b =>
+                {
+                    b.Property<int>("TV_EPISODE_INFO_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("AIR_DATE")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("API_ID")
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int?>("API_TYPE")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EPISODE_NAME")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int?>("EPISODE_NUMBER")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EPISODE_OVERVIEW")
+                        .HasMaxLength(4000)
+                        .HasColumnType("varchar(4000)");
+
+                    b.Property<string>("IMAGE_URL")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("RUNTIME")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SEASON_NAME")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int?>("SEASON_NUMBER")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TV_INFO_ID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TV_EPISODE_INFO_ID");
+
+                    b.HasIndex("TV_INFO_ID");
+
+                    b.ToTable("SL_TV_EPISODE_INFO");
+                });
+
+            modelBuilder.Entity("ShowLogger.Data.Entities.SL_TV_INFO", b =>
+                {
+                    b.Property<int>("TV_INFO_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("API_ID")
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int?>("API_TYPE")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IMAGE_URL")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("LAST_DATA_REFRESH")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("LAST_UPDATED")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("OTHER_NAMES")
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("SHOW_NAME")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("SHOW_OVERVIEW")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("varchar(4000)");
+
+                    b.HasKey("TV_INFO_ID");
+
+                    b.ToTable("SL_TV_INFO");
+                });
+
             modelBuilder.Entity("ShowLogger.Data.Entities.SL_USER_PREF", b =>
                 {
                     b.Property<int>("USER_PREF_ID")
@@ -314,6 +454,22 @@ namespace ShowLogger.Data.Migrations
                     b.HasKey("WATCHLIST_ID");
 
                     b.ToTable("SL_WATCHLIST");
+                });
+
+            modelBuilder.Entity("ShowLogger.Data.Entities.SL_TV_EPISODE_INFO", b =>
+                {
+                    b.HasOne("ShowLogger.Data.Entities.SL_TV_INFO", "TV_INFO")
+                        .WithMany("EPISODE_INFOS")
+                        .HasForeignKey("TV_INFO_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TV_INFO");
+                });
+
+            modelBuilder.Entity("ShowLogger.Data.Entities.SL_TV_INFO", b =>
+                {
+                    b.Navigation("EPISODE_INFOS");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ShowLogger.Data.Entities;
 using ShowLogger.Models;
+using ShowLogger.Models.Api;
 using ShowLogger.Store.Repositories.Interfaces;
 using ShowLogger.Web.Areas.Common;
 using ShowLogger.Web.Areas.Shows.Views.Show.ViewModels;
@@ -14,17 +16,20 @@ public class ShowController : BaseController
 {
     private readonly IWatchedShowsRepository _watchedShowsRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IInfoRepository _infoRepository;
 
     public ShowController(
         UserManager<ApplicationUser> userManager,
         ILogger<BaseController> logger,
         IHttpContextAccessor httpContextAccessor,
         IWatchedShowsRepository watchedShowsRepository,
+        IInfoRepository infoRepository,
         IUserRepository userRepository
     ) : base(userManager, logger, httpContextAccessor)
     {
         _watchedShowsRepository = watchedShowsRepository;
         _userRepository = userRepository;
+        _infoRepository = infoRepository;
     }
 
     public IActionResult Index()
@@ -104,6 +109,11 @@ public class ShowController : BaseController
         {
             if (ModelState.IsValid)
             {
+                if(model.InfoId != null)
+                {
+                    _infoRepository.RefreshInfo(model.InfoId.Value, model.ShowTypeId == (int)CodeValueIds.TV ? INFO_TYPE.TV : INFO_TYPE.MOVIE);
+                }
+
                 _watchedShowsRepository.UpdateShow(GetLoggedInUserId(), model);
                 model = _watchedShowsRepository.GetShows(m => m.ShowId == model.ShowId).FirstOrDefault();
             }
@@ -124,11 +134,27 @@ public class ShowController : BaseController
         {
             if (ModelState.IsValid)
             {
-                successful = _watchedShowsRepository.AddNextEpisode(GetLoggedInUserId(), showId);
+                int newShowId = _watchedShowsRepository.AddNextEpisode(GetLoggedInUserId(), showId);
+
+                successful = newShowId != -1;
 
                 if (!successful)
                 {
                     ModelState.AddModelError("AddNextEpisode", "Could not add next episode.");
+                }
+                else
+                {
+                    ShowModel show = _watchedShowsRepository.GetShows(m => m.ShowId == newShowId).First();
+
+                    if (show.InfoId != null)
+                    { 
+                        TvEpisodeInfoModel episodeInfo = _infoRepository.GetTvEpisodeInfos(m => m.TvEpisodeInfoId == show.InfoId).First();
+
+                        if(episodeInfo.Runtime == null || string.IsNullOrEmpty(episodeInfo.EpisodeOverview))
+                        {
+                            _infoRepository.RefreshTvInfo(episodeInfo.TvInfoId);
+                        }
+                    } 
                 }
             }
         }
@@ -372,5 +398,100 @@ public class ShowController : BaseController
 
         // Only grid query values will be available here.
         return PartialView("~/Areas/Shows/Views/Show/PartialViews/_YearStatsGrid.cshtml", model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SearchApi(InfoApiSearchModel searchModel)
+    {
+
+        IEnumerable<ApiSearchResultModel> model = new List<ApiSearchResultModel>();
+
+        try
+        {
+            ApiResultModel<IEnumerable<ApiSearchResultModel>> query = await _infoRepository.Search(GetLoggedInUserId(), searchModel);
+
+            if(query.Result != ApiResults.Success)
+            {
+                return Json(new { data = query.Result, errors = GetErrorsFromModelState() }); ;
+            }
+
+            model = query.ApiResultContents.OrderByDescending(m => m.AirDate);
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load api results.");
+        }
+
+
+        return PartialView("~/Areas/Shows/Views/Show/PartialViews/_SearchCards.cshtml", model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> WatchFromSearch(LoadWatchFromSearchModel downloadModel)
+    {
+        WatchFromSearchModel model = new WatchFromSearchModel
+        {
+            DateWatched = DateTime.Now.GetEST().Date,
+            ShowName = downloadModel.Name,
+            Id = downloadModel.Id,
+            API = downloadModel.API,
+            Type = downloadModel.Type,
+        };
+
+        DateTime airDate;
+
+        if (downloadModel.Type == INFO_TYPE.TV)
+        {
+            model.ShowTypeId = (int)CodeValueIds.TV;
+        }
+        else
+        {
+            if (DateTime.TryParse(downloadModel.AirDate, out airDate))
+            {
+
+                model.ShowTypeId = (airDate >= DateTime.Now.AddDays(-45) ? (int)CodeValueIds.AMC : (int)CodeValueIds.MOVIE);
+            }
+        }
+        return PartialView("~/Areas/Shows/Views/Show/Editor/_WatchFromSearch.cshtml", model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddWatchFromSearch(WatchFromSearchModel? model)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                DownloadResultModel info = await _infoRepository.Download(GetLoggedInUserId(), new InfoApiDownloadModel
+                {
+                    API = model.API,
+                    Type = model.Type,
+                    Id = model.Id,
+                });
+
+                if(info.Type == INFO_TYPE.TV)
+                {
+                    TvEpisodeInfoModel episode = _infoRepository.GetTvEpisodeInfos(m => m.TvInfoId == info.Id).FirstOrDefault(m => m.SeasonNumber == model.SeasonNumber && m.EpisodeNumber == model.EpisodeNumber);
+                    
+                    if(episode != null)
+                    {
+                        model.InfoId = episode.TvEpisodeInfoId;
+                    }
+                }
+                else
+                {
+                    model.InfoId = (int)info.Id;
+                }
+
+                long id = _watchedShowsRepository.CreateShow(GetLoggedInUserId(), model);
+                ShowModel show = _watchedShowsRepository.GetShows(m => m.ShowId == id).FirstOrDefault();
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not create show.");
+        }
+
+        return Json(new { data = model, errors = GetErrorsFromModelState() });
     }
 }

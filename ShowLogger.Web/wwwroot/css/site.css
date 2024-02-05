@@ -266,7 +266,7 @@ col.gvShows_Commands,
 col.gvWatchlist_Commands,
 col.gvTransactions_Commands,
 col.gvBooks_Commands {
-    width: 255px;
+    width: 260px;
 }
 
 col.gvShows_Showname,
@@ -285,6 +285,61 @@ col.gvBooks_Bookname {
 .gvYearStats_Mobileview,
 .gvYearStatsBook_Mobileview {
     text-align: center;
+}
+
+.search-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 10px;
+}
+
+.search-card {
+    height: 300px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0px;
+}
+
+    .search-card .card {
+        width: 249px;
+        border-radius: .25em 0 0 .25em;
+        /*border: 5px solid #3a3a3c !important;*/
+        /*border-right: 0px;*/
+        border-width: 3px 0px 3px 3px !important; /* top right bottom left */
+        border-style: solid !important;
+        border-color: #3a3a3c !important;
+    }
+
+.search-card img {
+    width: 166px;
+    height: 250px;
+    border-radius: 0 .25em .25em 0;
+    border: 3px solid #3a3a3c !important;
+}
+
+    .search-card .card-header {
+        min-height: 66px;
+        text-align: center;
+    }
+
+.search-card .card-body {
+    text-align: center;
+}
+
+.search-card .card-footer {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+}
+
+
+   /* .search-card .card {
+        width: 210px;
+    }*/
+
+.search-card {
+    height: 250px;
 }
 
 @media only screen and (min-width: 600px) {
@@ -307,6 +362,11 @@ col.gvBooks_Bookname {
     .gvShows_Episodenumber,
     .gvShows_Datewatched,
     .gvShows_Showtypeidz,
+    .gvShows_Seasonepisode,
+    .gvShows_Episodename,
+    .gvShows_Runtimez,
+    .gvShows_Shownamez,
+    .gvShows_Seasonepisoderuntime,
     .gvShows_Shownotes {
         display: none;
     }
@@ -400,6 +460,27 @@ col.gvBooks_Bookname {
         display: none;
     }
 
+
+    .search-cards-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        column-gap: 10px;
+        row-gap: 10px;
+    }
+
+    /*.search-card img {
+        width: 133px;
+        height: 200px;
+    }*/
+
+    .search-card .card {
+        width: 177px;
+    }
+
+    /*.search-card {
+        height: 200px;
+    }*/
+
     .tab {
         overflow-x: scroll;
     }
@@ -466,5 +547,18 @@ col.gvBooks_Bookname {
 
     .text-dark {
         color: white;
+    }
+
+    .card {
+        background: #121213 !important;
+        border: 1px solid #3a3a3c !important;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #3a3a3c !important;
+    }
+
+    .card-footer {
+        border-top: 1px solid #3a3a3c !important;
     }
 }

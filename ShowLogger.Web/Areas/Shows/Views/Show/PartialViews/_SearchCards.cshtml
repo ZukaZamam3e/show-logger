@@ -1,0 +1,49 @@
+﻿@using ShowLogger.Models.Api
+
+@model IEnumerable<ApiSearchResultModel>
+
+<style>
+    
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+</style>
+
+<div class="search-cards-grid">
+    @foreach(ApiSearchResultModel result in Model)
+    {
+        <div class="search-card">
+            <div class="card">
+                <div class="card-header">
+                    @result.Name
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Air Date - @result.AirDateZ</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary" onclick="oa_utilities.open_url('@result.Link')">
+                        <i class="fas fa-eye"></i> Open Info
+                    </a>
+                    <a href="#" class="btn btn-primary" onclick='shows.card_watch("@result.Api", "@result.Type", "@result.Id", "@result.Name", "@result.AirDateZ")'>
+                        <i class="fas fa-plus"></i> Watch
+                    </a>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(result.ImageUrl))
+            {
+                <img src="@result.ImageUrl" alt="Avatar">
+            }
+            else
+            {
+                <img src="/no_image_available.png" alt="Avatar">
+            }
+        </div>
+    }
+</div>
+@if (Model.Count() == 0)
+{
+    <div style="text-align: center;">No results found. Please refine your search and try again.</div>
+}
+
