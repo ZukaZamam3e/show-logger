@@ -34,6 +34,16 @@ public class BaseController : Controller
             return user.UserId;
     }
 
+    public string GetLoggedInUserEmail()
+    {
+        ApplicationUser user = GetCurrentUserAsync().Result;
+
+        if (user == null)
+            return "";
+        else
+            return user.Email;
+    }
+
     public IEnumerable<ModelErrorCollection> GetErrorsFromModelState()
     {
         return ModelState.Select(x => x.Value.Errors)

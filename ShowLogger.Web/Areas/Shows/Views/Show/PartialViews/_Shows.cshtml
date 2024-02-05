@@ -5,8 +5,8 @@
                 .Name("gvShows")
                 .Header(header =>
                 {
-                    header.Creator();
                     header.Custom("oa_grid_button fas fa-search", "shows.openSearch()");
+                    header.Creator();
                     header.Refresh();
                 })
                 .Read(Url.Action("Read", "Show", new { area = "Shows" }))

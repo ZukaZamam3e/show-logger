@@ -28,6 +28,9 @@ public class InfoController : BaseController
     {
         _infoRepository = infoRepository;
         _watchedShowRepository = watchedShowRepository;
+        string email = GetLoggedInUserEmail();
+
+        //if(email != "ffalex5678@gmail.com" ) { throw new Exception("Access Denied"); };
     }
 
     public async Task<IActionResult> Index()
