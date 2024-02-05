@@ -109,12 +109,18 @@ public class ShowController : BaseController
         {
             if (ModelState.IsValid)
             {
-                if(model.InfoId != null)
+                _watchedShowsRepository.UpdateShow(GetLoggedInUserId(), model);
+
+                if (model.InfoId != null)
                 {
-                    _infoRepository.RefreshInfo(model.InfoId.Value, model.ShowTypeId == (int)CodeValueIds.TV ? INFO_TYPE.TV : INFO_TYPE.MOVIE);
+                    TvEpisodeInfoModel episodeInfo = _infoRepository.GetTvEpisodeInfos(m => m.TvEpisodeInfoId == model.InfoId).First();
+
+                    if (episodeInfo.Runtime == null || string.IsNullOrEmpty(episodeInfo.EpisodeOverview))
+                    {
+                        _infoRepository.RefreshTvInfo(episodeInfo.TvInfoId);
+                    }
                 }
 
-                _watchedShowsRepository.UpdateShow(GetLoggedInUserId(), model);
                 model = _watchedShowsRepository.GetShows(m => m.ShowId == model.ShowId).FirstOrDefault();
             }
         }

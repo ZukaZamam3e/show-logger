@@ -9,12 +9,12 @@
         columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
         columns.OAColumn(model => model.Year);
         columns.OAColumn(model => model.Name);
-        columns.OAColumn(model => model.TvCnt);
-        columns.OAColumn(model => model.MoviesCnt);
-        columns.OAColumn(model => model.AmcCnt);
-        columns.OAColumn(model => model.AListMembership).Formatted("{0:c}");
-        columns.OAColumn(model => model.AListTickets).Formatted("{0:c}");
-        columns.OAColumn(model => model.AmcPurchases).Formatted("{0:c}");
+        columns.OAColumn(model => model.TvStats).Filterable(false).Encoded(false);
+        columns.OAColumn(model => model.MovieStats).Filterable(false).Encoded(false);
+        columns.OAColumn(model => model.AmcStats).Filterable(false).Encoded(false);
+        columns.OAColumn(model => model.AListMembership).Formatted("{0:c}").Filterable(false);
+        columns.OAColumn(model => model.AListTickets).Formatted("{0:c}").Filterable(false);
+        columns.OAColumn(model => model.AmcPurchases).Formatted("{0:c}").Filterable(false);
     })
     .Pageable(pager =>
     {

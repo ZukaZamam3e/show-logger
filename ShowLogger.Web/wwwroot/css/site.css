@@ -434,6 +434,9 @@ col.gvBooks_Bookname {
     .gvYearStats_Tvcnt,
     .gvYearStats_Moviescnt,
     .gvYearStats_Amccnt,
+    .gvYearStats_Tvstats,
+    .gvYearStats_Moviestats,
+    .gvYearStats_Amcstats,
     .gvYearStats_Alistmembership,
     .gvYearStats_Alisttickets,
     .gvYearStats_Amcpurchases {

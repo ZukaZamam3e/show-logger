@@ -212,8 +212,6 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
         if (entity != null)
         {
-            int? nextInfoId = GetTvEpisodeInfoId(entity.INFO_ID, entity.SEASON_NUMBER, entity.EPISODE_NUMBER + 1);
-
             SL_SHOW nextEpisode = new SL_SHOW
             {
                 SHOW_NAME = entity.SHOW_NAME,
@@ -222,8 +220,34 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 SEASON_NUMBER = entity.SEASON_NUMBER,
                 EPISODE_NUMBER = entity.EPISODE_NUMBER + 1,
                 DATE_WATCHED = DateTime.Now.GetEST().Date,
-                INFO_ID = nextInfoId
             };
+
+            if (entity.INFO_ID != null)
+            {
+                SL_TV_EPISODE_INFO nextEpisodeInfo = null;
+
+                List<SL_TV_EPISODE_INFO> episodes = GetEpisodes(entity.INFO_ID);
+
+                if (episodes != null)
+                {
+                    int index = episodes.FindIndex(m => m.TV_EPISODE_INFO_ID == entity.INFO_ID);
+                    if(index != -1 && index + 1 < episodes.Count - 1)
+                    {
+                        nextEpisodeInfo = episodes[index + 1];
+                    }
+                }
+
+                if(nextEpisodeInfo != null)
+                {
+                    nextEpisode.SEASON_NUMBER = nextEpisodeInfo.SEASON_NUMBER;
+                    nextEpisode.EPISODE_NUMBER = nextEpisodeInfo.EPISODE_NUMBER;
+                    nextEpisode.INFO_ID = nextEpisodeInfo.TV_EPISODE_INFO_ID;
+                }
+                else
+                {
+                    nextEpisode.INFO_ID = GetTvEpisodeInfoId(entity.INFO_ID, entity.SEASON_NUMBER, entity.EPISODE_NUMBER + 1);
+                }
+            }
 
             _context.SL_SHOW.Add(nextEpisode);
 
@@ -342,6 +366,8 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
         for(int i = model.AddRangeStartEpisode; i <= model.AddRangeEndEpisode; i++)
         {
+            int? nextInfoId = GetTvEpisodeInfoId(model.AddRangeShowName, model.AddRangeSeasonNumber, i);
+
             SL_SHOW nextEpisode = new SL_SHOW
             {
                 SHOW_NAME = model.AddRangeShowName,
@@ -349,6 +375,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 USER_ID = userId,
                 SEASON_NUMBER = model.AddRangeSeasonNumber,
                 EPISODE_NUMBER = i,
+                INFO_ID = nextInfoId,
                 DATE_WATCHED = model.AddRangeDateWatched.Date,
             };
 
@@ -762,17 +789,62 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                          AmcPurchases = g.Where(m => m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.TICKET || m.t.TRANSACTION_TYPE_ID == (int)CodeValueIds.PURCHASE).Sum(m => m.t.COST_AMT - (m.t.BENEFIT_AMT ?? 0) - (m.t.DISCOUNT_AMT ?? 0)),
                                      }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
 
+        IEnumerable<YearStatsModel> tvRuntimes = (from u in _context.OA_USERS
+                                                  join x in _context.SL_SHOW on u.USER_ID equals x.USER_ID
+                                                  join ei in _context.SL_TV_EPISODE_INFO on x.INFO_ID equals ei.TV_EPISODE_INFO_ID
+                                                  where x.SHOW_TYPE_ID == (int)CodeValueIds.TV && x.INFO_ID != null
+                                                  group new { x, u, ei } by new { x.USER_ID, x.DATE_WATCHED.Year } into g
+                                                  select new YearStatsModel
+                                                  {
+                                                      UserId = g.Key.USER_ID,
+                                                      Year = g.Key.Year,
+                                                      TvRuntime = g.Sum(m => m.ei.RUNTIME) ?? 0
+                                                  }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
+
+        IEnumerable<YearStatsModel> movieRuntimes = (from u in _context.OA_USERS
+                                                  join x in _context.SL_SHOW on u.USER_ID equals x.USER_ID
+                                                  join mi in _context.SL_MOVIE_INFO on x.INFO_ID equals mi.MOVIE_INFO_ID
+                                                  where x.SHOW_TYPE_ID == (int)CodeValueIds.MOVIE && x.INFO_ID != null
+                                                  group new { x, u, mi } by new { x.USER_ID, x.DATE_WATCHED.Year } into g
+                                                  select new YearStatsModel
+                                                  {
+                                                      UserId = g.Key.USER_ID,
+                                                      Year = g.Key.Year,
+                                                      MoviesRuntime = g.Sum(m => m.mi.RUNTIME) ?? 0
+                                                  }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
+
+        IEnumerable<YearStatsModel> amcRuntimes = (from u in _context.OA_USERS
+                                                     join x in _context.SL_SHOW on u.USER_ID equals x.USER_ID
+                                                     join mi in _context.SL_MOVIE_INFO on x.INFO_ID equals mi.MOVIE_INFO_ID
+                                                     where x.SHOW_TYPE_ID == (int)CodeValueIds.AMC && x.INFO_ID != null
+                                                     group new { x, u, mi } by new { x.USER_ID, x.DATE_WATCHED.Year } into g
+                                                     select new YearStatsModel
+                                                     {
+                                                         UserId = g.Key.USER_ID,
+                                                         Year = g.Key.Year,
+                                                         AmcRuntime = g.Sum(m => m.mi.RUNTIME) ?? 0
+                                                     }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
+
         IEnumerable<YearStatsModel> model = (from s in modelShows
                                              join t in modelTransactions on new { s.UserId, s.Year } equals new { t.UserId, t.Year } into ts
                                              from t in ts.DefaultIfEmpty()
+                                             join rtv in tvRuntimes on new { s.UserId, s.Year } equals new { rtv.UserId, rtv.Year } into rtvs
+                                             from rtv in rtvs.DefaultIfEmpty()
+                                             join rmovies in movieRuntimes on new { s.UserId, s.Year } equals new { rmovies.UserId, rmovies.Year } into rmoviess
+                                             from rmovies in rmoviess.DefaultIfEmpty()
+                                             join ramc in tvRuntimes on new { s.UserId, s.Year } equals new { ramc.UserId, ramc.Year } into ramcs
+                                             from ramc in rmoviess.DefaultIfEmpty()
                                              select new YearStatsModel
                                              {
                                                  UserId = s.UserId,
                                                  Year = s.Year,
                                                  Name = s.Name,
                                                  TvCnt = s.TvCnt,
+                                                 TvRuntime = rtv?.TvRuntime,
                                                  MoviesCnt = s.MoviesCnt,
+                                                 MoviesRuntime = rmovies?.MoviesRuntime,
                                                  AmcCnt = s.AmcCnt,
+                                                 AmcRuntime = ramc?.AmcRuntime,
                                                  AListMembership = t?.AListMembership ?? 0,
                                                  AListTickets = t?.AListTickets ?? 0,
                                                  AmcPurchases = t?.AmcPurchases ?? 0
@@ -817,5 +889,19 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
         _context.SaveChanges();
         return true;
+    }
+
+    private List<SL_TV_EPISODE_INFO> GetEpisodes(int? tvEpisodeInfoId)
+    {
+        SL_TV_EPISODE_INFO? currentInfo = _context.SL_TV_EPISODE_INFO.FirstOrDefault(m => m.TV_EPISODE_INFO_ID == tvEpisodeInfoId);
+
+        if (currentInfo == null)
+            return null;
+
+        return _context.SL_TV_EPISODE_INFO.Where(m => m.TV_INFO_ID == currentInfo.TV_INFO_ID)
+                .OrderByDescending(m => m.SEASON_NUMBER > 0)
+                .ThenBy(m => m.SEASON_NUMBER)
+                .ThenBy(m => m.EPISODE_NUMBER)
+                .ToList();
     }
 }
