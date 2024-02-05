@@ -3,7 +3,9 @@ using ShowLogger.Data.Entities;
 using ShowLogger.Models;
 using ShowLogger.Models.Api;
 using ShowLogger.Store.Repositories.Interfaces;
+using System;
 using System.Linq.Expressions;
+using TMDbLib.Objects.TvShows;
 
 namespace ShowLogger.Store.Repositories;
 
@@ -240,6 +242,15 @@ public class WatchedShowsRepository : IWatchedShowsRepository
         if (currentInfo != null)
         {
             nextInfo = _context.SL_TV_EPISODE_INFO.FirstOrDefault(m => m.SEASON_NUMBER == seasonNumber && m.EPISODE_NUMBER == episodeNumber + 1 && m.TV_INFO_ID == currentInfo.TV_INFO_ID);
+
+            if (nextInfo == null && episodeNumber != null)
+            {
+                // Somes shows I track are by episode and ignoring season. 
+                // So get all episodes and then find the row that matches the episode
+                nextInfo = _context.SL_TV_EPISODE_INFO.Where(m => m.TV_INFO_ID == currentInfo.TV_INFO_ID && m.SEASON_NUMBER > 0)
+                .OrderBy(m => m.SEASON_NUMBER).ThenBy(m => m.EPISODE_NUMBER)
+                    .Skip(episodeNumber.Value - 1).FirstOrDefault();
+            }
         }
 
         return nextInfo?.TV_EPISODE_INFO_ID;
