@@ -245,7 +245,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 }
                 else
                 {
-                    nextEpisode.INFO_ID = GetTvEpisodeInfoId(entity.INFO_ID, entity.SEASON_NUMBER, entity.EPISODE_NUMBER + 1);
+                    nextEpisode.INFO_ID = GetTvEpisodeInfoId(entity.INFO_ID, entity.SEASON_NUMBER, entity.EPISODE_NUMBER);
                 }
             }
 
