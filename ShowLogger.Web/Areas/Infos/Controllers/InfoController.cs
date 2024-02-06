@@ -259,7 +259,7 @@ public class InfoController : BaseController
 
         try
         {
-            model = _infoRepository.GetUnlinkedShows().OrderBy(m => m.ShowName);
+            model = _infoRepository.GetUnlinkedShows().OrderByDescending(m => m.InShowLoggerIndc).ThenBy(m => m.ShowName);
         }
         catch (Exception ex)
         {
