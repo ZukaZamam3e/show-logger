@@ -69,6 +69,8 @@ public class OATabBuilder<T> : OAControlBuilder<T>
             TagBuilder bodyTab = new TagBuilder("div");
             bodyTab.AddCssClass($"tabcontent {Container.Name}-tabs");
             bodyTab.Attributes.Add("tab", $"{Container.Name}-{tab.Title.Replace(" ", "")}");
+            bodyTab.Attributes.Add("refreshWhenClicked", $"{tab.RefreshWhenClicked}");
+
             if (tab.Selected)
             {
                 bodyTab.AddCssClass($"active-tab");

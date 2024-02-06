@@ -11,6 +11,8 @@ public class OATabLink
 
     public string Partial { get; set; }
 
+    public bool RefreshWhenClicked { get; set; }
+
     public Func<object, IHtmlContent> Content { get; set; }
 }
 
@@ -48,6 +50,12 @@ public class OATabLinkBuilder<T>
         });
 
         Container.Selected = selected;
+        return this;
+    }
+
+    public OATabLinkBuilder<T> RefreshWhenClicked(bool refreshWhenClicked)
+    {
+        Container.RefreshWhenClicked = refreshWhenClicked;
         return this;
     }
 

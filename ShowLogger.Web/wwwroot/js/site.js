@@ -1150,6 +1150,7 @@ oa_tabs = (function () {
             if (!!partialUrl) {
                 var url = $('#hlTabPartial').val();
                 var data = { partialUrl: partialUrl };
+
                 oa_utilities.ajaxGetData(url, data, function (data) {
                     $("[tab=" + tab.openTab + "]").html(data);
 
@@ -1158,9 +1159,11 @@ oa_tabs = (function () {
                     $(e).attr("partial", "");
                 });
             } else {
-                $("[tab=" + tab.openTab + "]").find('.mvc-grid').each((i, g) => {
-                    oa_grid.reload_grid(g.id);
-                })
+                if (tab.refreshWhenClicked) {
+                    $("[tab=" + tab.openTab + "]").find('.mvc-grid').each((i, g) => {
+                        oa_grid.reload_grid(g.id);
+                    })
+                }
             }
 
         },
@@ -1303,7 +1306,9 @@ oa_utilities = (function () {
         getTab: function (e) {
             return {
                 tabGroup: $(e).attr("tabGroup"),
-                openTab: $(e).attr("openTab")
+                openTab: $(e).attr("openTab"),
+                refreshWhenClicked: $(e).attr("refreshWhenClicked"),
+
             }
         },
 

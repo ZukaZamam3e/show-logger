@@ -833,7 +833,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                              join rmovies in movieRuntimes on new { s.UserId, s.Year } equals new { rmovies.UserId, rmovies.Year } into rmoviess
                                              from rmovies in rmoviess.DefaultIfEmpty()
                                              join ramc in amcRuntimes on new { s.UserId, s.Year } equals new { ramc.UserId, ramc.Year } into ramcs
-                                             from ramc in rmoviess.DefaultIfEmpty()
+                                             from ramc in ramcs.DefaultIfEmpty()
                                              select new YearStatsModel
                                              {
                                                  UserId = s.UserId,

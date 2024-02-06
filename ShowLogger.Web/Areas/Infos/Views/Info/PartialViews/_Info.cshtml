@@ -1,11 +1,12 @@
 ﻿@using ShowLogger.Models.Api
-@(Html.OA().Tab()
+@(
+Html.OA().Tab()
     .Name("tbInfos")
     .Items(tabs =>
     {
         tabs.Add().Title("Search").Selected(true).LoadFromPartial("~/Areas/Infos/Views/Info/PartialViews/_Search.cshtml");
         tabs.Add().Title("TV Infos").LoadFromPartial("~/Areas/Infos/Views/Info/PartialViews/_TVInfos.cshtml");
         tabs.Add().Title("Movie Infos").LoadFromPartial("~/Areas/Infos/Views/Info/PartialViews/_MovieInfos.cshtml");
-        tabs.Add().Title("Unlinked Shows").LoadFromPartial("~/Areas/Infos/Views/Info/PartialViews/_UnlinkedShows.cshtml");
+        tabs.Add().Title("Unlinked Shows").LoadFromPartial("~/Areas/Infos/Views/Info/PartialViews/_UnlinkedShows.cshtml").RefreshWhenClicked(false);
     })
 )
