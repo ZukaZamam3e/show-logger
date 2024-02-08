@@ -258,7 +258,8 @@ col.gvWatchlist_Mobileview,
 col.gvTransactions_Mobileview,
 col.gvBooks_Mobileview,
 col.gvYearStats_Mobileview,
-col.gvYearStatsBook_Mobileview {
+col.gvYearStatsBook_Mobileview,
+col.gvUnlinkedShows_Mobileview {
     width: 350px;
 }
 
@@ -283,7 +284,8 @@ col.gvBooks_Bookname {
 .gvTransactions_Mobileview,
 .gvBooks_Mobileview,
 .gvYearStats_Mobileview,
-.gvYearStatsBook_Mobileview {
+.gvYearStatsBook_Mobileview,
+.gvUnlinkedShows_Mobileview {
     text-align: center;
 }
 
@@ -351,7 +353,8 @@ col.gvBooks_Bookname {
     .gvTransactions_Mobileview,
     .gvBooks_Mobileview,
     .gvYearStats_Mobileview,
-    .gvYearStatsBook_Mobileview {
+    .gvYearStatsBook_Mobileview,
+    .gvUnlinkedShows_Mobileview {
         display: none;
     }
 }
@@ -400,12 +403,27 @@ col.gvBooks_Bookname {
         display: none;
     }
 
+    /*.gvFriendsWatchHistory_Name,
+    .gvFriendsWatchHistory_Showname,
+    .gvFriendsWatchHistory_Seasonnumber,
+    .gvFriendsWatchHistory_Episodenumber,
+    .gvFriendsWatchHistory_Datewatched,
+    .gvFriendsWatchHistory_Showtypeidz,
+    .gvFriendsWatchHistory_Shownotes {
+        display: none;
+    }*/
+
     .gvFriendsWatchHistory_Name,
     .gvFriendsWatchHistory_Showname,
     .gvFriendsWatchHistory_Seasonnumber,
     .gvFriendsWatchHistory_Episodenumber,
     .gvFriendsWatchHistory_Datewatched,
     .gvFriendsWatchHistory_Showtypeidz,
+    .gvFriendsWatchHistory_Seasonepisode,
+    .gvFriendsWatchHistory_Episodename,
+    .gvFriendsWatchHistory_Runtimez,
+    .gvFriendsWatchHistory_Shownamez,
+    .gvFriendsWatchHistory_Seasonepisoderuntime,
     .gvFriendsWatchHistory_Shownotes {
         display: none;
     }
@@ -460,6 +478,14 @@ col.gvBooks_Bookname {
     .gvYearStatsBook_Dayavgz,
     .gvYearStatsBook_Chapteravgz,
     .gvYearStatsBook_Pageavgz {
+        display: none;
+    }
+
+    .gvUnlinkedShows_Showname,
+    .gvUnlinkedShows_Showtypeidz,
+    .gvUnlinkedShows_Watchcount,
+    .gvUnlinkedShows_Lastwatched,
+    .gvUnlinkedShows_Inshowloggerindc {
         display: none;
     }
 

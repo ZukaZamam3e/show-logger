@@ -216,7 +216,10 @@ public class FriendWatchHistoryModel : ShowModel
     [Display(Name = "Name")]
     public string Name { get; set; }
 
-    public override string MobileView => $"{Name}<br>{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
+    //public override string MobileView => $"{Name}<br>{ShowName}<br>{ShowTypeIdZ}{(SeasonNumber != null ? $" - s{SeasonNumber.Value.ToString().PadLeft(2, '0')}e{EpisodeNumber.Value.ToString().PadLeft(2, '0')}" : "")}<br>{DateWatched.ToString("MM/dd/yyyy")}<br>{ShowNotes}";
+
+    public override string MobileView => $"{Name}<br>{base.MobileView}";
+
 }
 
 public class WatchlistModel
@@ -313,6 +316,9 @@ public class YearStatsModel
     [Display(Name = "TV")]
     public int TvCnt { get; set; }
 
+    [Display(Name = "TV (Not Tracked)")]
+    public int TvNotTrackedCnt { get; set; }
+
     [Display(Name = "TV Runtime")]
     public int? TvRuntime { get; set; }
 
@@ -320,10 +326,13 @@ public class YearStatsModel
     public string TvRuntimeZ => ConvertRuntime(TvRuntime);
 
     [Display(Name = "TV Stats")]
-    public string TvStats => $"{TvCnt}{TvRuntimeZ}";
+    public string TvStats => $"{TvCnt} ({TvNotTrackedCnt}){TvRuntimeZ}";
 
     [Display(Name = "Movies")]
     public int MoviesCnt { get; set; }
+
+    [Display(Name = "Movies (Not Tracked)")]
+    public int MoviesNotTrackedCnt { get; set; }
 
     [Display(Name = "Movies Runtime")]
     public int? MoviesRuntime { get; set; }
@@ -332,10 +341,13 @@ public class YearStatsModel
     public string MoviesRuntimeZ => ConvertRuntime(MoviesRuntime);
 
     [Display(Name = "Movies Stats")]
-    public string MovieStats => $"{MoviesCnt}{MoviesRuntimeZ}";
+    public string MovieStats => $"{MoviesCnt} ({MoviesNotTrackedCnt}){MoviesRuntimeZ}";
 
     [Display(Name = "AMC")]
     public int AmcCnt { get; set; }
+
+    [Display(Name = "AMC (Not Tracked)")]
+    public int AmcNotTrackedCnt { get; set; }
 
     [Display(Name = "AMC Runtime")]
     public int? AmcRuntime { get; set; }
@@ -344,7 +356,7 @@ public class YearStatsModel
     public string AmcRuntimeZ => ConvertRuntime(AmcRuntime);
 
     [Display(Name = "AMC Stats")]
-    public string AmcStats => $"{AmcCnt}{AmcRuntimeZ}";
+    public string AmcStats => $"{AmcCnt} ({AmcNotTrackedCnt}){AmcRuntimeZ}";
 
     [Display(Name = "A-List Membership")]
     public decimal AListMembership { get; set; }

@@ -17,6 +17,9 @@ public class UnlinkedShowsModel
     [Display(Name = "Show Type")]
     public string? ShowTypeIdZ { get; set; }
 
+    [Display(Name = "Last Watched")]
+    public DateTime LastWatched { get; set; }
+
     [Display(Name = "Watch Count")]
     public int WatchCount { get; set; }
 
@@ -25,4 +28,12 @@ public class UnlinkedShowsModel
 
     [Display(Name = "In Show Logger?")]
     public bool InShowLoggerIndc { get; set; }
+
+    public string MobileView =>
+        $"{ShowName}<br>" +
+        $"{ShowTypeIdZ}<br>" +
+        $"{LastWatched.ToShortDateString()}<br>" +
+        $"{WatchCount}<br>" +
+        $"{InShowLoggerIndc}<br>" +
+        $"";
 }

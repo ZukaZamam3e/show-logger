@@ -62,10 +62,6 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                            RestartBinge = s.RESTART_BINGE,
                                            Runtime = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.RUNTIME : null) : (m != null ? m.RUNTIME : null),
                                            EpisodeName = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.EPISODE_NAME : null) : "",
-                                           //ImageUrl = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? !string.IsNullOrEmpty(t.IMAGE_URL) ? $"{_apisConfig.TMDbURL}{TMDBApiPaths.Image}{t.IMAGE_URL}" : "" : null) : "",
-                                           //ImageUrl = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? GetImageUrl(t.API_TYPE, t.IMAGE_URL) : "") : "",
-                                           //InfoUrl = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? !string.IsNullOrEmpty(t.IMAGE_URL) ? $"{_apisConfig.TMDbURL}{TMDBApiPaths.TV}{$"/{ti.TMDB_ID}/season/{t.SEASON_NUMBER}/episode/{t.EPISODE_NUMBER}"}" : "" : null) : "",
-                                           //InfoUrl = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? GetTvEpisodeInfoUrl(t.API_TYPE, t.API_ID, t.SEASON_NUMBER, t.EPISODE_NUMBER) : "") : "",
                                            InfoId = s.INFO_ID,
 
                                            InfoApiType = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.API_TYPE : null) : (m != null ? m.API_TYPE : null),
@@ -74,22 +70,6 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                            InfoEpisodeNumber = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.EPISODE_NUMBER : null) : null,
                                            InfoImageUrl = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.IMAGE_URL : null) : (m != null ? m.IMAGE_URL : null),
                                        };
-
-
-
-        //IEnumerable < ShowModel > query = _context.SL_SHOW.Select(m => new ShowModel
-        //{
-        //    ShowId = m.SHOW_ID,
-        //    UserId = m.USER_ID,
-        //    ShowName = m.SHOW_NAME,
-        //    SeasonNumber = m.SEASON_NUMBER,
-        //    EpisodeNumber = m.EPISODE_NUMBER,
-        //    DateWatched = m.DATE_WATCHED,
-        //    ShowTypeId = m.SHOW_TYPE_ID,
-        //    ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
-        //    ShowNotes = m.SHOW_NOTES,
-        //    RestartBinge = m.RESTART_BINGE
-        //});
 
         if (predicate != null)
         {
@@ -541,21 +521,74 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
         Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
 
-        IEnumerable<FriendWatchHistoryModel> query = (from m in _context.SL_SHOW
-                                                      join u in _context.OA_USERS on m.USER_ID equals u.USER_ID
-                                                      select new FriendWatchHistoryModel
-                                                      {
-                                                          ShowId = m.SHOW_ID,
-                                                          UserId = m.USER_ID,
-                                                          Name = $"{u.LAST_NAME}, {u.FIRST_NAME}",
-                                                          ShowName = m.SHOW_NAME,
-                                                          SeasonNumber = m.SEASON_NUMBER,
-                                                          EpisodeNumber = m.EPISODE_NUMBER,
-                                                          DateWatched = m.DATE_WATCHED,
-                                                          ShowTypeId = m.SHOW_TYPE_ID,
-                                                          ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
-                                                          ShowNotes = m.SHOW_NOTES,
-                                                      }).Where(m => friends.Contains(m.UserId));
+        Dictionary<int, string> userLookUp = _context.OA_USERS.Where(m => friends.Contains(m.USER_ID)).ToDictionary(m => m.USER_ID, m => $"{m.LAST_NAME}, {m.FIRST_NAME}");
+
+        //IEnumerable<FriendWatchHistoryModel> query = (from m in _context.SL_SHOW
+        //                                              join u in _context.OA_USERS on m.USER_ID equals u.USER_ID
+        //                                              select new FriendWatchHistoryModel
+        //                                              {
+        //                                                  ShowId = m.SHOW_ID,
+        //                                                  UserId = m.USER_ID,
+        //                                                  Name = $"{u.LAST_NAME}, {u.FIRST_NAME}",
+        //                                                  ShowName = m.SHOW_NAME,
+        //                                                  SeasonNumber = m.SEASON_NUMBER,
+        //                                                  EpisodeNumber = m.EPISODE_NUMBER,
+        //                                                  DateWatched = m.DATE_WATCHED,
+        //                                                  ShowTypeId = m.SHOW_TYPE_ID,
+        //                                                  ShowTypeIdZ = showTypeIds[m.SHOW_TYPE_ID],
+        //                                                  ShowNotes = m.SHOW_NOTES,
+        //                                              }).Where(m => friends.Contains(m.UserId));
+
+        IEnumerable<ShowInfoModel> infoQuery = from s in _context.SL_SHOW
+                                               join t in _context.SL_TV_EPISODE_INFO on new { Id = s.INFO_ID ?? -1, Type = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? INFO_TYPE.TV : INFO_TYPE.MOVIE } equals new { Id = t.TV_EPISODE_INFO_ID, Type = INFO_TYPE.TV } into ts
+                                               from t in ts.DefaultIfEmpty()
+                                               join ti in _context.SL_TV_INFO on new { Id = t.TV_INFO_ID, Type = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? INFO_TYPE.TV : INFO_TYPE.MOVIE } equals new { Id = ti.TV_INFO_ID, Type = INFO_TYPE.TV } into tis
+                                               from ti in tis.DefaultIfEmpty()
+                                               join m in _context.SL_MOVIE_INFO on new { Id = s.INFO_ID ?? -1, Type = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? INFO_TYPE.TV : INFO_TYPE.MOVIE } equals new { Id = m.MOVIE_INFO_ID, Type = INFO_TYPE.MOVIE } into ms
+                                               from m in ms.DefaultIfEmpty()
+                                               where friends.Contains(s.USER_ID)
+                                               select new ShowInfoModel
+                                               {
+                                                   ShowId = s.SHOW_ID,
+                                                   UserId = s.USER_ID,
+                                                   ShowName = s.SHOW_NAME,
+                                                   SeasonNumber = s.SEASON_NUMBER,
+                                                   EpisodeNumber = s.EPISODE_NUMBER,
+                                                   DateWatched = s.DATE_WATCHED,
+                                                   ShowTypeId = s.SHOW_TYPE_ID,
+                                                   ShowTypeIdZ = showTypeIds[s.SHOW_TYPE_ID],
+                                                   ShowNotes = s.SHOW_NOTES,
+                                                   RestartBinge = s.RESTART_BINGE,
+                                                   Runtime = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.RUNTIME : null) : (m != null ? m.RUNTIME : null),
+                                                   EpisodeName = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.EPISODE_NAME : null) : "",
+                                                   InfoId = s.INFO_ID,
+
+                                                   InfoApiType = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.API_TYPE : null) : (m != null ? m.API_TYPE : null),
+                                                   InfoApiId = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? ti.API_ID : null) : (m != null ? m.API_ID : null),
+                                                   InfoSeasonNumber = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.SEASON_NUMBER : null) : null,
+                                                   InfoEpisodeNumber = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.EPISODE_NUMBER : null) : null,
+                                                   InfoImageUrl = s.SHOW_TYPE_ID == (int)CodeValueIds.TV ? (t != null ? t.IMAGE_URL : null) : (m != null ? m.IMAGE_URL : null),
+                                               };
+
+        IEnumerable<FriendWatchHistoryModel> query = infoQuery.ToList().Select(m => new FriendWatchHistoryModel 
+        {
+            ShowId = m.ShowId,
+            UserId = m.UserId,
+            Name = userLookUp[m.UserId],
+            ShowName = m.ShowName,
+            SeasonNumber = m.SeasonNumber,
+            EpisodeNumber = m.EpisodeNumber,
+            DateWatched = m.DateWatched,
+            ShowTypeId = m.ShowTypeId,
+            ShowTypeIdZ = m.ShowTypeIdZ,
+            ShowNotes = m.ShowNotes,
+            RestartBinge = m.RestartBinge,
+            Runtime = m.Runtime,
+            EpisodeName = m.EpisodeName,
+            InfoId = m.InfoId,
+            ImageUrl = GetImageUrl(m.InfoApiType, m.InfoImageUrl),
+            InfoUrl = (m.ShowTypeId == (int)CodeValueIds.TV ? GetTvEpisodeInfoUrl(m.InfoApiType, m.InfoApiId, m.InfoSeasonNumber, m.InfoEpisodeNumber) : GetMovieInfoUrl(m.InfoApiType, m.InfoApiId))
+        });
 
         return query;
     }
@@ -798,6 +831,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                                   {
                                                       UserId = g.Key.USER_ID,
                                                       Year = g.Key.Year,
+                                                      TvCnt = g.Count(),
                                                       TvRuntime = g.Sum(m => m.ei.RUNTIME) ?? 0
                                                   }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
 
@@ -810,6 +844,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                                   {
                                                       UserId = g.Key.USER_ID,
                                                       Year = g.Key.Year,
+                                                      MoviesCnt = g.Count(),
                                                       MoviesRuntime = g.Sum(m => m.mi.RUNTIME) ?? 0
                                                   }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
 
@@ -822,6 +857,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                                      {
                                                          UserId = g.Key.USER_ID,
                                                          Year = g.Key.Year,
+                                                         AmcCnt = g.Count(),
                                                          AmcRuntime = g.Sum(m => m.mi.RUNTIME) ?? 0
                                                      }).Where(m => m.UserId == userId || friends.Contains(m.UserId)).ToList();
 
@@ -840,10 +876,13 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                                                  Year = s.Year,
                                                  Name = s.Name,
                                                  TvCnt = s.TvCnt,
+                                                 TvNotTrackedCnt = s.TvCnt - (rtv?.TvCnt ?? 0),
                                                  TvRuntime = rtv?.TvRuntime,
                                                  MoviesCnt = s.MoviesCnt,
+                                                 MoviesNotTrackedCnt = s.MoviesCnt - (rmovies?.MoviesCnt ?? 0),
                                                  MoviesRuntime = rmovies?.MoviesRuntime,
                                                  AmcCnt = s.AmcCnt,
+                                                 AmcNotTrackedCnt = s.AmcCnt - (ramc?.AmcCnt ?? 0),
                                                  AmcRuntime = ramc?.AmcRuntime,
                                                  AListMembership = t?.AListMembership ?? 0,
                                                  AListTickets = t?.AListTickets ?? 0,
