@@ -628,6 +628,7 @@ public class InfoRepository : IInfoRepository
                                                      ShowTypeId = grp.Key.SHOW_TYPE_ID,
                                                      ShowTypeIdZ = showTypeIds[grp.Key.SHOW_TYPE_ID],
                                                      WatchCount = grp.Count(),
+                                                     LastWatched = grp.Max(m => m.DATE_WATCHED),
                                                      InfoId = grp.Key.SHOW_TYPE_ID == (int)CodeValueIds.TV ? tvData.ContainsKey(grp.Key.SHOW_NAME) ? tvData[grp.Key.SHOW_NAME] : -1 : movieData.ContainsKey(grp.Key.SHOW_NAME) ? movieData[grp.Key.SHOW_NAME] : -1,
                                                      InShowLoggerIndc = grp.Key.SHOW_TYPE_ID == (int)CodeValueIds.TV ? tvData.ContainsKey(grp.Key.SHOW_NAME) : movieData.ContainsKey(grp.Key.SHOW_NAME)
                                                  });

@@ -12,9 +12,11 @@
             commands.Custom("UpdateUnlinkedShowName", "fas fa-check", "infos.openUpdateUnlinkedShowName");
             commands.Custom("UpdateUnlinkedShowName", "fas fa-link", "infos.linkShows", "infos.showLinkShows");
         });
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
         columns.OAColumn(model => model.ShowName);
         columns.OAColumn(model => model.ShowTypeIdZ);
         columns.OAColumn(model => model.WatchCount);
+        columns.OAColumn(model => model.LastWatched).Formatted("{0:d}");
         columns.OAColumn(model => model.InShowLoggerIndc);
     })
     .Pageable(pager =>

@@ -11,7 +11,7 @@ public class OATabLink
 
     public string Partial { get; set; }
 
-    public bool RefreshWhenClicked { get; set; }
+    public bool RefreshWhenClicked { get; set; } = true;
 
     public Func<object, IHtmlContent> Content { get; set; }
 }

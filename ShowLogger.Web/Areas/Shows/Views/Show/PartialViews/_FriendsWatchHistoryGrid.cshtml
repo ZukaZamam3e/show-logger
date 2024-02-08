@@ -6,11 +6,20 @@
     .NamedAndId("gvFriendsWatchHistory")
     .Columns(columns =>
     {
-        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
-        columns.OAColumn(model => model.Name);
+        @* columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
         columns.OAColumn(model => model.ShowName);
         columns.OAColumn(model => model.SeasonNumber);
         columns.OAColumn(model => model.EpisodeNumber);
+        columns.OAColumn(model => model.DateWatched).Formatted("{0:d}");
+        columns.OAColumn(model => model.ShowTypeIdZ);
+        columns.OAColumn(model => model.ShowNotes); *@
+
+        columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
+        columns.OAColumn(model => model.Name);
+        columns.OAColumn(model => model.ShowNameZ).Encoded(false);
+        columns.OAColumn(model => model.SeasonEpisodeRuntime);
+        //columns.OAColumn(model => model.EpisodeName);
+        //columns.OAColumn("EpisodeName", model => !string.IsNullOrEmpty(model.EpisodeName) ? $"<a href =\"{model.InfoUrl}\" target=\"blank\">{model.EpisodeName}</a>" : "").Titled("Episode Name").Encoded(false);
         columns.OAColumn(model => model.DateWatched).Formatted("{0:d}");
         columns.OAColumn(model => model.ShowTypeIdZ);
         columns.OAColumn(model => model.ShowNotes);

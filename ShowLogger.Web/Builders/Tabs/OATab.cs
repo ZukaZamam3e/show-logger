@@ -62,6 +62,7 @@ public class OATabBuilder<T> : OAControlBuilder<T>
             buttonTab.Attributes.Add("openTab", $"{Container.Name}-{tab.Title.Replace(" ", "")}");
             buttonTab.Attributes.Add("tabGroup", $"{Container.Name}-tabs");
             buttonTab.Attributes.Add("onclick", "oa_tabs.open_tab(this)");
+            buttonTab.Attributes.Add("refreshWhenClicked", $"{tab.RefreshWhenClicked}");
 
             tabHeader.InnerHtml.AppendHtml(buttonTab);
 
@@ -69,7 +70,6 @@ public class OATabBuilder<T> : OAControlBuilder<T>
             TagBuilder bodyTab = new TagBuilder("div");
             bodyTab.AddCssClass($"tabcontent {Container.Name}-tabs");
             bodyTab.Attributes.Add("tab", $"{Container.Name}-{tab.Title.Replace(" ", "")}");
-            bodyTab.Attributes.Add("refreshWhenClicked", $"{tab.RefreshWhenClicked}");
 
             if (tab.Selected)
             {

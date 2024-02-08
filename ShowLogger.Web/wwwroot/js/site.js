@@ -1307,7 +1307,7 @@ oa_utilities = (function () {
             return {
                 tabGroup: $(e).attr("tabGroup"),
                 openTab: $(e).attr("openTab"),
-                refreshWhenClicked: $(e).attr("refreshWhenClicked"),
+                refreshWhenClicked: $(e).attr("refreshWhenClicked") === "True",
 
             }
         },
