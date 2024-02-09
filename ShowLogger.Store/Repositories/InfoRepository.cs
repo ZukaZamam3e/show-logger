@@ -67,14 +67,14 @@ public class InfoRepository : IInfoRepository
             Result = ApiResults.Success
         };
 
-        IEnumerable<ApiSearchResultModel> query = new List<ApiSearchResultModel>();   
+        IEnumerable<ApiSearchResultModel> query = new List<ApiSearchResultModel>();
 
-        if(string.IsNullOrEmpty(searchInfo.Name))
+        if (string.IsNullOrEmpty(searchInfo.Name))
         {
             model.Result = ApiResults.SearchNameMissing;
             return model;
         }
-        else if(searchInfo.Name.Length < 3)
+        else if (searchInfo.Name.Length < 3)
         {
             model.Result = ApiResults.SearchNameTooShort;
             return model;
@@ -221,7 +221,7 @@ public class InfoRepository : IInfoRepository
                         info.ImageUrl = show.PosterPath;
 
                         List<TvEpisodeInfoModel> episodes = new List<TvEpisodeInfoModel>();
-                        
+
                         int requestCount = 1;
                         Stopwatch requestTimer = Stopwatch.StartNew();
 
@@ -527,7 +527,7 @@ public class InfoRepository : IInfoRepository
     {
         SL_TV_INFO entity = _context.SL_TV_INFO.FirstOrDefault(m => m.TV_INFO_ID == tvInfoId);
 
-        if(entity != null)
+        if (entity != null)
         {
             IEnumerable<SL_TV_EPISODE_INFO> episodeEntities = _context.SL_TV_EPISODE_INFO.Where(m => m.TV_INFO_ID == tvInfoId);
 
@@ -623,7 +623,7 @@ public class InfoRepository : IInfoRepository
         {
             IEnumerable<SL_SHOW> showEntities = _context.SL_SHOW.Where(m => codeValueIds.Contains(m.SHOW_TYPE_ID) && m.INFO_ID == entity.MOVIE_INFO_ID);
 
-            foreach(SL_SHOW show in showEntities)
+            foreach (SL_SHOW show in showEntities)
             {
                 show.INFO_ID = null;
             }
@@ -639,7 +639,7 @@ public class InfoRepository : IInfoRepository
 
     public void RefreshInfo(int infoId, INFO_TYPE type)
     {
-        switch(type)
+        switch (type)
         {
             case INFO_TYPE.TV:
                 {
@@ -661,31 +661,100 @@ public class InfoRepository : IInfoRepository
     {
         Dictionary<int, string> showTypeIds = _context.SL_CODE_VALUE.Where(m => m.CODE_TABLE_ID == (int)CodeTableIds.SHOW_TYPE_ID).ToDictionary(m => m.CODE_VALUE_ID, m => m.DECODE_TXT);
         SL_SHOW[] data = _context.SL_SHOW.Where(m => m.INFO_ID == null).ToArray();
-        Dictionary<string, int> tvData = _context.SL_TV_INFO.ToDictionary(m => m.SHOW_NAME, m=> m.TV_INFO_ID);
-        Dictionary<string, int> movieData = _context.SL_MOVIE_INFO.ToDictionary(m => m.MOVIE_NAME, m => m.MOVIE_INFO_ID);
+        SL_TV_INFO[] tvData = _context.SL_TV_INFO.ToArray();
+        SL_MOVIE_INFO[] movieData = _context.SL_MOVIE_INFO.ToArray();
+
+        List<UnlinkedShowsModel> query = new List<UnlinkedShowsModel>();
+
+        IEnumerable<UnlinkedShowsModel> groupData = (from d in data
+                                                     group d by new { d.SHOW_NAME, d.SHOW_TYPE_ID } into grp
+                                                     select new UnlinkedShowsModel
+                                                     {
+                                                         ShowName = grp.Key.SHOW_NAME,
+                                                         ShowTypeId = grp.Key.SHOW_TYPE_ID,
+                                                         ShowTypeIdZ = showTypeIds[grp.Key.SHOW_TYPE_ID],
+                                                         WatchCount = grp.Count(),
+                                                         LastWatched = grp.Max(m => m.DATE_WATCHED),
+                                                         //InfoId = grp.Key.SHOW_TYPE_ID == (int)CodeValueIds.TV ? tvData.ContainsKey(grp.Key.SHOW_NAME) ? tvData[grp.Key.SHOW_NAME] : -1 : movieData.ContainsKey(grp.Key.SHOW_NAME) ? movieData[grp.Key.SHOW_NAME] : -1,
+                                                         //InShowLoggerIndc = grp.Key.SHOW_TYPE_ID == (int)CodeValueIds.TV ? tvData.ContainsKey(grp.Key.SHOW_NAME) : movieData.ContainsKey(grp.Key.SHOW_NAME)
+                                                     });
 
 
-        IEnumerable<UnlinkedShowsModel> query = (from d in data
-                                                 group d by new { d.SHOW_NAME, d.SHOW_TYPE_ID } into grp
-                                                 select new UnlinkedShowsModel
-                                                 {
-                                                     ShowName = grp.Key.SHOW_NAME,
-                                                     ShowTypeId = grp.Key.SHOW_TYPE_ID,
-                                                     ShowTypeIdZ = showTypeIds[grp.Key.SHOW_TYPE_ID],
-                                                     WatchCount = grp.Count(),
-                                                     LastWatched = grp.Max(m => m.DATE_WATCHED),
-                                                     InfoId = grp.Key.SHOW_TYPE_ID == (int)CodeValueIds.TV ? tvData.ContainsKey(grp.Key.SHOW_NAME) ? tvData[grp.Key.SHOW_NAME] : -1 : movieData.ContainsKey(grp.Key.SHOW_NAME) ? movieData[grp.Key.SHOW_NAME] : -1,
-                                                     InShowLoggerIndc = grp.Key.SHOW_TYPE_ID == (int)CodeValueIds.TV ? tvData.ContainsKey(grp.Key.SHOW_NAME) : movieData.ContainsKey(grp.Key.SHOW_NAME)
-                                                 });
+        foreach (UnlinkedShowsModel group in groupData)
+        {
+            if (group.ShowTypeId == (int)CodeValueIds.TV)
+            {
+                IEnumerable<UnlinkedShowsModel> unlinked = tvData.Where(m => m.SHOW_NAME == group.ShowName).Select(m => new UnlinkedShowsModel
+                {
+                    ShowName = group.ShowName,
+                    ShowTypeId = group.ShowTypeId,
+                    ShowTypeIdZ = group.ShowTypeIdZ,
+                    WatchCount = group.WatchCount,
+                    LastWatched = group.LastWatched,
+                    LastDataRefresh = m.LAST_DATA_REFRESH,
+                    InfoId = m.TV_INFO_ID,
+                    InShowLoggerIndc = true
+                });
+
+                if (unlinked.Any())
+                {
+                    query.AddRange(unlinked);
+                }
+                else
+                {
+                    query.Add(new UnlinkedShowsModel
+                    {
+                        ShowName = group.ShowName,
+                        ShowTypeId = group.ShowTypeId,
+                        ShowTypeIdZ = group.ShowTypeIdZ,
+                        WatchCount = group.WatchCount,
+                        LastWatched = group.LastWatched,
+                        InShowLoggerIndc = false
+                    });
+                }
+            }
+            else
+            {
+                IEnumerable<UnlinkedShowsModel> unlinked = movieData.Where(m => m.MOVIE_NAME == group.ShowName).Select(m => new UnlinkedShowsModel
+                {
+                    ShowName = group.ShowName,
+                    ShowTypeId = group.ShowTypeId,
+                    ShowTypeIdZ = group.ShowTypeIdZ,
+                    WatchCount = group.WatchCount,
+                    LastWatched = group.LastWatched,
+                    AirDate = m.AIR_DATE,
+                    LastDataRefresh = m.LAST_DATA_REFRESH,
+                    InfoId = m.MOVIE_INFO_ID,
+                    InShowLoggerIndc = true
+                });
+
+                if (unlinked.Any())
+                {
+                    query.AddRange(unlinked);
+                }
+                else
+                {
+                    query.Add(new UnlinkedShowsModel
+                    {
+                        ShowName = group.ShowName,
+                        ShowTypeId = group.ShowTypeId,
+                        ShowTypeIdZ = group.ShowTypeIdZ,
+                        WatchCount = group.WatchCount,
+                        LastWatched = group.LastWatched,
+                        InShowLoggerIndc = false
+                    });
+                }
+            }
+        }
 
         if (predicate != null)
         {
-            query = query.AsQueryable().Where(predicate);
+            query = query.AsQueryable().Where(predicate).ToList();
         }
 
         return query;
     }
 
-    
+
 
 }

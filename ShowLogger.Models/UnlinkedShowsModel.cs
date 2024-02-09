@@ -23,6 +23,12 @@ public class UnlinkedShowsModel
     [Display(Name = "Watch Count")]
     public int WatchCount { get; set; }
 
+    [Display(Name = "Air Date")]
+    public DateTime? AirDate { get; set; }
+
+    [Display(Name = "Last Data Refresh")]
+    public DateTime? LastDataRefresh { get; set; }
+
     [Display(Name = "Info Id")]
     public int InfoId { get; set; }
 
@@ -34,6 +40,8 @@ public class UnlinkedShowsModel
         $"{ShowTypeIdZ}<br>" +
         $"{LastWatched.ToShortDateString()}<br>" +
         $"{WatchCount}<br>" +
+        (AirDate != null ? $"{AirDate:MM/dd/yyyy}<br>": "") +
         $"{InShowLoggerIndc}<br>" +
+        (LastDataRefresh != null ? $"{LastDataRefresh:MM/dd/yyyy}<br>": "") +
         $"";
 }

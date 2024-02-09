@@ -490,6 +490,8 @@ col.gvBooks_Bookname {
     .gvUnlinkedShows_Showtypeidz,
     .gvUnlinkedShows_Watchcount,
     .gvUnlinkedShows_Lastwatched,
+    .gvUnlinkedShows_Airdate,
+    .gvUnlinkedShows_Lastdatarefresh,
     .gvUnlinkedShows_Inshowloggerindc {
         display: none;
     }

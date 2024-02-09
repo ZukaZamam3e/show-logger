@@ -17,6 +17,8 @@
         columns.OAColumn(model => model.ShowTypeIdZ);
         columns.OAColumn(model => model.WatchCount);
         columns.OAColumn(model => model.LastWatched).Formatted("{0:d}");
+        columns.OAColumn(model => model.AirDate).Formatted("{0:d}");
+        columns.OAColumn(model => model.LastDataRefresh).Formatted("{0:d}");
         columns.OAColumn(model => model.InShowLoggerIndc);
     })
     .Pageable(pager =>

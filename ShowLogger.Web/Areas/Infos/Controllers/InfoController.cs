@@ -260,7 +260,7 @@ public class InfoController : BaseController
 
         try
         {
-            model.UnlinkedCount = _infoRepository.GetUnlinkedShows().Count();
+            model.UnlinkedCount = _infoRepository.GetUnlinkedShows().Select(m => m.ShowName).Distinct().Count();
         }
         catch (Exception ex)
         {
