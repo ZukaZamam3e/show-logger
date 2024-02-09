@@ -626,9 +626,29 @@ infos = (function () {
             });
         },
 
+        copy_title: function (title) {
+            navigator.clipboard.writeText(title);
+            oa_utilities.show_info_message('Clipboard', 'Title copied.');
+        },
+
         openTVInfo: function (e) {
             var model = oa_utilities.getModel(e);
             window.location.href = getInfosBaseURL('Info/TVInfo') + "/" + model.TvInfoId;
+        },
+
+        deleteTvInfo: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/DeleteTvInfo'), {
+                "tvInfoId": model.TvInfoId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_deleted_notification();
+                    oa_grid.reload_grid('gvTVInfos');
+                }
+            });
         },
 
         btnUpdateOtherNames_Click: function () {
@@ -663,6 +683,21 @@ infos = (function () {
         openMovieInfo: function (e) {
             var model = oa_utilities.getModel(e);
             window.location.href = getInfosBaseURL('Info/MovieInfo') + "/" + model.MovieInfoId;
+        },
+
+        deleteMovieInfo: function (e) {
+            var model = oa_utilities.getModel(e);
+
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/DeleteMovieInfo'), {
+                "movieInfoId": model.MovieInfoId
+            }, function (data) {
+                if (data.errors.length > 0) {
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_deleted_notification();
+                    oa_grid.reload_grid('gvMovieInfos');
+                }
+            });
         },
 
         btnUpdateMovieOtherNames_Click: function () {
@@ -739,6 +774,7 @@ infos = (function () {
                 } else {
                     oa_grid.reload_grid('gvUnlinkedShows');
                     oa_utilities.show_record_saved_notification();
+                    infos.updateUnlinkedShowCount();
                 }
             });
         },
@@ -746,6 +782,23 @@ infos = (function () {
         showLinkShows: function (e) {
             var model = oa_utilities.getModel(e);
             return model.InShowLoggerIndc;
+        },
+
+        btnPasteTitle_Click: async function () {
+            const title = await navigator.clipboard.readText();
+            $('#UpdateUnlinkedShowNameNewShowName').val(title);
+
+        },
+
+        initUnlinkShows: function () {
+            infos.updateUnlinkedShowCount();
+        },
+
+        updateUnlinkedShowCount: function () {
+            oa_utilities.ajaxGetData(getInfosBaseURL('Info/GetUnlinkedInfo'), {}, function (data) {
+                console.log(data);
+                $('#spnUnlinkedShowsCount').text(data.data.unlinkedCount);
+            });
         }
     }
 })();
@@ -1449,6 +1502,10 @@ oa_utilities = (function () {
             validationFormSummary.addClass('hide');
         },
 
+        show_info_message: function (title, message) {
+            toastr.info(title, message, { timeOut: 2000, positionClass: "toast-bottom-right" })
+        },
+
         show_record_saved_notification: function () {
             toastr.success('Record saved successfully.', 'Record saved.', { timeOut: 2000, positionClass: "toast-bottom-right" })
         },
@@ -1458,7 +1515,7 @@ oa_utilities = (function () {
         },
 
         show_record_saved_message: function (message) {
-            toastr.success('Record saved successfully.', message, { timeOut: 0, positionClass: "toast-bottom-right" })
+            toastr.success('Record saved successfully.', message, { timeOut: 2000, positionClass: "toast-bottom-right" })
         },
 
         show_record_error_notification: function (message) {

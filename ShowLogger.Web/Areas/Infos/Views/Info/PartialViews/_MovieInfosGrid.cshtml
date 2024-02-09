@@ -10,7 +10,7 @@
         columns.Commands(commands =>
         {
             commands.Custom("Open", "fas fa-eye", "infos.openMovieInfo");
-            //commands.Custom("Delete", "fas fa-trash-alt", "infos.delete");
+            commands.Custom("Delete", "fas fa-trash-alt", "infos.deleteMovieInfo");
         });
         //columns.OAColumn(model => model.MobileView).RenderedAs(m => "<span>" + m.MobileView + "</span>").Encoded(false);
         columns.OAColumn(model => model.MovieName);

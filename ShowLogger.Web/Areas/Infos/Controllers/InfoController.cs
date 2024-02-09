@@ -57,6 +57,8 @@ public class InfoController : BaseController
         return View("Index");
     }
 
+    
+
 
     [HttpPost]
     public async Task<PartialViewResult> SearchApi(InfoApiSearchModel searchModel)
@@ -252,6 +254,24 @@ public class InfoController : BaseController
     }
 
     [HttpGet]
+    public IActionResult GetUnlinkedInfo()
+    {
+        UnlinkedInfoModel model = new UnlinkedInfoModel();
+
+        try
+        {
+            model.UnlinkedCount = _infoRepository.GetUnlinkedShows().Count();
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load unlinked count.");
+        }
+
+        // Only grid query values will be available here.
+        return Json(new { data = model, errors = GetErrorsFromModelState() });
+    }
+
+    [HttpGet]
     public PartialViewResult ReadUnlinkedShows()
     {
 
@@ -320,6 +340,54 @@ public class InfoController : BaseController
         {
             HandleException(ex, "Could not link shows.");
             ModelState.AddModelError("LinkShows", ex.Message);
+        }
+
+        return Json(new { data = successful, errors = GetErrorsFromModelState() });
+    }
+
+    [HttpPost]
+    public IActionResult DeleteTvInfo(int tvInfoId)
+    {
+        bool successful = false;
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                successful = _infoRepository.DeleteTvInfo(GetLoggedInUserId(), tvInfoId);
+
+                if (!successful)
+                {
+                    ModelState.AddModelError("Delete", "Could not delete TV info.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not delete TV info.");
+        }
+
+        return Json(new { data = successful, errors = GetErrorsFromModelState() });
+    }
+
+    [HttpPost]
+    public IActionResult DeleteMovieInfo(int movieInfoId)
+    {
+        bool successful = false;
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                successful = _infoRepository.DeleteMovieInfo(GetLoggedInUserId(), movieInfoId);
+
+                if (!successful)
+                {
+                    ModelState.AddModelError("Delete", "Could not delete movie info.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not delete movie info.");
         }
 
         return Json(new { data = successful, errors = GetErrorsFromModelState() });

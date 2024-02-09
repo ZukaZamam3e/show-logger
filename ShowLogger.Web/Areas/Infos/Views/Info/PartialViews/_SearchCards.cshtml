@@ -2,83 +2,21 @@
 
 @model IEnumerable<ApiSearchResultModel>
 
-<style>
-    
-
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .flip-card {
-        background-color: transparent;
-        width: 200px;
-        height: 300px;
-        /* perspective: 1000px; */
-    }
-
-    .flip-card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        transition: transform 0.2s;
-        transform-style: preserve-3d;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-        border-radius: 15px;
-    }
-
-    .flip-card:hover .flip-card-inner {
-        transform: rotateY(180deg);
-    }
-
-    .flip-card-front, .flip-card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-        border-radius: 15px;
-    }
-
-    .flip-card-front {
-        background-color: #bbb;
-        color: black;
-    }
-
-    .flip-card-back {
-        background-color: #2980b9;
-        color: white;
-        transform: rotateY(180deg);
-        border: solid 5px white;
-    }
-
-    .flip-card img {
-        border-radius: 15px;
-        width: 200px;
-        height: 300px;
-    }
-
-    .flip-card-back .card, .flip-card-front .card {
-        background-color: #2980b9;
-        min-height: 290px;
-        border-radius: 15px;
-    }
-</style>
-
 <div class="search-cards-grid">
     @foreach(ApiSearchResultModel result in Model)
     {
         <div class="search-card">
             <div class="card">
-                <div class="card-header">
+                <a href="#" class="card-header" onclick="infos.copy_title('@result.Name')">
                     @result.Name
-                </div>
+                </a>
                 <div class="card-body">
                     <p class="card-text">Air Date - @result.AirDateZ</p>
                 </div>
                 <div class="card-footer">
                     <a href="#" class="btn btn-primary" onclick="oa_utilities.open_url('@result.Link')"><i class="fas fa-eye"></i> Open Info</a>
                     <a href="#" class="btn btn-primary" onclick="infos.card_download('@result.Api', '@result.Type', '@result.Id')"><i class="fas fa-download"></i> Download</a>
+                    @* <a href="#" class="btn btn-primary" onclick="infos.copy_title('@result.Name')"><i class="fas fa-copy"></i> Copy Title</a> *@
                     @* <button class="btn btn-primary btn-sm float-left" style="color:white" onclick="oa_utilities.open_url('@result.Link')">
                         
                     </button>
