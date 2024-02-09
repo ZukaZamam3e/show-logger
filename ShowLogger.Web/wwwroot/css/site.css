@@ -335,6 +335,11 @@ col.gvBooks_Bookname {
     row-gap: 10px;
 }
 
+.card .card-header {
+    cursor: pointer;
+    text-decoration: none;
+}
+
 
    /* .search-card .card {
         width: 210px;
@@ -503,7 +508,7 @@ col.gvBooks_Bookname {
     }*/
 
     .search-card .card {
-        width: 177px;
+        width: 216px;
     }
 
     /*.search-card {
@@ -519,7 +524,11 @@ col.gvBooks_Bookname {
     }
 }
 
-
+@media only screen and (max-width: 390px) {
+    .search-card .card {
+        width: 177px;
+    }
+}
 
 
 

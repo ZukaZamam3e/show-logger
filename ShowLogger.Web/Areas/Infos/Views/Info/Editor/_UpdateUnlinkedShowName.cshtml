@@ -23,8 +23,18 @@
             @Html.OA().LabelFor(m => m.UpdateUnlinkedShowNameNewShowName)
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             @Html.OA().TextBoxFor(m => m.UpdateUnlinkedShowNameNewShowName).HtmlAttributes(new { @class = "mandatory" })
+        </div>
+
+        <div class="col-sm-3">
+            @(Html.OA().Button()
+                .Name("btnPasteTitle")
+                .Text("Paste")
+                .Icon("fa fa-paste")
+                .HtmlAttributes(new { @class = "btn btn-primary", style = "width: 100%" })
+                .Click("infos.btnPasteTitle_Click()")
+            )
         </div>
     </div>
 }

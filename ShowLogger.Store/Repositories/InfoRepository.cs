@@ -525,7 +525,29 @@ public class InfoRepository : IInfoRepository
 
     public bool DeleteTvInfo(int userId, int tvInfoId)
     {
-        throw new NotImplementedException();
+        SL_TV_INFO entity = _context.SL_TV_INFO.FirstOrDefault(m => m.TV_INFO_ID == tvInfoId);
+
+        if(entity != null)
+        {
+            IEnumerable<SL_TV_EPISODE_INFO> episodeEntities = _context.SL_TV_EPISODE_INFO.Where(m => m.TV_INFO_ID == tvInfoId);
+
+            int[] episodeIds = episodeEntities.Select(m => m.TV_EPISODE_INFO_ID).ToArray();
+
+            IEnumerable<SL_SHOW> showEntities = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && episodeIds.Contains(entity.TV_INFO_ID));
+
+            foreach (SL_SHOW show in showEntities)
+            {
+                show.INFO_ID = null;
+            }
+
+            _context.SL_TV_EPISODE_INFO.RemoveRange(episodeEntities);
+            _context.SL_TV_INFO.Remove(entity);
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        return false;
     }
 
     public IEnumerable<MovieInfoModel> GetMovieInfos(Expression<Func<MovieInfoModel, bool>>? predicate = null)
@@ -587,9 +609,32 @@ public class InfoRepository : IInfoRepository
         throw new NotImplementedException();
     }
 
-    public bool DeleteMovieInfo(int userId, int tvInfoId)
+    public bool DeleteMovieInfo(int userId, int movieInfoId)
     {
-        throw new NotImplementedException();
+        SL_MOVIE_INFO entity = _context.SL_MOVIE_INFO.FirstOrDefault(m => m.MOVIE_INFO_ID == movieInfoId);
+
+        int[] codeValueIds = new int[]
+        {
+            (int)CodeValueIds.MOVIE,
+            (int)CodeValueIds.AMC,
+        };
+
+        if (entity != null)
+        {
+            IEnumerable<SL_SHOW> showEntities = _context.SL_SHOW.Where(m => codeValueIds.Contains(m.SHOW_TYPE_ID) && m.INFO_ID == entity.MOVIE_INFO_ID);
+
+            foreach(SL_SHOW show in showEntities)
+            {
+                show.INFO_ID = null;
+            }
+
+            _context.SL_MOVIE_INFO.Remove(entity);
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        return false;
     }
 
     public void RefreshInfo(int infoId, INFO_TYPE type)

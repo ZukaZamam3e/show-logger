@@ -1,5 +1,11 @@
 ﻿<div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        Unlinked Shows: <span id="spnUnlinkedShowsCount"></span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         @(Html.OA().GridPage()
             .Name("gvUnlinkedShows")
             .Header(header =>
@@ -22,3 +28,9 @@
         )
     </div>
 </div>
+
+<script>
+    $(function () {
+        infos.initUnlinkShows();
+    })
+</script>
