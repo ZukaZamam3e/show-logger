@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ShowLogger.Data.Context;
+using ShowLogger.Models;
 using ShowLogger.Models.Api;
 using ShowLogger.Store.Repositories;
 using ShowLogger.Store.Repositories.Interfaces;
@@ -37,6 +38,10 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 ApisConfig apisConfig = new ApisConfig();
 builder.Configuration.GetSection("Apis").Bind(apisConfig);
 builder.Services.AddSingleton(apisConfig);
+
+ShowLoggerSettings showLoggerSettings = new ShowLoggerSettings();
+builder.Configuration.GetSection("ShowLoggerSettings").Bind(showLoggerSettings);
+builder.Services.AddSingleton(showLoggerSettings);
 
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>

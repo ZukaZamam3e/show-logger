@@ -15,16 +15,19 @@ namespace ShowLogger.Web.Controllers
     {
         private readonly IFriendRepository _friendRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ShowLoggerSettings _showLoggerSettings;
         public HomeController(
             UserManager<ApplicationUser> userManager,
             IFriendRepository friendRepository,
             IUserRepository userRepository,
+            ShowLoggerSettings showLoggerSettings,
             ILogger<BaseController> logger,
             IHttpContextAccessor httpContextAccessor
                 ) : base(userManager, logger, httpContextAccessor)
         {
             _friendRepository = friendRepository;
             _userRepository = userRepository;
+            _showLoggerSettings = showLoggerSettings;
         }
 
         public IActionResult Index()
@@ -71,6 +74,23 @@ namespace ShowLogger.Web.Controllers
         public IActionResult Friends()
         {
             return View();
+        }
+
+        public IActionResult GetLatestReleaseDate()
+        {
+            GetLatestReleaseDateModel model = new GetLatestReleaseDateModel();
+
+            try
+            {
+                model.LatestReleaseDate = $" - {_showLoggerSettings.LatestReleaseDate}";
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex, "Could not load latest release date.");
+            }
+
+            // Only grid query values will be available here.
+            return Json(new { data = model, errors = GetErrorsFromModelState() });
         }
 
         [HttpGet]
