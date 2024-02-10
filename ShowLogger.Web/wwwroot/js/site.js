@@ -803,6 +803,18 @@ infos = (function () {
     }
 })();
 
+layout = (function () {
+    return {
+        init: function () {
+            setTimeout(function () {
+                oa_utilities.ajaxGetData(getBaseURL() + "/Home/GetLatestReleaseDate", {}, function (data) {
+                    $('#spnLatestReleaseDate').text(data.data.latestReleaseDate);
+                });
+            }, 50);
+        }
+    }
+})();
+
 areas = (function () {
     return {
         btnSetShowsAreaAsDefault_Click: function () {
