@@ -28,7 +28,7 @@ jobs:
           # Get the current date in the format "YYYY-MM-DD"
           CURRENT_DATE=$(date +%Y.%m.%d).${GITHUB_RUN_NUMBER}
           echo $CURRENT_DATE
-          echo "App:ReleaseDate=$CURRENT_DATE" >> $GITHUB_ENV
+          echo "ReleaseDate=$CURRENT_DATE" >> $GITHUB_ENV
     #substitute production appsettings entries to appsettings json file
     - name: App Settings Variable Substitution
       uses: microsoft/variable-substitution@v1
@@ -36,7 +36,7 @@ jobs:
         files: './Release/appsettings.json'
       env:
         Apis.TMDbAPIKey: ${{ secrets.TMDB_API_KEY }}
-        ShowLoggerSettings.LatestReleaseDate: ${{ env.App:ReleaseDate }}
+        ShowLoggerSettings.LatestReleaseDate: ${{ env.ReleaseDate }}
     - name: SFTP Deploy
   # You may pin to the exact commit or the version.
   # uses: wlixcc/SFTP-Deploy-Action@c6e4d76ad92d7460e93fc66178b52638298adfaa
