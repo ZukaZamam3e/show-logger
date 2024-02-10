@@ -215,7 +215,7 @@ public class InfoRepository : IInfoRepository
                         TvInfoModel info = new TvInfoModel();
 
                         info.ShowName = show.Name;
-                        info.ShowOverview = show.Overview;
+                        info.ShowOverview = show.Overview.Substring(0, show.Overview.Length > 4000 ? 4000 : show.Overview.Length);
                         info.ApiType = (int)INFO_API.TMDB_API;
                         info.ApiId = show.Id.ToString();
                         info.ImageUrl = show.PosterPath;
@@ -240,7 +240,7 @@ public class InfoRepository : IInfoRepository
                                     EpisodeName = m.Name,
                                     SeasonNumber = season.SeasonNumber,
                                     EpisodeNumber = m.EpisodeNumber,
-                                    EpisodeOverview = m.Overview,
+                                    EpisodeOverview = m.Overview.Substring(0, m.Overview.Length > 4000 ? 4000 : m.Overview.Length),
                                     Runtime = m.Runtime,
                                     AirDate = m.AirDate,
                                     ImageUrl = m.StillPath
@@ -272,7 +272,7 @@ public class InfoRepository : IInfoRepository
                         MovieInfoModel info = new MovieInfoModel
                         {
                             MovieName = movie.Title,
-                            MovieOverview = movie.Overview,
+                            MovieOverview = movie.Overview.Substring(0, movie.Overview.Length > 4000 ? 4000 : movie.Overview.Length),
                             ApiType = (int)INFO_API.TMDB_API,
                             ApiId = movie.Id.ToString(),
                             Runtime = movie.Runtime,
