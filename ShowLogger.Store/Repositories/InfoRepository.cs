@@ -533,7 +533,7 @@ public class InfoRepository : IInfoRepository
 
             int[] episodeIds = episodeEntities.Select(m => m.TV_EPISODE_INFO_ID).ToArray();
 
-            IEnumerable<SL_SHOW> showEntities = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && episodeIds.Contains(entity.TV_INFO_ID));
+            IEnumerable<SL_SHOW> showEntities = _context.SL_SHOW.Where(m => m.SHOW_TYPE_ID == (int)CodeValueIds.TV && m.INFO_ID != null && episodeIds.Contains(m.INFO_ID.Value));
 
             foreach (SL_SHOW show in showEntities)
             {
