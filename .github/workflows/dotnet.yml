@@ -23,6 +23,10 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish -c Release --output ./Release
+    - name: Set release date
+      run: |
+          # Get the current date in the format "YYYY-MM-DD"
+          CURRENT_DATE=$(date +%F).${GITHUB_RUN_NUMBER}
     #substitute production appsettings entries to appsettings json file
     - name: App Settings Variable Substitution
       uses: microsoft/variable-substitution@v1
@@ -30,6 +34,7 @@ jobs:
         files: './Release/appsettings.json'
       env:
         Apis.TMDbAPIKey: ${{ secrets.TMDB_API_KEY }}
+        LatestReleaseDate: "$CURRENT_DATE"
     - name: SFTP Deploy
   # You may pin to the exact commit or the version.
   # uses: wlixcc/SFTP-Deploy-Action@c6e4d76ad92d7460e93fc66178b52638298adfaa
