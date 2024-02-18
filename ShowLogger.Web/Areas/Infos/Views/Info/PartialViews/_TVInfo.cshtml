@@ -146,4 +146,15 @@
     </div>
 }
 
-@Html.Partial("~/Areas/Infos/Views/Info/PartialViews/_TvEpisodeInfos.cshtml")
+@(Html.OA().Tab()
+    .Name("tbSeasons")
+    .Items(tabs =>
+    {
+        foreach(TvInfoSeasonModel season in Model.Seasons)
+        {
+            tabs.Add().Title(season.SeasonNumberZ).LoadFromPartial($"/Infos/Info/LoadTvSeasonTab/{season.TvInfoId}/{season.SeasonNumber}"); //"Url.Action("LoadTvSeasonTab", "Info", new { area = "Infos", tvInfoId=season.TvInfoId, seasonNumber=season.SeasonNumber, seasonName=season.SeasonName, episodeCount=season.EpisodeCount })
+        }
+    })
+)
+
+@* @Html.Partial("~/Areas/Infos/Views/Info/PartialViews/_TvEpisodeInfos.cshtml") *@

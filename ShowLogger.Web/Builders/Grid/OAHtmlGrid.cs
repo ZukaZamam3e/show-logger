@@ -19,6 +19,8 @@ public class OAHtmlGrid<T>
 
     public bool ServerFilter { get; set; }
 
+    public object HtmlAttributes { get; set; }
+
     public List<OAHtmlGridButton> HeaderButtons { get; set; }
 
     public OAHtmlGrid()

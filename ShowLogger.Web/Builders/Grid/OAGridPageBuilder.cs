@@ -1,6 +1,8 @@
 ﻿using System.Text.Encodings.Web;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ShowLogger.Web.Builders.Button;
 
 namespace ShowLogger.Web.Builders.Grid;
 
@@ -41,6 +43,12 @@ public class OAGridPageBuilder<T> : OAControlBuilder<T>
     public OAGridPageBuilder<T> Header(Action<OAGridButtonBuilder<T>> headerAction)
     {
         headerAction(new OAGridButtonBuilder<T>(this));
+        return this;
+    }
+
+    public OAGridPageBuilder<T> HtmlAttributes(object htmlAttributes)
+    {
+        Container.HtmlAttributes = htmlAttributes;
         return this;
     }
 
@@ -120,6 +128,15 @@ public class OAGridPageBuilder<T> : OAControlBuilder<T>
         }
 
         TagBuilder gridDiv = new TagBuilder("div");
+
+        Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+        RouteValueDictionary rvd = new RouteValueDictionary(Container.HtmlAttributes);
+
+        foreach (var a in rvd)
+        {
+            htmlAttributes.Add(a.Key, a.Value);
+        }
+
         gridDiv.Attributes.Add("id", $"{Container.Name}_partial");
         gridDiv.Attributes.Add("partial", Container.Read);
 
@@ -133,6 +150,8 @@ public class OAGridPageBuilder<T> : OAControlBuilder<T>
             gridDiv.Attributes.Add("filter_function", "oa_grid.set_server_filter");
             gridDiv.Attributes.Add("total_function", "oa_grid.set_grid_total");
         }
+
+        gridDiv.MergeAttributes(htmlAttributes);
 
         IHtmlContent gridPartial = _htmlHelper.PartialAsync("~/Views/Shared/Grid/_AjaxGrid.cshtml", Container.Read).Result;
 

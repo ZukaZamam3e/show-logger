@@ -103,7 +103,7 @@ public class ShowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Update(ShowModel? model)
+    public async Task<IActionResult> Update(ShowModel? model)
     {
         try
         {
@@ -114,10 +114,16 @@ public class ShowController : BaseController
                 if (model.InfoId != null)
                 {
                     TvEpisodeInfoModel episodeInfo = _infoRepository.GetTvEpisodeInfos(m => m.TvEpisodeInfoId == model.InfoId).First();
+                    TvInfoModel tvInfo = _infoRepository.GetTvInfos(m => m.TvInfoId == episodeInfo.TvInfoId).First();
 
                     if (episodeInfo.Runtime == null || string.IsNullOrEmpty(episodeInfo.EpisodeOverview))
                     {
-                        _infoRepository.RefreshTvInfo(episodeInfo.TvInfoId);
+                        await _infoRepository.Download(GetLoggedInUserId(), new InfoApiDownloadModel
+                        {
+                            API = (INFO_API)episodeInfo.ApiType,
+                            Type = INFO_TYPE.TV,
+                            Id = tvInfo.ApiId
+                        });
                     }
                 }
 
@@ -133,7 +139,7 @@ public class ShowController : BaseController
     }
 
     [HttpPost]
-    public IActionResult AddNextEpisode(int showId)
+    public async Task<IActionResult> AddNextEpisode(int showId)
     {
         bool successful = false;
         try
@@ -155,10 +161,16 @@ public class ShowController : BaseController
                     if (show.InfoId != null)
                     { 
                         TvEpisodeInfoModel episodeInfo = _infoRepository.GetTvEpisodeInfos(m => m.TvEpisodeInfoId == show.InfoId).First();
+                        TvInfoModel tvInfo = _infoRepository.GetTvInfos(m => m.TvInfoId == episodeInfo.TvInfoId).First();
 
-                        if(episodeInfo.Runtime == null || string.IsNullOrEmpty(episodeInfo.EpisodeOverview))
+                        if (episodeInfo.Runtime == null || string.IsNullOrEmpty(episodeInfo.EpisodeOverview))
                         {
-                            _infoRepository.RefreshTvInfo(episodeInfo.TvInfoId);
+                            await _infoRepository.Download(GetLoggedInUserId(), new InfoApiDownloadModel
+                            {
+                                API = (INFO_API)episodeInfo.ApiType, 
+                                Type = INFO_TYPE.TV,
+                                Id = tvInfo.ApiId
+                            });
                         }
                     } 
                 }

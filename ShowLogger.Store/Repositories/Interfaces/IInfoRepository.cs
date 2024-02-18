@@ -16,6 +16,8 @@ public interface IInfoRepository
 
     IEnumerable<TvInfoModel> GetTvInfos(Expression<Func<TvInfoModel, bool>>? predicate = null);
 
+    IEnumerable<TvInfoSeasonModel> GetTvInfoSeasons(int tvInfoId);
+
     IEnumerable<TvEpisodeInfoModel> GetTvEpisodeInfos(Expression<Func<TvEpisodeInfoModel, bool>>? predicate = null);
 
     long RefreshTvInfo(TvInfoModel model);

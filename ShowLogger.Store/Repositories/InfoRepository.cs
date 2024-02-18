@@ -20,6 +20,7 @@ using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
 using TMDbLib.Objects.TvShows;
 using OMDB_API_Wrapper.Models.API_Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShowLogger.Store.Repositories.Interfaces;
 public class InfoRepository : IInfoRepository
@@ -414,6 +415,22 @@ public class InfoRepository : IInfoRepository
         return query;
     }
 
+    public IEnumerable<TvInfoSeasonModel> GetTvInfoSeasons(int tvInfoId)
+    {
+        IEnumerable<TvInfoSeasonModel> query = _context.SL_TV_EPISODE_INFO
+            .Where(m => m.TV_INFO_ID == tvInfoId)
+            .GroupBy(m => new { m.TV_INFO_ID, m.SEASON_NAME, m.SEASON_NUMBER })
+            .Select(m => new TvInfoSeasonModel
+        {
+            TvInfoId = m.Key.TV_INFO_ID,
+            SeasonNumber = m.Key.SEASON_NUMBER ?? -1,
+            SeasonName = m.Key.SEASON_NAME ?? "",
+            EpisodeCount = m.Count()
+        });
+
+        return query;
+    }
+
     public IEnumerable<TvEpisodeInfoModel> GetTvEpisodeInfos(Expression<Func<TvEpisodeInfoModel, bool>>? predicate)
     {
         IEnumerable<TvEpisodeInfoModel> query = _context.SL_TV_EPISODE_INFO
@@ -470,7 +487,7 @@ public class InfoRepository : IInfoRepository
         foreach (TvEpisodeInfoModel episode in model.Episodes)
         {
             //SL_TV_EPISODE_INFO? episodeEntity = _context.SL_TV_EPISODE_INFO.FirstOrDefault(m => m.TMDB_ID == episode.TMDbId && m.OMDB_ID == episode.OMDbId);
-            SL_TV_EPISODE_INFO? episodeEntity = _context.SL_TV_EPISODE_INFO.FirstOrDefault(m => m.API_TYPE == model.ApiType && m.API_ID == model.ApiId);
+            SL_TV_EPISODE_INFO? episodeEntity = _context.SL_TV_EPISODE_INFO.FirstOrDefault(m => m.API_TYPE == model.ApiType && m.API_ID == episode.ApiId);
 
             if (episodeEntity == null)
             {
@@ -478,7 +495,7 @@ public class InfoRepository : IInfoRepository
                 {
                     TV_INFO_ID = entity.TV_INFO_ID,
                     API_TYPE = model.ApiType,
-                    API_ID = entity.API_ID,
+                    API_ID = episode.ApiId,
                 };
 
                 _context.SL_TV_EPISODE_INFO.Add(episodeEntity);
@@ -489,7 +506,6 @@ public class InfoRepository : IInfoRepository
 
             episodeEntity.EPISODE_NAME = episode.EpisodeName;
             episodeEntity.EPISODE_OVERVIEW = episode.EpisodeOverview;
-
 
             episodeEntity.SEASON_NAME = episode.SeasonName;
             episodeEntity.EPISODE_NAME = episode.EpisodeName;
@@ -508,13 +524,17 @@ public class InfoRepository : IInfoRepository
 
     public long RefreshTvInfo(int infoId)
     {
-        TvInfoModel model = GetTvInfos(m => m.TvInfoId == infoId).First();
+        //TvInfoModel model = GetTvInfos(m => m.TvInfoId == infoId).First();
 
+        //DownloadResultModel downloadModel = await Download(-1, new InfoApiDownloadModel
+        //{
+        //    API = (INFO_API)tv.ApiType,
+        //    Type = INFO_TYPE.TV,
+        //    Id = tv.ApiId,
+        //});
 
-
-        long result = RefreshTvInfo(model);
-
-        return result;
+        //return result;
+        return -1;
     }
 
 
@@ -754,7 +774,4 @@ public class InfoRepository : IInfoRepository
 
         return query;
     }
-
-
-
 }

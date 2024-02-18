@@ -30,6 +30,9 @@ public class TvInfoModel
     [Display(Name = "Image")]
     public string ImageUrl { get; set; }
 
+    public IEnumerable<TvInfoSeasonModel> Seasons { get; set; }
+
     [Display(Name = "Episodes")]
     public IEnumerable<TvEpisodeInfoModel> Episodes { get; set; }
 }
+

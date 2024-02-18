@@ -41,6 +41,11 @@ public class OATabBuilder<T> : OAControlBuilder<T>
 
     public override void WriteTo(TextWriter writer, HtmlEncoder encoder)
     {
+        //if(!Container.Tabs.Any(m => m.Selected))
+        //{
+        //    Container.Tabs.First().Selected = true;
+        //}
+
         TagBuilder container = new TagBuilder("div");
         container.Attributes.Add("id", Container.Name);
 

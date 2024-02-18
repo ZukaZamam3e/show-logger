@@ -113,10 +113,8 @@ public class InfoController : BaseController
 
             model = await _infoRepository.Download(GetLoggedInUserId(), new InfoApiDownloadModel
             {
-                //API = tv.TMDbId != -1 ? INFO_API.TMDB_API : INFO_API.OMDB_API,
                 API = (INFO_API)tv.ApiType,
                 Type = INFO_TYPE.TV,
-                //Id = tv.TMDbId != -1 ? tv.TMDbId.ToString() : tv.OMDbId,
                 Id = tv.ApiId,
             });
         }
@@ -162,7 +160,7 @@ public class InfoController : BaseController
 
         try
         {
-            model = _infoRepository.GetTvInfos().OrderByDescending(m => m.ShowName);
+            model = _infoRepository.GetTvInfos().OrderBy(m => m.ShowName);
         }
         catch (Exception ex)
         {
@@ -199,6 +197,8 @@ public class InfoController : BaseController
         try
         {
             model = _infoRepository.GetTvInfos(m => m.TvInfoId == id).FirstOrDefault();
+
+            model.Seasons = _infoRepository.GetTvInfoSeasons(id);
         }
         catch (Exception ex)
         {
@@ -209,7 +209,25 @@ public class InfoController : BaseController
     }
 
     [HttpGet]
-    public PartialViewResult ReadTVEpisodesInfo(int tvInfoId)
+    public IActionResult LoadTvSeasonTab(int tvInfoId, int seasonNumber)
+    {
+
+        TvInfoSeasonModel model = new TvInfoSeasonModel();
+
+        try
+        {
+            model = _infoRepository.GetTvInfoSeasons(tvInfoId).First(m => m.SeasonNumber == seasonNumber);
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "Could not load tv season info.");
+        }
+
+        return View("~/Areas/Infos/Views/Info/PartialViews/_TvEpisodeInfos.cshtml", model);
+    }
+
+    [HttpGet]
+    public PartialViewResult ReadTVEpisodesInfo(int tvInfoId, int seasonNumber)
     {
 
         IEnumerable<TvEpisodeInfoModel> model = new List<TvEpisodeInfoModel>();
@@ -225,7 +243,7 @@ public class InfoController : BaseController
                 {
                     m.OverallEpisodeNumber = i + 1;
                     return m;
-                });
+                }).Where(m => m.SeasonNumber == seasonNumber);
         }
         catch (Exception ex)
         {

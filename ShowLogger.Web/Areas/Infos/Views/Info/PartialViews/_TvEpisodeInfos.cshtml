@@ -1,9 +1,19 @@
-﻿<div class="row">
+﻿@{
+    Layout = "";
+}
+
+@using ShowLogger.Models
+
+@model TvInfoSeasonModel
+
+<div class="row episode_infos">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <input type="hidden" class="" value="@Model.TvInfoId" />
         @(Html.OA().GridPage()
-            .Name("gvTvEpisodeInfos")
+            .Name($"gvTvEpisodeInfos_{Model.SeasonNumber}")
             .Read(Url.Action("ReadTVEpisodesInfo", "Info", new { area = "Infos" }))
             .Init("infos.grid_init")
+            .HtmlAttributes(new { tv_info_id = Model.TvInfoId, season_number = Model.SeasonNumber })
         )
     </div>
 </div>
