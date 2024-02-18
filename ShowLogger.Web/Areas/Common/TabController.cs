@@ -18,10 +18,21 @@ public class TabController : Controller
             string a = url[1];
             string c = url[2];
             string act = url[3];
-            string e = url[4];
-            string i = url[5];
 
-            return RedirectToAction(act, c, new { area = a, eventId = Convert.ToInt32(e), id = Convert.ToInt32(i) });
+            object routeValues;
+
+            if(partialUrl.StartsWith("/Infos/Info/LoadTvSeasonTab"))
+            {
+                routeValues = new { area = a, tvInfoId = Convert.ToInt32(url[4]), seasonNumber = Convert.ToInt32(url[5]) };
+            }
+            else
+            {
+                routeValues = new { area = a };
+            }
+            //string e = url[4];
+            //string i = url[5];
+
+            return RedirectToAction(act, c, routeValues);
         }
         else
         {

@@ -651,6 +651,17 @@ infos = (function () {
             });
         },
 
+        fixTvInfo: function () {
+            oa_utilities.ajaxPostData(getInfosBaseURL('Info/FixTvInfo'), {}, function (data) {
+                if (data.errors.length > 0) {
+                    oa_utilities.show_record_error_notification(data.errors[0].errorMessage);
+                } else {
+                    oa_utilities.show_record_saved_message();
+                    oa_grid.reload_grid('gvTVInfos');
+                }
+            });
+        },
+
         btnUpdateOtherNames_Click: function () {
 
         },
@@ -677,7 +688,8 @@ infos = (function () {
         },
 
         grid_init: function (e) {
-            e.url.searchParams.set('tvInfoId', infos.get_tv_info_id().TvInfoId);
+            e.url.searchParams.set('tvInfoId', parseInt($(e.element).parent().attr("tv_info_id")));
+            e.url.searchParams.set('seasonNumber', parseInt($(e.element).parent().attr("season_number")));
         },
 
         openMovieInfo: function (e) {
