@@ -30,7 +30,13 @@ public class DownloadRepository : IDownloadRepository
         SL_WATCHLIST[] sl_watchlist = _context.SL_WATCHLIST.ToArray();
         SL_TRANSACTION[] sl_transaction = _context.SL_TRANSACTION.ToArray();
         SL_USER_PREF[] sl_user_pref = _context.SL_USER_PREF.ToArray();
-        OA_USERS[] oa_users = _context.OA_USERS.ToArray();
+        OA_USER_BASIC[] oa_users = _context.OA_USERS.Select(m => new OA_USER_BASIC
+        {
+            USERID = m.USER_ID,
+            FIRSTNAME = m.FIRST_NAME,
+            LASTNAME = m.LAST_NAME,
+            EMAIL = m.USER_NAME
+        }).OrderBy(m => m.USERID).ToArray();
         SL_TV_INFO_BASIC[] sl_tv_info = _context.SL_TV_INFO.Select(m => new SL_TV_INFO_BASIC
         {
             TV_INFO_ID = m.TV_INFO_ID,
@@ -123,5 +129,17 @@ public class DownloadRepository : IDownloadRepository
         public DateTime? AIR_DATE { get; set; }
 
         public string? IMAGE_URL { get; set; }
+    }
+
+    public class OA_USER_BASIC
+    {
+        public int USERID { get; set; }
+
+        public string FIRSTNAME { get; set; }
+
+
+        public string LASTNAME { get; set; }
+
+        public string EMAIL { get; set; }
     }
 }
