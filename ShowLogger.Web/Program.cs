@@ -33,6 +33,7 @@ builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IInfoRepository, InfoRepository>();
+builder.Services.AddScoped<IDownloadRepository, DownloadRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 ApisConfig apisConfig = new ApisConfig();
