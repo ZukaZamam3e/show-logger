@@ -407,7 +407,8 @@ public class ShowController : BaseController
 
         try
         {
-            model = _watchedShowsRepository.GetYearStats(GetLoggedInUserId()).OrderByDescending(m => m.Year).ThenBy(m => m.Name);
+            int userId = GetLoggedInUserId();
+            model = _watchedShowsRepository.GetYearStats(GetLoggedInUserId()).OrderByDescending(m => m.Year).ThenBy(m => m.UserId == userId ? 0 : 1).ThenBy(m => m.Name);
         }
         catch (Exception ex)
         {
