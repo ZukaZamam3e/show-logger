@@ -395,7 +395,8 @@ col.gvBooks_Bookname {
     .gvTVStats_Lastwatched,
     .gvTVStats_Episodesperday,
     .gvTVStats_Watched,
-    .gvTVStats_Dayssincestarting {
+    .gvTVStats_Dayssincestarting,
+    .gvTVStats_Nextepisodeinfo {
         display: none;
     }
 
