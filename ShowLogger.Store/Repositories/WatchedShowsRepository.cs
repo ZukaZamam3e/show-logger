@@ -409,9 +409,22 @@ public class WatchedShowsRepository : IWatchedShowsRepository
             .ThenBy(m => m.DATE_WATCHED)
             .ThenBy(m => m.SHOW_ID);
 
+        int[] episodeTvInfoIds = shows.Where(m => m.INFO_ID != null).Select(m => m.INFO_ID.Value).ToArray();
+        
+        int[] tvInfoIds = _context.SL_TV_EPISODE_INFO.Where(m => episodeTvInfoIds.Contains(m.TV_EPISODE_INFO_ID)).Select(m => m.TV_INFO_ID).ToArray();
+        SL_TV_INFO[] tvInfos = _context.SL_TV_INFO.Where(m => tvInfoIds.Contains(m.TV_INFO_ID)).ToArray();
+
+        List<SL_TV_EPISODE_INFO> episodes = _context.SL_TV_EPISODE_INFO.Where(m => tvInfoIds.Contains(m.TV_INFO_ID))
+                .OrderBy(m => m.TV_INFO_ID)
+                .ThenBy(m => m.SEASON_NUMBER)
+                .ThenBy(m => m.EPISODE_NUMBER)
+                .ToList();
+
         GroupedShowModel model = new GroupedShowModel();
         int count = 0;
         SL_SHOW? previousShow = null;
+
+        DateTime fourMonthsAgo = DateTime.Now.AddMonths(-4);
 
         List<GroupedShowModel> list = new List<GroupedShowModel>();
 
@@ -430,6 +443,36 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                     model.LatestEpisodeNumber = previousShow.EPISODE_NUMBER;
                     model.EpisodesWatched = (model.LatestSeasonNumber == previousShow.SEASON_NUMBER && model.LatestEpisodeNumber == previousShow.EPISODE_NUMBER ? count : ++count);
                     model.ShowId = previousShow.SHOW_ID;
+                    model.InfoId = previousShow.INFO_ID;
+
+                    if (model.InfoId != null)
+                    {
+                        int episodesLeft = 0;
+                        SL_TV_EPISODE_INFO? nextEpisodeInfo = GetNextEpisode(episodes, model.InfoId, out episodesLeft);
+
+                        if (nextEpisodeInfo != null && model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
+                        {
+                            nextEpisodeInfo = null;
+                        }
+
+                        if (nextEpisodeInfo != null)
+                        {
+                            SL_TV_INFO info = tvInfos.First(m => m.TV_INFO_ID == nextEpisodeInfo.TV_INFO_ID);
+                            model.NextSeasonNumber = nextEpisodeInfo.SEASON_NUMBER;
+                            model.NextEpisodeNumber = nextEpisodeInfo.EPISODE_NUMBER;
+                            model.NextEpisodeInfoId = nextEpisodeInfo.TV_EPISODE_INFO_ID;
+                            model.NextEpisodeName = nextEpisodeInfo.EPISODE_NAME;
+                            model.NextAirDate = nextEpisodeInfo.AIR_DATE;
+                            model.NextInfoUrl = GetTvEpisodeInfoUrl(info.API_TYPE, info.API_ID, nextEpisodeInfo.SEASON_NUMBER, nextEpisodeInfo.EPISODE_NUMBER);
+
+                            if(model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
+                            {
+                                episodesLeft = 0;
+                            }
+
+                            model.EpisodesLeft = episodesLeft;
+                        }
+                    }
 
                     list.Add(model);
                 }
@@ -441,6 +484,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                     FirstWatched = show.DATE_WATCHED,
                     StartingSeasonNumber = show.SEASON_NUMBER,
                     StartingEpisodeNumber = show.EPISODE_NUMBER,
+                    InfoId = show.INFO_ID
                 };
 
                 count = 1;
@@ -452,6 +496,36 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 model.LatestEpisodeNumber = previousShow.EPISODE_NUMBER;
                 model.EpisodesWatched = (model.LatestSeasonNumber == previousShow.SEASON_NUMBER && model.LatestEpisodeNumber == previousShow.EPISODE_NUMBER ? count : ++count);
                 model.ShowId = previousShow.SHOW_ID;
+                model.InfoId = previousShow.INFO_ID;
+
+                if (model.InfoId != null)
+                {
+                    int episodesLeft = 0;
+                    SL_TV_EPISODE_INFO? nextEpisodeInfo = GetNextEpisode(episodes, model.InfoId, out episodesLeft);
+
+                    if (nextEpisodeInfo != null && model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
+                    {
+                        nextEpisodeInfo = null;
+                    }
+
+                    if (nextEpisodeInfo != null)
+                    {
+                        SL_TV_INFO info = tvInfos.First(m => m.TV_INFO_ID == nextEpisodeInfo.TV_INFO_ID);
+                        model.NextSeasonNumber = nextEpisodeInfo.SEASON_NUMBER;
+                        model.NextEpisodeNumber = nextEpisodeInfo.EPISODE_NUMBER;
+                        model.NextEpisodeInfoId = nextEpisodeInfo.TV_EPISODE_INFO_ID;
+                        model.NextEpisodeName = nextEpisodeInfo.EPISODE_NAME;
+                        model.NextAirDate = nextEpisodeInfo.AIR_DATE;
+                        model.NextInfoUrl = GetTvEpisodeInfoUrl(info.API_TYPE, info.API_ID, nextEpisodeInfo.SEASON_NUMBER, nextEpisodeInfo.EPISODE_NUMBER);
+
+                        if (model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
+                        {
+                            episodesLeft = 0;
+                        }
+
+                        model.EpisodesLeft = episodesLeft;
+                    }
+                }
 
                 list.Add(model);
 
@@ -462,6 +536,7 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                     FirstWatched = show.DATE_WATCHED,
                     StartingSeasonNumber = show.SEASON_NUMBER,
                     StartingEpisodeNumber = show.EPISODE_NUMBER,
+                    InfoId = show.INFO_ID
                 };
 
                 count = 1;
@@ -476,6 +551,28 @@ public class WatchedShowsRepository : IWatchedShowsRepository
 
 
         return list;
+    }
+
+    private SL_TV_EPISODE_INFO? GetNextEpisode(List<SL_TV_EPISODE_INFO> episodesList, int? episodeInfoId, out int episodesLeft)
+    {
+        SL_TV_EPISODE_INFO? nextEpisodeInfo = null;
+        SL_TV_EPISODE_INFO? currentEpisode = episodesList.FirstOrDefault(m => m.TV_EPISODE_INFO_ID == episodeInfoId);
+
+        List<SL_TV_EPISODE_INFO> episodes = episodesList.Where(m => m.TV_INFO_ID == currentEpisode.TV_INFO_ID).ToList();
+        episodesLeft = 0;
+
+        if (episodes != null)
+        {
+            int index = episodes.FindIndex(m => m.TV_EPISODE_INFO_ID == episodeInfoId);
+            if (index != -1 && index + 1 < episodes.Count - 1)
+            {
+                nextEpisodeInfo = episodes[index + 1];
+                episodesLeft = episodes.Count - (index + 1);
+            }
+        }
+
+
+        return nextEpisodeInfo;
     }
 
     public IEnumerable<MovieModel> GetMovieStats(int userId)
@@ -943,4 +1040,5 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 .ThenBy(m => m.EPISODE_NUMBER)
                 .ToList();
     }
+
 }

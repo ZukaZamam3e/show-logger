@@ -163,7 +163,9 @@ public class ShowController : BaseController
                         TvEpisodeInfoModel episodeInfo = _infoRepository.GetTvEpisodeInfos(m => m.TvEpisodeInfoId == show.InfoId).First();
                         TvInfoModel tvInfo = _infoRepository.GetTvInfos(m => m.TvInfoId == episodeInfo.TvInfoId).First();
 
-                        if (episodeInfo.Runtime == null || string.IsNullOrEmpty(episodeInfo.EpisodeOverview))
+                        if (episodeInfo.Runtime == null 
+                            || string.IsNullOrEmpty(episodeInfo.EpisodeOverview) 
+                            || string.IsNullOrEmpty(episodeInfo.ImageUrl))
                         {
                             await _infoRepository.Download(GetLoggedInUserId(), new InfoApiDownloadModel
                             {
