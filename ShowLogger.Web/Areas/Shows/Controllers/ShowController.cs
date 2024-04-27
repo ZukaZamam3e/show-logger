@@ -165,7 +165,8 @@ public class ShowController : BaseController
 
                         if (episodeInfo.Runtime == null 
                             || string.IsNullOrEmpty(episodeInfo.EpisodeOverview) 
-                            || string.IsNullOrEmpty(episodeInfo.ImageUrl))
+                            || string.IsNullOrEmpty(episodeInfo.ImageUrl)
+                            || episodeInfo.EpisodeName == $"Episode {episodeInfo.EpisodeNumber}")
                         {
                             await _infoRepository.Download(GetLoggedInUserId(), new InfoApiDownloadModel
                             {
