@@ -445,15 +445,10 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                     model.ShowId = previousShow.SHOW_ID;
                     model.InfoId = previousShow.INFO_ID;
 
-                    if (model.InfoId != null)
+                    if (model.InfoId != null && model.LastWatched > fourMonthsAgo)
                     {
                         int episodesLeft = 0;
                         SL_TV_EPISODE_INFO? nextEpisodeInfo = GetNextEpisode(episodes, model.InfoId, out episodesLeft);
-
-                        if (nextEpisodeInfo != null && model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
-                        {
-                            nextEpisodeInfo = null;
-                        }
 
                         if (nextEpisodeInfo != null)
                         {
@@ -464,12 +459,6 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                             model.NextEpisodeName = nextEpisodeInfo.EPISODE_NAME;
                             model.NextAirDate = nextEpisodeInfo.AIR_DATE;
                             model.NextInfoUrl = GetTvEpisodeInfoUrl(info.API_TYPE, info.API_ID, nextEpisodeInfo.SEASON_NUMBER, nextEpisodeInfo.EPISODE_NUMBER);
-
-                            if(model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
-                            {
-                                episodesLeft = 0;
-                            }
-
                             model.EpisodesLeft = episodesLeft;
                         }
                     }
@@ -498,15 +487,10 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                 model.ShowId = previousShow.SHOW_ID;
                 model.InfoId = previousShow.INFO_ID;
 
-                if (model.InfoId != null)
+                if (model.InfoId != null && model.LastWatched > fourMonthsAgo)
                 {
                     int episodesLeft = 0;
                     SL_TV_EPISODE_INFO? nextEpisodeInfo = GetNextEpisode(episodes, model.InfoId, out episodesLeft);
-
-                    if (nextEpisodeInfo != null && model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
-                    {
-                        nextEpisodeInfo = null;
-                    }
 
                     if (nextEpisodeInfo != null)
                     {
@@ -517,12 +501,6 @@ public class WatchedShowsRepository : IWatchedShowsRepository
                         model.NextEpisodeName = nextEpisodeInfo.EPISODE_NAME;
                         model.NextAirDate = nextEpisodeInfo.AIR_DATE;
                         model.NextInfoUrl = GetTvEpisodeInfoUrl(info.API_TYPE, info.API_ID, nextEpisodeInfo.SEASON_NUMBER, nextEpisodeInfo.EPISODE_NUMBER);
-
-                        if (model.LatestSeasonNumber < nextEpisodeInfo.SEASON_NUMBER && model.LastWatched < fourMonthsAgo)
-                        {
-                            episodesLeft = 0;
-                        }
-
                         model.EpisodesLeft = episodesLeft;
                     }
                 }
