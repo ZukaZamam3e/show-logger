@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShowLogger.Data.Context;
 
@@ -10,9 +11,10 @@ using ShowLogger.Data.Context;
 namespace ShowLogger.Data.Migrations
 {
     [DbContext(typeof(ShowLoggerDbContext))]
-    partial class ShowLoggerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240428231525_0.1.0023")]
+    partial class _010023
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

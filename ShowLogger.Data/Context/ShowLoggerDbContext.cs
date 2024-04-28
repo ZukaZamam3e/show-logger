@@ -27,6 +27,7 @@ public class ShowLoggerDbContext : DbContext
     public DbSet<SL_TV_INFO> SL_TV_INFO { get; set; }
     public DbSet<SL_TV_EPISODE_INFO> SL_TV_EPISODE_INFO { get; set; }
     public DbSet<SL_MOVIE_INFO> SL_MOVIE_INFO { get; set; }
+    public DbSet<SL_TV_EPISODE_ORDER> SL_TV_EPISODE_ORDER { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,6 +46,7 @@ public class ShowLoggerDbContext : DbContext
         modelBuilder.Entity<SL_TV_INFO>().HasKey(m => m.TV_INFO_ID);
         modelBuilder.Entity<SL_TV_EPISODE_INFO>().HasKey(m => m.TV_EPISODE_INFO_ID);
         modelBuilder.Entity<SL_MOVIE_INFO>().HasKey(m => m.MOVIE_INFO_ID);
+        modelBuilder.Entity<SL_TV_EPISODE_ORDER>().HasKey(m => m.TV_EPISODE_ORDER_ID);
 
         modelBuilder.Entity<SL_TV_INFO>().HasMany(m => m.EPISODE_INFOS)
             .WithOne(m => m.TV_INFO)
@@ -247,6 +249,21 @@ public class ShowLoggerDbContext : DbContext
                 .IsRequired();
 
             entity.Property(e => e.LAST_UPDATED)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<SL_TV_EPISODE_ORDER>(entity =>
+        {
+            entity.Property(e => e.TV_EPISODE_ORDER_ID)
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.TV_INFO_ID)
+                .IsRequired();
+
+            entity.Property(e => e.TV_EPISODE_INFO_ID)
+                .IsRequired();
+
+            entity.Property(e => e.EPISODE_ORDER)
                 .IsRequired();
         });
     }
