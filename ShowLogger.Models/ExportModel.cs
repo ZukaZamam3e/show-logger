@@ -27,5 +27,7 @@ public class ExportModel
 
     public string SL_WATCHLIST { get; set; }
 
+    public string SL_TV_EPISODE_ORDER { get; set; }
+
     public string OA_USERS { get; set; }
 }
