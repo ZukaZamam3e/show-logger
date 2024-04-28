@@ -67,6 +67,8 @@ public class DownloadRepository : IDownloadRepository
 
         }).ToArray();
         SL_MOVIE_INFO[] sl_movie_info = _context.SL_MOVIE_INFO.ToArray();
+        SL_TV_EPISODE_ORDER[] sl_tv_episode_order = _context.SL_TV_EPISODE_ORDER.ToArray();
+
 
         model.SL_BOOK = JsonConvert.SerializeObject(sl_book, Formatting.Indented);
         model.SL_SHOW = JsonConvert.SerializeObject(sl_show, Formatting.Indented);
@@ -79,6 +81,7 @@ public class DownloadRepository : IDownloadRepository
         model.SL_TV_INFO = JsonConvert.SerializeObject(sl_tv_info, Formatting.Indented);
         model.SL_TV_EPISODE_INFO = JsonConvert.SerializeObject(sl_tv_episode_info, Formatting.Indented);
         model.SL_MOVIE_INFO = JsonConvert.SerializeObject(sl_movie_info, Formatting.Indented);
+        model.SL_TV_EPISODE_ORDER = JsonConvert.SerializeObject(sl_tv_episode_order, Formatting.Indented);
 
         return model;
     }

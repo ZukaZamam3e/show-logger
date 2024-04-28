@@ -70,6 +70,7 @@ public class DownloadController : BaseController
                     new Tuple<string, string>("sl_tv_info.json", model.SL_TV_INFO),
                     new Tuple<string, string>("sl_tv_episode_info.json", model.SL_TV_EPISODE_INFO),
                     new Tuple<string, string>("sl_movie_info.json", model.SL_MOVIE_INFO),
+                    new Tuple<string, string>("sl_tv_episode_order.json", model.SL_TV_EPISODE_ORDER),
                 };
 
                 using (MemoryStream memoryStream = new MemoryStream())
