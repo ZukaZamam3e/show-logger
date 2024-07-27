@@ -102,4 +102,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+string listeningPort = builder.Configuration.GetValue<string>("ListeningPort");
+
+app.Urls.Add(listeningPort);
+
 app.Run();
